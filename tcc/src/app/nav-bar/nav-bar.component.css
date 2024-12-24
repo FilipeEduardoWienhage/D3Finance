@@ -1,0 +1,68 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: fantasy;
+    font-size: 24px;
+    background-color: black;
+}
+
+.container{
+    max-width: 1280px;
+    margin: auto;
+}
+
+.flex{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header{
+    width: 100%;
+    padding: 40px 4%;
+}
+
+header ul{
+    list-style-type: none;
+}
+
+header ul li{
+    display: inline-block;
+    margin: 0 40px;
+}
+
+.btn-login button{
+    width: 120px;
+    height: 40px;
+    border: 0;
+    background-color: rgb(189, 163, 213);
+    color: blueviolet;
+    cursor: pointer;
+    transition: 2s;
+    border-radius: 10px;
+}
+
+header ul li a{
+    color: blueviolet;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+header ul li:hover{
+    transform: scale(1.1);
+}
+
+header ul li a:hover{
+    color: white;
+    background-color: blueviolet;
+    transition: 1s;
+}
+
+.btn-login button:hover{
+    color: white;
+    background-color: blueviolet;
+    transition: 1s;
+    transform: scale(1.1);
+}
