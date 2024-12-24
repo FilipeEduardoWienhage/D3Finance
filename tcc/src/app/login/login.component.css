@@ -1,0 +1,35 @@
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+  }
+
+  .card{
+    text-align: center;
+    align-items: center;
+  }
+  
+  .form-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  input{
+    width: 500px;
+    align-items: center;
+    padding: 25px;
+    margin-bottom: 20px;
+  }
+
+  p-button{
+    margin-top: 20px;
+    display: block;
+  }
+
+button{
+    width: 200px; 
+    padding: 15px;
+    text-align: center;
+}

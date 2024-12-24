@@ -1,1 +1,25 @@
-<p>login works!</p>
+<app-nav-bar></app-nav-bar>
+
+<div class="center-container">
+    <p-card header="Faça seu Login" class="card">
+    <div class="form-wrapper">
+
+        <p-iconfield>
+            <p-inputicon>
+                <i class="pi pi-user"></i>
+            </p-inputicon>
+            <input pInputText id="input" [(ngModel)]="name" type="text" placeholder="Nome" />
+        </p-iconfield>
+
+        <p-iconfield>
+            <p-inputicon>
+                <i class="pi pi-eye"></i>
+            </p-inputicon>
+            <input pInputText id="password" [(ngModel)]="email" type="password" placeholder="Senha" />
+        </p-iconfield>
+
+
+        <p-button type="submit" label="Acessar"></p-button>
+    </div>
+    </p-card>
+</div>
