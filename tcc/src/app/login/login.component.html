@@ -1,25 +1,24 @@
 <app-nav-bar></app-nav-bar>
+<div class="wrapper">
+    <form action="">
+        <h1>Login</h1>
+        <div class="input-box">
+            <input type="text" placeholder="Username" required>
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Senha" required>
+            <i class='bx bxs-lock'></i>
+        </div>
+        <div class="remember-forgot">
+            <label><input type="checkbox">Lembrar Senha</label>
+            <a href="#">Esqueceu a senha?</a>
+        </div>
 
-<div class="center-container">
-    <p-card header="Faça seu Login" class="card">
-    <div class="form-wrapper">
+        <button type="submit" class="btn">Login</button>
 
-        <p-iconfield>
-            <p-inputicon>
-                <i class="pi pi-user"></i>
-            </p-inputicon>
-            <input pInputText id="input" [(ngModel)]="name" type="text" placeholder="Nome" />
-        </p-iconfield>
-
-        <p-iconfield>
-            <p-inputicon>
-                <i class="pi pi-eye"></i>
-            </p-inputicon>
-            <input pInputText id="password" [(ngModel)]="email" type="password" placeholder="Senha" />
-        </p-iconfield>
-
-
-        <p-button type="submit" label="Acessar"></p-button>
-    </div>
-    </p-card>
+        <div class="register-link">
+            <p>Não tem Conta? <a href="#">Cadastre-se</a></p>
+        </div>
+    </form>
 </div>
