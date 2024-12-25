@@ -1,68 +1,67 @@
-*{
-    margin:0;
-    padding: 0;
-    box-sizing: border-box;
+* {
     font-family: fantasy;
     font-size: 24px;
-    background-color: black;
 }
 
-.container{
-    max-width: 1280px;
-    margin: auto;
-}
-
-.flex{
+.flex {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-header{
+header {
     width: 100%;
     padding: 40px 4%;
+    background: transparent;
+    border: 5px solid rgba(0, 0, 0, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
 }
 
-header ul{
+header ul {
     list-style-type: none;
 }
 
-header ul li{
+header ul li {
     display: inline-block;
     margin: 0 40px;
 }
 
-.btn-login button{
+.btn-login button {
     width: 120px;
     height: 40px;
     border: 0;
-    background-color: rgb(189, 163, 213);
-    color: blueviolet;
+    background-color: black;
+    color: #fff;
+    letter-spacing: 2px;
     cursor: pointer;
     transition: 2s;
     border-radius: 10px;
 }
 
-header ul li a{
-    color: blueviolet;
+header ul li a {
+    color: #fff;
+    letter-spacing: 2px;
     text-decoration: none;
     padding: 8px;
     border-radius: 10px;
 }
 
-header ul li:hover{
+header ul li:hover {
     transform: scale(1.1);
 }
 
-header ul li a:hover{
+header ul li a:hover {
     color: white;
-    background-color: blueviolet;
+    background-color: black;
     transition: 1s;
+    text-decoration: underline;
 }
 
-.btn-login button:hover{
+.btn-login button:hover {
     color: white;
-    background-color: blueviolet;
+    background-color: black;
     transition: 1s;
     transform: scale(1.1);
+    text-decoration: underline;
 }
