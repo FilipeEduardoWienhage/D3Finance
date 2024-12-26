@@ -1,5 +1,5 @@
 * {
-    font-family: fantasy;
+    font-family: 'Times New Roman', Times, serif;
     font-size: 24px;
 }
 
@@ -11,7 +11,7 @@
 
 header {
     width: 100%;
-    padding: 40px 4%;
+    padding: 25px;
     background: transparent;
     border: 5px solid rgba(0, 0, 0, .2);
     backdrop-filter: blur(20px);
@@ -45,23 +45,42 @@ header ul li a {
     text-decoration: none;
     padding: 8px;
     border-radius: 10px;
+    position: relative;
+    transition: color 0.3s ease;
 }
 
 header ul li:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
+}
+
+header ul li a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: black;
+    transition: width 0.5s ease, transform 0.5s ease;
+    transform: translateX(-100%);
 }
 
 header ul li a:hover {
-    color: white;
-    background-color: black;
-    transition: 1s;
-    text-decoration: underline;
+    color: black;
+}
+
+header ul li a:hover::before {
+    width: 100%;
+    transform: translateX(0);
+}
+
+header ul li a:not(:hover)::before {
+    transform: translateX(100%);
 }
 
 .btn-login button:hover {
-    color: white;
-    background-color: black;
+    color: black;
+    background-color: #fff;
     transition: 1s;
-    transform: scale(1.1);
-    text-decoration: underline;
+    transform: scale(1.2);
 }
