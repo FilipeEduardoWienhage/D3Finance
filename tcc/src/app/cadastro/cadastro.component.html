@@ -4,8 +4,10 @@
            <form action="">
                 <h1>Faça seu Cadastro</h1>
                 <div class="input-box">
-                    <label for="">Nome</label>
-                    <input type="text" placeholder="Digite seu nome" required>
+                    <p-floatlabel variant="in">
+                        <input pInputText id="in_label" [(ngModel)]="nome" autocomplete="on" />
+                        <label for="in_label">Seu nome</label>
+                    </p-floatlabel>
                 </div>
                 <div class="input-box">
                     <label for="">E-Mail</label>
