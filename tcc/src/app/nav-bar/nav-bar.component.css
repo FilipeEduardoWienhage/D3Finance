@@ -1,6 +1,5 @@
 * {
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 24px;
+    box-sizing: border-box;
 }
 
 .flex {
@@ -11,76 +10,71 @@
 
 header {
     width: 100%;
-    padding: 25px;
-    background: transparent;
-    border: 5px solid rgba(0, 0, 0, .2);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    padding: 20px 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 header ul {
-    list-style-type: none;
-}
-
-header ul li {
-    display: inline-block;
-    margin: 0 40px;
-}
-
-.btn-login button {
-    width: 120px;
-    height: 40px;
-    border: 0;
-    background-color: black;
-    color: #fff;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: 2s;
-    border-radius: 10px;
+    list-style: none;
+    display: flex;
+    gap: 30px;
 }
 
 header ul li a {
     color: #fff;
-    letter-spacing: 2px;
+    font-size: 18px;
+    font-weight: 500;
     text-decoration: none;
-    padding: 8px;
-    border-radius: 10px;
+    padding: 8px 16px;
+    border-radius: 12px;
     position: relative;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease-in-out;
 }
 
-header ul li:hover {
-    transform: scale(1.2);
+header ul li a:hover {
+    background: rgba(255, 255, 255, 0.3); 
+    color: black; 
+    transform: scale(1.1); 
 }
 
 header ul li a::before {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background-color: black;
-    transition: width 0.5s ease, transform 0.5s ease;
-    transform: translateX(-100%);
-}
-
-header ul li a:hover {
-    color: black;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: #fff;
+    transition: all 0.4s ease;
+    transform: translateX(-50%);
 }
 
 header ul li a:hover::before {
     width: 100%;
-    transform: translateX(0);
 }
 
-header ul li a:not(:hover)::before {
-    transform: translateX(100%);
+.btn-login button {
+    width: 140px;
+    height: 45px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.4s ease-in-out;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .btn-login button:hover {
+    background: rgba(255, 255, 255, 0.8);
     color: black;
-    background-color: #fff;
-    transition: 1s;
-    transform: scale(1.2);
+    transform: scale(1.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
+
