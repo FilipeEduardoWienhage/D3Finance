@@ -1,44 +1,66 @@
 <app-nav-bar></app-nav-bar>
 <div class="container">
-    <div class="wrapper">
-           <form action="">
-                <h1>Faça seu Cadastro</h1>
-                <div class="input-box">
-                    <label for="">Nome</label>
-                    <input type="text" placeholder="Digite seu Nome" required>
-                </div>
-                <div class="input-box">
-                    <label for="">E-Mail</label>
-                    <input type="email" placeholder="Digite seu e-mail" required>
-                </div>
-                <div class="input-box">
-                    <label for="">CPF</label>
-                    <input type="number" placeholder="Digite seu CPF" required>
-                </div>
-                <div class="input-box">
-                    <label for="">Data de Nascimento</label>
-                    <input type="date" required>
-                </div>
-                <div class="input-box">
-                    <label for="">Username</label>
-                    <input type="text" placeholder="Digite seu Username" required>
-                </div>
-                <div class="input-box">
-                    <label for="">Senha</label>
-                    <input type="password" placeholder="Digite uma senha" required>
-                </div>
-                <div class="input-box">
-                    <label for="">Confirme sua senha</label>
-                    <input type="password" placeholder="Digite novamente a senha" required>
-                </div>
-                <div class="input-box">
-                    <label for="">CEP</label>
-                    <input type="text" placeholder="Digite seu CEP" required>
-                </div>
-                
-                <button type="submit" class="btn">Cadastrar</button>
-               
-           </form>
+    <div class="card">
+        <div class="flex items-center justify-center h-full">
+            <div class="flex flex-col gap-2">
+                <label for="nome">Nome</label>
+                <input pInputText id="nome" aria-describedby="name-help" [(ngModel)]="nome" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="e-mail">E-Mail</label>
+                <input pInputText id="e-mail" aria-describedby="e-mail-help" [(ngModel)]="email" />
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center h-full">
+            <div class="flex flex-col gap-2">
+                <label for="cpf">CPF</label>
+                <p-inputMask mask="999.999.999-99" [(ngModel)]="cpf" placeholder="000.000.000-00" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="dataNascimento">Data Nascimento</label>
+                <p-datepicker [(ngModel)]="dataNascimento" [showButtonBar]="true" />
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center h-full">
+            <div class="flex flex-col gap-2">
+                <label for="cep">CEP</label>
+                <p-inputMask mask="99.999-999" [(ngModel)]="cep" placeholder="00.000-000" (onBlur)="buscarEndereco()"/>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="estado">Estado/UF</label>
+                <input pInputText id="estado" [(ngModel)]="estado" placeholder="Estado" disabled/>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center h-full">
+            <div class="flex flex-col gap-2">
+                <label for="cidade">Cidade</label>
+                <input pInputText id="cidade" [(ngModel)]="cidade" placeholder="Cidade" disabled/>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="bairro">Bairro</label>
+                <input pInputText id="bairro" [(ngModel)]="bairro" placeholder="Bairro" disabled/>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center h-full">
+            <div class="flex flex-col gap-2">
+                <label for="password">Senha</label>
+                <p-password [(ngModel)]="senha" [toggleMask]="true" promptLabel="Escolha uma senha"
+                    weakLabel="Muito Fácil" mediumLabel="Senha Média" strongLabel="Senha Forte" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="password-confirmado">Confirmar Senha</label>
+                <p-password [(ngModel)]="confirmarSenha" [toggleMask]="true" promptLabel="Repita a senha"
+                    weakLabel="Muito Fácil" mediumLabel="Senha Média" strongLabel="Senha Forte" />
+            </div>
+        </div>
+
+        <div class="btn">
+            <p-button label="Cadastrar" (click)="onSubmit()"  />
+        </div>
     </div>
 </div>
 
