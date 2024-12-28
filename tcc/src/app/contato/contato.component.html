@@ -13,16 +13,19 @@
     <ng-template #footer>
       <div class="flex gap-2 mt-2 justify-between">
         <a href="https://www.instagram.com/filipeeduw/" target="_blank">
-          <i class="pi pi-instagram" style="font-size: 1.5rem; color: #e66b94;"></i>
+          <i class="pi pi-instagram" style="font-size: 3.5rem; color: #e66b94;"></i>
         </a>
-        
+        <div class="qrcode-wrapper">
+          <h3>GitHub Filipe:</h3>
+          <qrcode [qrdata]="githubFilipe" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
+        </div>
         <a href="https://www.linkedin.com/in/filipewienhage/">
-          <i class="pi pi-linkedin" style="font-size: 1.5rem; color: #0e76a8;"></i>
+          <i class="pi pi-linkedin" style="font-size: 3.5rem; color: #0e76a8;"></i>
         </a>
       </div>
     </ng-template>
   </p-card>
-
+  
   <p-card [style]="{ width: '30rem', overflow: 'hidden' }">
     <ng-template #header>
       <img alt="Card" class="w-full" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
@@ -35,15 +38,10 @@
     <ng-template #footer>
       <div class="flex gap-1 mt-3 justify-between">
         <a href="https://instagram.com/lhspezia" target="_blank">
-          <i class="pi pi-instagram" style="font-size: 1.5rem; color: #e66b94;"></i>
+          <i class="pi pi-instagram" style="font-size: 3.5rem; color: #e66b94;"></i>
         </a>
-        <!-- falta colocar o link do linkedin no href para redirecionar -->
-        <a href="">
-          <i class="pi pi-linkedin" style="font-size: 1.5rem; color: #0e76a8;"></i>
-        </a>
-      </div>
-    </ng-template>
-  </p-card>
-</div>
-
-<app-footer></app-footer>
+        <div class="qrcode-wrapper">
+          <h3>GitHub Luis:</h3>
+          <qrcode [qrdata]="githubSpezia" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
+        </div>
+        <!-- falta colocar o
