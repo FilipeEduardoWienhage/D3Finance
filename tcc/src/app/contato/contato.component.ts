@@ -14,7 +14,6 @@ import { QRCodeComponent } from 'angularx-qrcode';
     NavBarComponent,
     CardModule,
     ButtonModule,
-    FooterComponent,
     QRCodeComponent,
   ],
   templateUrl: './contato.component.html',
