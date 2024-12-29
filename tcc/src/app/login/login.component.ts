@@ -13,5 +13,6 @@ import { FooterComponent } from '../footer/footer.component';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-
+  login: string = '';
+  password: string = '';
 }

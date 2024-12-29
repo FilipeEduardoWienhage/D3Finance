@@ -1,32 +1,33 @@
 <app-nav-bar></app-nav-bar>
 <div class="container">
     <div class="card">
+        <h1>Formulário de Cadastro</h1>
         <div class="flex items-center justify-center h-full">
             <div class="flex flex-col gap-2">
                 <label for="nome">Nome</label>
-                <input pInputText id="nome" aria-describedby="name-help" [(ngModel)]="nome" />
+                <input pInputText id="nome" aria-describedby="name-help" [(ngModel)]="nome" required/>
             </div>
             <div class="flex flex-col gap-2">
                 <label for="e-mail">E-Mail</label>
-                <input pInputText id="e-mail" aria-describedby="e-mail-help" [(ngModel)]="email" />
+                <input pInputText id="e-mail" aria-describedby="e-mail-help" [(ngModel)]="email" required />
             </div>
         </div>
 
         <div class="flex items-center justify-center h-full">
             <div class="flex flex-col gap-2">
                 <label for="cpf">CPF</label>
-                <p-inputMask mask="999.999.999-99" [(ngModel)]="cpf" placeholder="000.000.000-00" />
+                <p-inputMask mask="999.999.999-99" id="cpf" [(ngModel)]="cpf" placeholder="000.000.000-00" aria-describedby="CPF-help" required />
             </div>
             <div class="flex flex-col gap-2">
                 <label for="dataNascimento">Data Nascimento</label>
-                <p-datepicker [(ngModel)]="dataNascimento" [showButtonBar]="true" />
+                <p-datepicker id="dataNascimento" [(ngModel)]="dataNascimento" required [showButtonBar]="true" />
             </div>
         </div>
 
         <div class="flex items-center justify-center h-full">
             <div class="flex flex-col gap-2">
                 <label for="cep">CEP</label>
-                <p-inputMask mask="99.999-999" [(ngModel)]="cep" placeholder="00.000-000" (onBlur)="buscarEndereco()"/>
+                <p-inputMask mask="99.999-999" id="cep" [(ngModel)]="cep" placeholder="00.000-000" aria-describedby="CEP-help" required (onBlur)="buscarEndereco()"/>
             </div>
             <div class="flex flex-col gap-2">
                 <label for="estado">Estado/UF</label>
@@ -48,18 +49,18 @@
         <div class="flex items-center justify-center h-full">
             <div class="flex flex-col gap-2">
                 <label for="password">Senha</label>
-                <p-password [(ngModel)]="senha" [toggleMask]="true" promptLabel="Escolha uma senha"
+                <p-password [(ngModel)]="senha" id="password" [toggleMask]="true" aria-describedby="senha-help" required promptLabel="Escolha uma senha"
                     weakLabel="Muito Fácil" mediumLabel="Senha Média" strongLabel="Senha Forte" />
             </div>
             <div class="flex flex-col gap-2">
                 <label for="password-confirmado">Confirmar Senha</label>
-                <p-password [(ngModel)]="confirmarSenha" [toggleMask]="true" promptLabel="Repita a senha"
+                <p-password [(ngModel)]="confirmarSenha" id="password-confirmado" [toggleMask]="true" aria-describedby="senha-help" required promptLabel="Repita a senha"
                     weakLabel="Muito Fácil" mediumLabel="Senha Média" strongLabel="Senha Forte" />
             </div>
         </div>
 
         <div class="btn">
-            <p-button label="Cadastrar" (click)="onSubmit()"  />
+            <p-button id="btn" label="Cadastrar" (click)="onSubmit()"  />
         </div>
     </div>
 </div>
