@@ -17,6 +17,11 @@
     padding: 30px 40px;
 }
 
+h1 {
+    font-size: 24px;
+    padding: 20px;
+}
+
 .btn {
     padding: 15px;
 }
