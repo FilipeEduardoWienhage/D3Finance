@@ -4,6 +4,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import "primeicons/primeicons.css";
 import { QRCodeComponent } from 'angularx-qrcode';
+import { FooterComponent } from '../footer/footer.component';
 
 
 @Component({
@@ -14,6 +15,7 @@ import { QRCodeComponent } from 'angularx-qrcode';
     CardModule,
     ButtonModule,
     QRCodeComponent,
+    FooterComponent,
   ],
   templateUrl: './contato.component.html',
   styleUrl: './contato.component.css',
