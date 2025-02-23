@@ -1,68 +1,132 @@
-<app-nav-bar></app-nav-bar>
-<div class="container">
-    <div class="card">
-        <h1>Formulário de Cadastro</h1>
-        <div class="flex items-center justify-center h-full">
-            <div class="flex flex-col gap-2">
-                <label for="nome">Nome</label>
-                <input pInputText id="nome" aria-describedby="name-help" [(ngModel)]="nome" required/>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="e-mail">E-Mail</label>
-                <input pInputText id="e-mail" aria-describedby="e-mail-help" [(ngModel)]="email" required />
-            </div>
-        </div>
+<p-stepper [(value)]="activeStep" class="basis-[40rem]">
+    <p-step-list>
+        <p-step [value]="1" class="flex flex-row flex-auto gap-2">
+            <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                                'border-surface': value > activeStep
+                            }">
+                        <i class="pi pi-user"></i>
+                    </span>
+                </button>
+            </ng-template>
+        </p-step>
 
-        <div class="flex items-center justify-center h-full">
-            <div class="flex flex-col gap-2">
-                <label for="cpf">CPF</label>
-                <p-inputMask mask="999.999.999-99" id="cpf" [(ngModel)]="cpf" placeholder="000.000.000-00" aria-describedby="CPF-help" required />
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="dataNascimento">Data Nascimento</label>
-                <p-datepicker id="dataNascimento" [(ngModel)]="dataNascimento" required [showButtonBar]="true" />
-            </div>
-        </div>
+        <p-step [value]="2" class="flex flex-row flex-auto gap-2">
+            <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                                'border-surface': value > activeStep
+                            }">
+                        <i class="pi pi-star"></i>
+                    </span>
+                </button>
+            </ng-template>
+        </p-step>
 
-        <div class="flex items-center justify-center h-full">
-            <div class="flex flex-col gap-2">
-                <label for="cep">CEP</label>
-                <p-inputMask mask="99.999-999" id="cep" [(ngModel)]="cep" placeholder="00.000-000" aria-describedby="CEP-help" required (onBlur)="buscarEndereco()"/>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="estado">Estado/UF</label>
-                <input pInputText id="estado" [(ngModel)]="estado" placeholder="Estado" disabled/>
-            </div>
-        </div>
+        <p-step [value]="3" class="flex flex-row flex-auto gap-2">
+            <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                    <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                                'border-surface': value > activeStep
+                            }">
+                        <i class="pi pi-id-card"></i>
+                    </span>
+                </button>
+            </ng-template>
+        </p-step>
+    </p-step-list>
 
-        <div class="flex items-center justify-center h-full">
-            <div class="flex flex-col gap-2">
-                <label for="cidade">Cidade</label>
-                <input pInputText id="cidade" [(ngModel)]="cidade" placeholder="Cidade" disabled/>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="bairro">Bairro</label>
-                <input pInputText id="bairro" [(ngModel)]="bairro" placeholder="Bairro" disabled/>
-            </div>
-        </div>
+    <p-step-panels>
+        <p-step-panel [value]="1">
+            <ng-template #content let-activateCallback="activateCallback">
+                <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
+                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Crie sua conta</div>
+                    <div class="field">
+                        <label for="nome">Nome</label>
+                        <input [(ngModel)]="nome" pInputText id="nome" type="text" placeholder="Nome" fluid />
+                    </div>
+                    <div class="field">
+                        <label for="email">E-mail</label>
+                        <input [(ngModel)]="email" pInputText id="email" type="email" placeholder="E-mail" fluid />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="cpf">CPF</label>
+                        <p-inputMask mask="999.999.999-99" id="cpf" [(ngModel)]="cpf" placeholder="000.000.000-00"
+                            aria-describedby="CPF-help" required />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="dataNascimento">Data de Nascimento</label>
+                        <p-datepicker id="dataNascimento" [(ngModel)]="dataNascimento" required
+                            [showButtonBar]="true" />
+                    </div>
+                    <div class="field">
+                        <label for="password">Senha</label>
+                        <p-password [(ngModel)]="password" placeholder="Senha" fluid id="password" />
+                    </div>
+                    <div class="field">
+                        <label for="confirmarSenha">Confirmar Senha</label>
+                        <p-password [(ngModel)]="confirmarSenha" placeholder="Confirmar Senha" fluid
+                            id="confirmarSenha" />
+                    </div>
+                </div>
+                <div class="flex pt-6 justify-end">
+                    <p-button (onClick)="activateCallback(2)" label="Next" icon="pi pi-arrow-right" iconPos="right" />
+                </div>
+            </ng-template>
+        </p-step-panel>
 
-        <div class="flex items-center justify-center h-full">
-            <div class="flex flex-col gap-2">
-                <label for="password">Senha</label>
-                <p-password [(ngModel)]="senha" id="password" [toggleMask]="true" aria-describedby="senha-help" required promptLabel="Escolha uma senha"
-                    weakLabel="Muito Fácil" mediumLabel="Senha Média" strongLabel="Senha Forte" />
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="password-confirmado">Confirmar Senha</label>
-                <p-password [(ngModel)]="confirmarSenha" id="password-confirmado" [toggleMask]="true" aria-describedby="senha-help" required promptLabel="Repita a senha"
-                    weakLabel="Muito Fácil" mediumLabel="Senha Média" strongLabel="Senha Forte" />
-            </div>
-        </div>
+        <p-step-panel [value]="2">
+            <ng-template #content let-activateCallback="activateCallback">
+                <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações de Endereço</div>
+                    <div class="flex flex-col gap-2">
+                        <label for="cep">CEP</label>
+                        <p-inputMask mask="99.999-999" id="cep" [(ngModel)]="cep" placeholder="00.000-000"
+                            aria-describedby="CEP-help" required (onBlur)="buscarEndereco()" />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="estado">Estado/UF</label>
+                        <input pInputText id="estado" [(ngModel)]="estado" placeholder="Estado" required />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="cidade">Cidade</label>
+                        <input pInputText id="cidade" [(ngModel)]="cidade" placeholder="Cidade" required />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="bairro">Bairro</label>
+                        <input pInputText id="bairro" [(ngModel)]="bairro" placeholder="Bairro" required />
+                    </div>
+                </div>
+                <div class="flex pt-6 justify-between">
+                    <p-button (onClick)="activateCallback(1)" label="Back" severity="secondary"
+                        icon="pi pi-arrow-left" />
+                    <p-button (onClick)="activateCallback(3)" label="Next" icon="pi pi-arrow-right" iconPos="right" />
+                </div>
+            </ng-template>
+        </p-step-panel>
 
-        <div class="btn">
-            <p-button id="btn" label="Cadastrar" (click)="onSubmit()"  />
-        </div>
-    </div>
-</div>
+        <p-step-panel [value]="3">
+            <ng-template #content let-activateCallback="activateCallback">
+                <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Conta criada com sucesso!</div>
+                    <div class="text-center">
+                        <img alt="logo" src="https://primefaces.org/cdn/primeng/images/stepper/content.svg" />
+                    </div>
+                </div>
+                <div class="flex pt-6 justify-start">
+                    <p-button (onClick)="activateCallback(2)" label="Back" severity="secondary"
+                        icon="pi pi-arrow-left" />
+                </div>
+            </ng-template>
+        </p-step-panel>
+    </p-step-panels>
+</p-stepper>
+
+
+
 
 <app-footer></app-footer>

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { FooterComponent } from '../footer/footer.component';
-import { InputTextModule } from 'primeng/inputtext';
+import { InputText, InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { InputMask } from 'primeng/inputmask';
 import { DatePicker } from 'primeng/datepicker';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
+import { StepperModule } from 'primeng/stepper';
+import { CommonModule } from '@angular/common';
+
 
 interface Endereco {
   uf: string,
@@ -17,7 +19,6 @@ interface Endereco {
 @Component({
   selector: 'app-cadastro',
   imports: [
-    NavBarComponent,
     FooterComponent,
     InputTextModule,
     FormsModule,
@@ -25,52 +26,35 @@ interface Endereco {
     DatePicker,
     PasswordModule,
     ButtonModule,
+    StepperModule,
+    CommonModule,
+    InputText
   ],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css'
 })
 export class CadastroComponent {
-  nome: string = '';
-  email: string = '';
-  cpf: string = '';
-  cep: string = '';
-  dataNascimento: Date[] | undefined;
-  senha: string = '';
+  activeStep: number = 1;
+
+  nome: string = "";
+
+  email: string = "";
+
+  password: string = "";
+
   confirmarSenha: string = '';
+
+  cpf: string = ""
+
+  cep: string = '';
+
+  dataNascimento: Date[] | undefined;
+
   estado: string = '';
+
   cidade: string = '';
+
   bairro: string = '';
-
-
-  onSubmit(): void {
-
-    if (!this.nome || !this.email || !this.cpf || !this.cep || !this.dataNascimento || !this.senha || !this.confirmarSenha) {
-      alert('Por favor, preencha todos os campos obrigatórios!');
-      return
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailPattern.test(this.email)) {
-      alert('Por favor, insira um e-mail válido!');
-      return;
-    }
-
-    if (this.senha !== this.confirmarSenha) {
-      alert('As senhas não conferem!');
-      return;
-    }
-
-    const dadosUsuario = {
-      nome: this.nome,
-      email: this.email,
-      cpf: this.cpf,
-      dataNascimento: this.dataNascimento,
-      senha: this.senha,
-    };
-
-    console.log('Dados do usuário:', dadosUsuario);
-    alert('Cadastro realizado com sucesso!');
-  }
 
   endereco: Endereco = {
     uf: '',
@@ -111,5 +95,5 @@ export class CadastroComponent {
       alert('Digite um CEP válido (8 números)!');
     }
   }
-
 }
+
