@@ -1,3 +1,5 @@
+<app-nav-bar></app-nav-bar>
+
 <p-stepper [(value)]="activeStep" class="basis-[40rem]">
     <p-step-list>
         <p-step [value]="1" class="flex flex-row flex-auto gap-2">
@@ -20,7 +22,7 @@
                                 'bg-primary text-primary-contrast border-primary': value <= activeStep,
                                 'border-surface': value > activeStep
                             }">
-                        <i class="pi pi-star"></i>
+                        <i class="pi pi-user"></i>
                     </span>
                 </button>
             </ng-template>
@@ -82,7 +84,16 @@
         <p-step-panel [value]="2">
             <ng-template #content let-activateCallback="activateCallback">
                 <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
-                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações de Endereço</div>
+                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações da Empresa/Endereço</div>
+                    <div class="flex flex-col gap-2">
+                        <label for="nomeEmpresa">Nome Empresa</label>
+                        <input pInputText id="nomeEmpresa" [(ngModel)]="nomeEmpresa" placeholder="Nome da Empresa" required />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="cnpj">CNPJ</label>
+                        <p-inputMask mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="cnpj" placeholder="00.000.000/0000-00"
+                            aria-describedby="CNPJ-help" required />
+                    </div>
                     <div class="flex flex-col gap-2">
                         <label for="cep">CEP</label>
                         <p-inputMask mask="99.999-999" id="cep" [(ngModel)]="cep" placeholder="00.000-000"

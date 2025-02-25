@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { FooterComponent } from '../footer/footer.component';
+import { FormsModule } from '@angular/forms';
+import { PasswordModule } from 'primeng/password';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 @Component({
@@ -8,6 +11,9 @@ import { FooterComponent } from '../footer/footer.component';
   imports: [
     NavBarComponent,
     FooterComponent,
+    FormsModule,
+    PasswordModule,
+    InputTextModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

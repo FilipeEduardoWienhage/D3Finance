@@ -8,6 +8,7 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
 import { CommonModule } from '@angular/common';
+import { NavBarComponent } from '../nav-bar/nav-bar.component';
 
 
 interface Endereco {
@@ -28,7 +29,8 @@ interface Endereco {
     ButtonModule,
     StepperModule,
     CommonModule,
-    InputText
+    InputText,
+    NavBarComponent
   ],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css'
@@ -55,6 +57,10 @@ export class CadastroComponent {
   cidade: string = '';
 
   bairro: string = '';
+
+  nomeEmpresa: string = '';
+
+  cnpj: string = '';
 
   endereco: Endereco = {
     uf: '',
