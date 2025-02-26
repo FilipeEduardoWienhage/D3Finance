@@ -1,6 +1,7 @@
-.container {
+header {
     display: flex;
     padding-top: 10px;
+    justify-content: space-between;
 }
 
 .navegacao {
@@ -9,7 +10,11 @@
     list-style: none;
 }
 
-.navegacao_link {
+.navegacao-esquerda{
+    display: flex;
+}
+
+.navegacao_link {   
     font-size: 14px;
     font-weight: 300;
     letter-spacing: 2px;
@@ -19,7 +24,7 @@
 
 }
 
-.navegacao_link:hover{
+.navegacao_link:hover {
     color: white;
 }
 
@@ -44,6 +49,7 @@
 
 .btn-login {
     transform: skew(-15deg);
+    margin-right: 15px;
 }
 
 .btn-login button {
@@ -68,4 +74,9 @@ span {
     margin-left: auto;
     letter-spacing: 15px;
     font-size: 20px;
+}
+
+
+.navegacao-direita {
+    display: flex;
 }
