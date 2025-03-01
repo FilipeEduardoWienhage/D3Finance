@@ -35,7 +35,7 @@
                                 'bg-primary text-primary-contrast border-primary': value <= activeStep,
                                 'border-surface': value > activeStep
                             }">
-                        <i class="pi pi-id-card"></i>
+                        <i class="pi pi-user"></i>
                     </span>
                 </button>
             </ng-template>
@@ -46,12 +46,12 @@
         <p-step-panel [value]="1">
             <ng-template #content let-activateCallback="activateCallback">
                 <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
-                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Crie sua conta</div>
-                    <div class="field">
+                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações Pessoais</div>
+                    <div class="flex flex-col gap-2">
                         <label for="nome">Nome</label>
                         <input [(ngModel)]="nome" pInputText id="nome" type="text" placeholder="Nome" fluid />
                     </div>
-                    <div class="field">
+                    <div class="flex flex-col gap-2">
                         <label for="email">E-mail</label>
                         <input [(ngModel)]="email" pInputText id="email" type="email" placeholder="E-mail" fluid />
                     </div>
@@ -65,18 +65,19 @@
                         <p-datepicker id="dataNascimento" [(ngModel)]="dataNascimento" required
                             [showButtonBar]="true" />
                     </div>
-                    <div class="field">
-                        <label for="password">Senha</label>
-                        <p-password [(ngModel)]="password" placeholder="Senha" fluid id="password" />
+                    <div class="flex flex-col gap-2">
+                        <label for="escSexo">Sexo</label>
+                        <p-select [options]="sexo" [(ngModel)]="selectedSexo" [checkmark]="true" optionLabel="EscSexo"
+                            [showClear]="true" placeholder="Selecione o Sexo" class="w-full md:w-56" />
                     </div>
-                    <div class="field">
-                        <label for="confirmarSenha">Confirmar Senha</label>
-                        <p-password [(ngModel)]="confirmarSenha" placeholder="Confirmar Senha" fluid
-                            id="confirmarSenha" />
+                    <div class="flex flex-col gap-2">
+                        <label for="cargo">Profissão</label>
+                        <input [(ngModel)]="cargo" pInputText id="cargo" type="text" placeholder="Profissão" fluid />
                     </div>
                 </div>
                 <div class="flex pt-6 justify-end mr-2">
-                    <p-button (onClick)="activateCallback(2)" label="Próximo" icon="pi pi-arrow-right" iconPos="right" />
+                    <p-button (onClick)="activateCallback(2)" label="Próximo" icon="pi pi-arrow-right"
+                        iconPos="right" />
                 </div>
             </ng-template>
         </p-step-panel>
@@ -87,12 +88,13 @@
                     <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações da Empresa/Endereço</div>
                     <div class="flex flex-col gap-2">
                         <label for="nomeEmpresa">Nome Empresa</label>
-                        <input pInputText id="nomeEmpresa" [(ngModel)]="nomeEmpresa" placeholder="Nome da Empresa" required />
+                        <input pInputText id="nomeEmpresa" [(ngModel)]="nomeEmpresa" placeholder="Nome da Empresa"
+                            required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="cnpj">CNPJ</label>
-                        <p-inputMask mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="cnpj" placeholder="00.000.000/0000-00"
-                            aria-describedby="CNPJ-help" required />
+                        <p-inputMask mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="cnpj"
+                            placeholder="00.000.000/0000-00" aria-describedby="CNPJ-help" required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="cep">CEP</label>
@@ -113,9 +115,10 @@
                     </div>
                 </div>
                 <div class="flex pt-6 justify-between">
-                    <p-button (onClick)="activateCallback(1)" label="Back" severity="secondary"
+                    <p-button (onClick)="activateCallback(1)" label="Voltar" severity="secondary"
                         icon="pi pi-arrow-left" />
-                    <p-button (onClick)="activateCallback(3)" label="Next" icon="pi pi-arrow-right" iconPos="right" />
+                    <p-button (onClick)="activateCallback(3)" label="Próximo" icon="pi pi-arrow-right"
+                        iconPos="right" />
                 </div>
             </ng-template>
         </p-step-panel>
@@ -123,14 +126,29 @@
         <p-step-panel [value]="3">
             <ng-template #content let-activateCallback="activateCallback">
                 <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
-                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Conta criada com sucesso!</div>
+                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações de Perfil/Login</div>
                     <div class="text-center">
-                        <img alt="logo" src="https://primefaces.org/cdn/primeng/images/stepper/content.svg" />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="usuario">Usuário</label>
+                        <input [(ngModel)]="usuario" pInputText id="usuario" type="text" placeholder="Usuário" fluid />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="password">Senha</label>
+                        <p-password [(ngModel)]="password" placeholder="Senha" fluid id="password" />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="confirmarSenha">Confirmar Senha</label>
+                        <p-password [(ngModel)]="confirmarSenha" placeholder="Confirmar Senha" fluid
+                            id="confirmarSenha" />
                     </div>
                 </div>
-                <div class="flex pt-6 justify-start">
-                    <p-button (onClick)="activateCallback(2)" label="Back" severity="secondary"
+
+                <div class="flex pt-6 justify-between">
+                    <p-button (onClick)="activateCallback(2)" label="Voltar" severity="secondary"
                         icon="pi pi-arrow-left" />
+                    <p-button (onClick)="activateCallback(3)" label="Cadastrar" icon="pi pi-arrow-right"
+                        iconPos="right" />
                 </div>
             </ng-template>
         </p-step-panel>

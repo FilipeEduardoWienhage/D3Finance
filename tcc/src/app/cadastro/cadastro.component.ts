@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
+import { Select } from 'primeng/select';
 
 
 interface Endereco {
@@ -17,8 +18,19 @@ interface Endereco {
   bairro: string,
 }
 
+interface Sexo {
+  name: string;
+  code: string;
+}
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
+
 @Component({
   selector: 'app-cadastro',
+  standalone: true,
   imports: [
     FooterComponent,
     InputTextModule,
@@ -30,7 +42,8 @@ interface Endereco {
     StepperModule,
     CommonModule,
     InputText,
-    NavBarComponent
+    NavBarComponent,
+    Select,
   ],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css'
@@ -62,12 +75,15 @@ export class CadastroComponent {
 
   cnpj: string = '';
 
+  usuario: string = '';
+
+  cargo: string = '';
+
   endereco: Endereco = {
     uf: '',
     localidade: '',
     bairro: '',
   };
-
 
   buscarEndereco(): void {
     let cep = this.cep.replace("-", "").replace("_", "").replace(".", "");
@@ -101,5 +117,18 @@ export class CadastroComponent {
       alert('Digite um CEP válido (8 números)!');
     }
   }
+
+  sexo: Sexo[] | undefined;
+
+    selectedSexo: Sexo | undefined;
+
+    ngOnInit() {
+        this.sexo = [
+            { name: 'Masculino', code: 'MASC' },
+            { name: 'Feminino', code: 'FEM' },
+            { name: 'Outro', code: 'NA' },
+        ];
+    }
+
 }
 
