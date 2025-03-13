@@ -87,14 +87,14 @@
                 <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
                     <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações da Empresa/Endereço</div>
                     <div class="flex flex-col gap-2">
-                        <label for="nomeEmpresa">Nome Empresa</label>
-                        <input pInputText id="nomeEmpresa" [(ngModel)]="nomeEmpresa" placeholder="Nome da Empresa"
-                            required />
-                    </div>
-                    <div class="flex flex-col gap-2">
                         <label for="cnpj">CNPJ</label>
                         <p-inputMask mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="cnpj"
                             placeholder="00.000.000/0000-00" aria-describedby="CNPJ-help" required />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="nomeEmpresa">Razão Social</label>
+                        <input pInputText id="nomeEmpresa" [(ngModel)]="nomeEmpresa" placeholder="Nome da Empresa"
+                            required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="cep">CEP</label>
