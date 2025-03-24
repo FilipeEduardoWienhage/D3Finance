@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { InputText, InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
@@ -10,23 +10,7 @@ import { StepperModule } from 'primeng/stepper';
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { Select } from 'primeng/select';
-
-
-interface Endereco {
-  uf: string,
-  localidade: string,
-  bairro: string,
-}
-
-interface Sexo {
-  name: string;
-  code: string;
-}
-
-interface UploadEvent {
-  originalEvent: Event;
-  files: File[];
-}
+import { Sexo, Usuario } from '../models/cadastro';
 
 @Component({
   selector: 'app-cadastro',
@@ -41,52 +25,27 @@ interface UploadEvent {
     ButtonModule,
     StepperModule,
     CommonModule,
-    InputText,
     NavBarComponent,
     Select,
   ],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css'
 })
-export class CadastroComponent {
+export class CadastroComponent implements OnInit {
   activeStep: number = 1;
+  usuario: Usuario = new Usuario();
+  sexoOptions: Sexo[] = [];
 
-  nome: string = "";
-
-  email: string = "";
-
-  password: string = "";
-
-  confirmarSenha: string = '';
-
-  cpf: string = ""
-
-  cep: string = '';
-
-  dataNascimento: Date[] | undefined;
-
-  estado: string = '';
-
-  cidade: string = '';
-
-  bairro: string = '';
-
-  nomeEmpresa: string = '';
-
-  cnpj: string = '';
-
-  usuario: string = '';
-
-  cargo: string = '';
-
-  endereco: Endereco = {
-    uf: '',
-    localidade: '',
-    bairro: '',
-  };
+  ngOnInit() {
+    this.sexoOptions = [
+      { name: 'Masculino', code: 'MASC' },
+      { name: 'Feminino', code: 'FEM' },
+      { name: 'Outro', code: 'NA' },
+    ];
+  }
 
   buscarEndereco(): void {
-    let cep = this.cep.replace("-", "").replace("_", "").replace(".", "");
+    let cep = this.usuario.cep.replace(/[-_.]/g, '');
 
     if (cep.length === 8) {
       const viaCepUrl = `https://viacep.com.br/ws/${cep}/json/`;
@@ -100,10 +59,11 @@ export class CadastroComponent {
         })
         .then((data) => {
           if (!data.erro) {
-            // Atualiza as propriedades vinculadas aos inputs
-            this.estado = data.uf;
-            this.cidade = data.localidade;
-            this.bairro = data.bairro;
+            this.usuario.endereco = {
+              uf: data.uf,
+              localidade: data.localidade,
+              bairro: data.bairro,
+            };
             console.log('Endereço encontrado:', data);
           } else {
             alert('CEP não encontrado!');
@@ -117,18 +77,5 @@ export class CadastroComponent {
       alert('Digite um CEP válido (8 números)!');
     }
   }
-
-  sexo: Sexo[] | undefined;
-
-    selectedSexo: Sexo | undefined;
-
-    ngOnInit() {
-        this.sexo = [
-            { name: 'Masculino', code: 'MASC' },
-            { name: 'Feminino', code: 'FEM' },
-            { name: 'Outro', code: 'NA' },
-        ];
-    }
-
 }
 
