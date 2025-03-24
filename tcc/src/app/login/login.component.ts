@@ -4,6 +4,9 @@ import { FooterComponent } from '../footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
+import { AppComponent } from '../app.component';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 
 
 @Component({
@@ -14,6 +17,9 @@ import { InputTextModule } from 'primeng/inputtext';
     FormsModule,
     PasswordModule,
     InputTextModule,
+    AppComponent,
+    ButtonModule,
+    DialogModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -21,4 +27,11 @@ import { InputTextModule } from 'primeng/inputtext';
 export class LoginComponent {
   login: string = '';
   password: string = '';
+
+  visible: boolean = false;
+
+    abrirModal() {
+        this.visible = true;
+    }
 }
+

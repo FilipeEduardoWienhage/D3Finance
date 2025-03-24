@@ -13,9 +13,21 @@
             </div>
             <div class="remember-forgot">
                 <label><input type="checkbox">Lembrar Senha</label>
-                <a href="#">Esqueceu a senha?</a>
+                <a href="#"  (click)="abrirModal()">Esqueceu a senha?</a>
             </div>
-
+                <!-- MODAL -->
+                <p-dialog header="Recupere sua senha" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+                    <span class="p-text-secondary block mb-8">Insira seu e-mail no campo abaixo</span>
+                    <div class="flex items-center gap-4 mb-8">
+                        <label for="email" class="email">Email</label>
+                        <input pInputText id="email" class="flex-auto" autocomplete="off" placeholder="Digite seu email" />
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <p-button label="Cancelar" severity="secondary" (click)="visible = false" />
+                        <p-button label="Enviar" (click)="visible = false" />
+                    </div>
+                </p-dialog>
+                <!-- FIM MODAL -->
             <button type="submit" class="btn">Login</button>
 
             <div class="register-link">

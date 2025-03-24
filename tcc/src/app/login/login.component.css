@@ -106,3 +106,8 @@ label {
   color: black;
   font-size: 20px;
 }
+
+.email {
+  background-color: #18181B;
+  color: white;
+}
