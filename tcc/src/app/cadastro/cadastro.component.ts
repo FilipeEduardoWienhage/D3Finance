@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
-import { InputText, InputTextModule } from 'primeng/inputtext';
+import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { InputMask } from 'primeng/inputmask';
 import { DatePicker } from 'primeng/datepicker';
@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { Select } from 'primeng/select';
 import { Sexo, Usuario } from '../models/cadastro';
-
 
 @Component({
   selector: 'app-cadastro',
