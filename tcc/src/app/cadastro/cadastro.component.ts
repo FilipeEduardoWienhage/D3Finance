@@ -12,6 +12,7 @@ import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { Select } from 'primeng/select';
 import { Sexo, Usuario } from '../models/cadastro';
 
+
 @Component({
   selector: 'app-cadastro',
   standalone: true,
