@@ -15,6 +15,7 @@ APAGAR_USUARIO = "/v1/usuarios/{usuario_id}"  # Endpoint para deletar um usuári
 OBTER_POR_ID_USUARIO = "/v1/usuarios/{usuario_id}"  # Endpoint para obter um usuário pelo seu ID
 
 
+
 # Função de dependência para obter uma sessão do banco de dados
 def get_db():
     db = SessionLocal()  # Cria uma nova sessão do banco de dados
@@ -29,7 +30,7 @@ def get_db():
     path=LISTA_USUARIOS, response_model=List[UserResponse], tags=[Tag.Clientes.name]
 )  # Resposta será uma lista de objetos UserResponse
 def get_users(db: Session = Depends(get_db)):  # Recebe a sessão do banco como dependência
-    users = db.query(Usuario).all()  # Consulta todos os usuários no banco de dados
+    users = db.query(Usuario).all()  # Consulta todos os usuários no banco de da
     # Retorna a lista de usuários convertidos para o formato UserResponse
     return [UserResponse(id=user.id, name=user.name, email=user.email) for user in users]
 
@@ -86,6 +87,7 @@ def update_user(
 )  # Esse endpoint não retorna nenhum dado, apenas confirma a exclusão
 def delete_user(user_id: int, db: Session = Depends(get_db)):  # Recebe o ID do usuário e a sessão do banco
     user = db.query(Usuario).filter(Usuario.id == user_id).first()  # Consulta o usuário pelo ID
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")  # Lança exceção se o usuário não for encontrado
     db.delete(user)  # Exclui o usuário da sessão do banco de dados
