@@ -1,0 +1,50 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# Virtualenv
+env/
+venv/
+ENV/
+.venv/
+venv.bak/
+env.bak/
+
+# IDEs e editores (Exemplos comuns de IDEs)
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# PyCharm
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Python dotenv (não deve ser enviado ao repositório)
+.env
+*.env
+
+# Database
+*.sqlite3
+*.db
+
+# MySQL/MariaDB
+*.sql
+
+# Log files
+*.log
+
+# Local configuration files
+*.local
