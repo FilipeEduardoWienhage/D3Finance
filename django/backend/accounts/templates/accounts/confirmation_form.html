@@ -1,9 +1,0 @@
-<h1>Confirme seu E-mail</h1>
-
-<p>Por favor, insira seu endereço de e-mail para que possamos enviar um link de confirmação.</p>
-
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enviar Link de Confirmação</button>
-</form>
