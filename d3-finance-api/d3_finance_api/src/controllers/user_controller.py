@@ -3,16 +3,16 @@ from fastapi import HTTPException, Depends, status, Response
 from sqlalchemy.orm import Session
 from src.app import router
 from src.database import SessionLocal
-from src.models import User
+from src.models import Usuario
 from src.controllers.tags import Tag
 from src.schemas import UserCreate, UserUpdate, UserResponse
 
 # Definição das rotas de endpoints
 LISTA_USUARIOS = "/v1/usuarios"  # Endpoint para listar todos os usuários
 CADASTRO_USUARIO = "/v1/usuarios"  # Endpoint para cadastrar um novo usuário
-ATUALIZAR_USUARIO = "/v1/usuarios/{user_id}"  # Endpoint para atualizar um usuário existente
-APAGAR_USUARIO = "/v1/usuarios/{user_id}"  # Endpoint para deletar um usuário
-OBTER_POR_ID_USUARIO = "/v1/usuarios/{user_id}"  # Endpoint para obter um usuário pelo seu ID
+ATUALIZAR_USUARIO = "/v1/usuarios/{usuario_id}"  # Endpoint para atualizar um usuário existente
+APAGAR_USUARIO = "/v1/usuarios/{usuario_id}"  # Endpoint para deletar um usuário
+OBTER_POR_ID_USUARIO = "/v1/usuarios/{usuario_id}"  # Endpoint para obter um usuário pelo seu ID
 
 
 # Função de dependência para obter uma sessão do banco de dados
@@ -29,7 +29,7 @@ def get_db():
     path=LISTA_USUARIOS, response_model=List[UserResponse], tags=[Tag.Clientes.name]
 )  # Resposta será uma lista de objetos UserResponse
 def get_users(db: Session = Depends(get_db)):  # Recebe a sessão do banco como dependência
-    users = db.query(User).all()  # Consulta todos os usuários no banco de dados
+    users = db.query(Usuario).all()  # Consulta todos os usuários no banco de dados
     # Retorna a lista de usuários convertidos para o formato UserResponse
     return [UserResponse(id=user.id, name=user.name, email=user.email) for user in users]
 
@@ -39,7 +39,7 @@ def get_users(db: Session = Depends(get_db)):  # Recebe a sessão do banco como 
     path=OBTER_POR_ID_USUARIO, response_model=UserResponse, tags=[Tag.Clientes.name]
 )  # Resposta será um único objeto UserResponse
 def get_user(user_id: int, db: Session = Depends(get_db)):  # Recebe o ID do usuário e a sessão do banco
-    user = db.query(User).filter(User.id == user_id).first()  # Consulta o usuário pelo ID
+    user = db.query(Usuario).filter(Usuario.id == user_id).first()  # Consulta o usuário pelo ID
     if not user:
         raise HTTPException(status_code=404, detail="User not found")  # Lança exceção se o usuário não for encontrado
     # Retorna o usuário no formato UserResponse
@@ -51,7 +51,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):  # Recebe o ID do usu
     path=CADASTRO_USUARIO, response_model=UserResponse, tags=[Tag.Clientes.name]
 )  # A resposta será um único objeto UserResponse
 def create_user(user: UserCreate, db: Session = Depends(get_db)):  # Recebe o objeto UserCreate e a sessão do banco
-    db_user = User(name=user.name, email=user.email)  # Cria um novo usuário com os dados recebidos
+    db_user = Usuario(name=user.name, email=user.email)  # Cria um novo usuário com os dados recebidos
     db.add(db_user)  # Adiciona o usuário na sessão
     db.commit()  # Realiza a transação no banco de dados
     db.refresh(db_user)  # Atualiza o objeto db_user com os dados do banco (incluindo o ID)
@@ -66,7 +66,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):  # Recebe o ob
 def update_user(
     user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)
 ):  # Recebe o ID e os dados para atualização
-    user = db.query(User).filter(User.id == user_id).first()  # Consulta o usuário pelo ID
+    user = db.query(Usuario).filter(Usuario.id == user_id).first()  # Consulta o usuário pelo ID
     if not user:
         raise HTTPException(status_code=404, detail="User not found")  # Lança exceção se o usuário não for encontrado
     # Atualiza os dados do usuário com as informações recebidas
@@ -85,7 +85,7 @@ def update_user(
     path=APAGAR_USUARIO, tags=[Tag.Clientes.name]
 )  # Esse endpoint não retorna nenhum dado, apenas confirma a exclusão
 def delete_user(user_id: int, db: Session = Depends(get_db)):  # Recebe o ID do usuário e a sessão do banco
-    user = db.query(User).filter(User.id == user_id).first()  # Consulta o usuário pelo ID
+    user = db.query(Usuario).filter(Usuario.id == user_id).first()  # Consulta o usuário pelo ID
     if not user:
         raise HTTPException(status_code=404, detail="User not found")  # Lança exceção se o usuário não for encontrado
     db.delete(user)  # Exclui o usuário da sessão do banco de dados
