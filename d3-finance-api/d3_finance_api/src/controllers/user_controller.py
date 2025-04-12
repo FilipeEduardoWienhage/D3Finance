@@ -5,7 +5,7 @@ from src.app import router
 from src.database import SessionLocal
 from src.models import Usuario
 from src.controllers.tags import Tag
-from src.schemas import UserCreate, UserUpdate, UserResponse
+from src.schemas import UsuarioCreate, UsuarioUpdate, UsuarioResponse
 
 # Endpoints
 LISTA_USUARIOS = "/v1/usuarios"
@@ -28,12 +28,12 @@ def get_db():
 
 # GET - Listar todos os usuários
 @router.get(
-    path=LISTA_USUARIOS, response_model=List[UserResponse], tags=[Tag.Clientes.name]
-
+    path=LISTA_USUARIOS, response_model=List[UsuarioResponse], tags=[Tag.Clientes.name]
 )
 def get_users(db: Session = Depends(get_db)):
     users = db.query(Usuario).all()
-    return [UserResponse(
+    return [UsuarioResponse(
+
         id=user.id,
         name=user.name,
         email=user.email,
@@ -52,15 +52,15 @@ def get_users(db: Session = Depends(get_db)):
 
 # GET - Obter usuário por ID
 @router.get(
-    path=OBTER_POR_ID_USUARIO, response_model=UserResponse, tags=[Tag.Clientes.name]
-
+    path=OBTER_POR_ID_USUARIO, response_model=UsuarioResponse, tags=[Tag.Clientes.name]
 )
 def get_user(usuario_id: int, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.id == usuario_id).first()
 
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    return UserResponse(
+
+    return UsuarioResponse(
         id=user.id,
         name=user.name,
         email=user.email,
@@ -79,10 +79,11 @@ def get_user(usuario_id: int, db: Session = Depends(get_db)):
 
 # POST - Criar usuário
 @router.post(
-    path=CADASTRO_USUARIO, response_model=UserResponse, tags=[Tag.Clientes.name]
 
+    path=CADASTRO_USUARIO, response_model=UsuarioResponse, tags=[Tag.Clientes.name]
 )
-def create_user(usuario: UserCreate, db: Session = Depends(get_db)):
+def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
+
     db_user = Usuario(
         name=usuario.name,
         email=usuario.email,
@@ -101,7 +102,9 @@ def create_user(usuario: UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return UserResponse(
+
+    return UsuarioResponse(
+
         id=db_user.id,
         name=db_user.name,
         email=db_user.email,
@@ -121,9 +124,11 @@ def create_user(usuario: UserCreate, db: Session = Depends(get_db)):
 
 # PUT - Atualizar usuário
 @router.put(
-    path=ATUALIZAR_USUARIO, response_model=UserResponse, tags=[Tag.Clientes.name]
+
+    path=ATUALIZAR_USUARIO, response_model=UsuarioResponse, tags=[Tag.Clientes.name]
 )
-def update_user(usuario_id: int, usuario_update: UserUpdate, db: Session = Depends(get_db)):
+def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = Depends(get_db)):
+
     user = db.query(Usuario).filter(Usuario.id == usuario_id).first()
 
     if not user:
@@ -136,7 +141,9 @@ def update_user(usuario_id: int, usuario_update: UserUpdate, db: Session = Depen
 
     db.commit()
     db.refresh(user)
-    return UserResponse(
+
+    return UsuarioResponse(
+
         id=user.id,
         name=user.name,
         email=user.email,
