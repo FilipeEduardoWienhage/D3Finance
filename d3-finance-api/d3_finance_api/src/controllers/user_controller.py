@@ -15,6 +15,7 @@ APAGAR_USUARIO = "/v1/usuarios/{usuario_id}"
 OBTER_POR_ID_USUARIO = "/v1/usuarios/{usuario_id}"
 
 
+
 # Dependência para injeção de sessão do banco
 def get_db():
     db = SessionLocal()
