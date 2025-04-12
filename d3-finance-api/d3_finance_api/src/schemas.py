@@ -1,29 +1,50 @@
 from typing import Optional
+from datetime import date
 from pydantic.dataclasses import dataclass
 
 
-# Classe base para os dados do usuário, usada como estrutura comum para criação e resposta de usuários
+# Base comum para criação e resposta de usuários
 @dataclass
-class UserBase:
-    name: str  # Nome do usuário, obrigatório
-    email: str  # Email do usuário, obrigatório
+class UsuarioBase:
+    name: str
+    email: str
+    cpf: str
+    data_nascimento: date
+    sexo: str
+    profissao: str
+    cnpj: str
+    razao_social: str
+    cep: str
+    estado: str
+    cidade: str
+    bairro: str
 
 
-# Classe usada para criar um novo usuário. Herda de UserBase e pode ser expandida se necessário no futuro.
+# Para criação de usuário, adiciona o campo de senha
 @dataclass
-class UserCreate(UserBase):
-    pass  # A classe herda todos os campos de UserBase sem adicionar novos ou modificar os existentes
+class UsuarioCreate(UsuarioBase):
+    senha: str
 
 
-# Classe usada para atualizar um usuário existente. O nome e o email são opcionais, permitindo que um ou
-# ambos os campos possam ser atualizados.
+# Para atualização, todos os campos são opcionais
 @dataclass
-class UserUpdate:
-    name: Optional[str] = None  # Nome do usuário a ser atualizado, opcional
-    email: Optional[str] = None  # Email do usuário a ser atualizado, opcional
+class UsuarioUpdate:
+    name: Optional[str] = None
+    email: Optional[str] = None
+    cpf: Optional[str] = None
+    data_nascimento: Optional[date] = None
+    sexo: Optional[str] = None
+    profissao: Optional[str] = None
+    cnpj: Optional[str] = None
+    razao_social: Optional[str] = None
+    cep: Optional[str] = None
+    estado: Optional[str] = None
+    cidade: Optional[str] = None
+    bairro: Optional[str] = None
+    senha: Optional[str] = None
 
 
-# Classe usada para retornar os dados do usuário na resposta da API, incluindo o ID gerado pelo banco de dados.
+# Para resposta da API, inclui o ID
 @dataclass
-class UserResponse(UserBase):
-    id: int  # ID único do usuário, obrigatório, que será retornado na resposta
+class UsuarioResponse(UsuarioBase):
+    id: int
