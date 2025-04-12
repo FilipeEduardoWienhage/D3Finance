@@ -18,3 +18,4 @@ class Usuario(Base):
     cidade = Column(String(30), nullable=False)
     bairro = Column(String(30), nullable=False)
     senha = Column(String(30), nullable=False)
+
