@@ -16,6 +16,7 @@ OBTER_POR_ID_USUARIO = "/v1/usuarios/{usuario_id}"
 
 
 
+
 # Dependência para injeção de sessão do banco
 def get_db():
     db = SessionLocal()
@@ -54,6 +55,7 @@ def get_users(db: Session = Depends(get_db)):
 )
 def get_user(usuario_id: int, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     return UsuarioResponse(
@@ -113,12 +115,14 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     )
 
 
+
 # PUT - Atualizar usuário
 @router.put(
     path=ATUALIZAR_USUARIO, response_model=UsuarioResponse, tags=[Tag.Clientes.name]
 )
 def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
@@ -152,6 +156,7 @@ def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = De
 )
 def delete_user(usuario_id: int, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     db.delete(user)
