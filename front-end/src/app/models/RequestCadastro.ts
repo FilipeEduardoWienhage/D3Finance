@@ -8,8 +8,9 @@
 //     name: string;
 //     code: string;
 //   }
-  
-export class RequestCadastro {
+
+
+export class UsuarioCadastroRequestModel {
   nome: string = "";
   email: string = "";
   password: string = "";
@@ -24,10 +25,5 @@ export class RequestCadastro {
   cnpj: string = "";
   usuario: string = "";
   cargo: string = "";
-  endereco: { uf: string; localidade: string; bairro: string } = {
-    uf: "",
-    localidade: "",
-    bairro: ""
-  };
   selectedSexo: string = '';
 }

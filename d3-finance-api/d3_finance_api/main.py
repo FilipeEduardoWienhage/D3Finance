@@ -1,5 +1,5 @@
 import uvicorn
-from .app import app
+from src.app import app
 from src.database import engine, Base
 from src.controllers import user_controller
 

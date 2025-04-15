@@ -10,7 +10,8 @@ import { StepperModule } from 'primeng/stepper';
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { Select } from 'primeng/select';
-import { RequestCadastro } from '../../models/RequestCadastro';
+import { UsuarioService } from '../../service/usuario.service';
+import { UsuarioCadastroRequestModel } from '../../models/RequestCadastro';
 
 @Component({
   selector: 'app-cadastro',
@@ -32,17 +33,23 @@ import { RequestCadastro } from '../../models/RequestCadastro';
   styleUrl: './cadastro.component.css'
 })
 export class CadastroComponent implements OnInit {
-  public requestCadastro!: RequestCadastro;
+  public requestCadastro!: UsuarioCadastroRequestModel;
 
-  constructor() {}
+  constructor(private usuarioService: UsuarioService) {}
   
   ngOnInit(): void {
-    this.requestCadastro = new RequestCadastro();
+    this.requestCadastro = new UsuarioCadastroRequestModel();
   }
 
   public doCadastro(): void {
     console.log(this.requestCadastro);
-    alert('Cadastro realizado com sucesso!');
+    this.usuarioService.cadastrarUsuario(this.requestCadastro).subscribe({
+      next: () => alert("Deu boa!"),
+      error: erro => {
+        console.error(erro)
+        alert("Erro ao carregar os jogos");
+      }
+    });
   }
 
   public activeStep: number = 0;
@@ -68,11 +75,9 @@ export class CadastroComponent implements OnInit {
         })
         .then((data) => {
           if (!data.erro) {
-            this.requestCadastro.endereco = {
-              uf: data.uf,
-              localidade: data.localidade,
-              bairro: data.bairro,
-            };
+            this.requestCadastro.estado= data.uf;
+            this.requestCadastro.cidade= data.localidade;
+            this.requestCadastro.bairro= data.bairro;
             console.log('Endereço encontrado:', data);
           } else {
             alert('CEP não encontrado!');
