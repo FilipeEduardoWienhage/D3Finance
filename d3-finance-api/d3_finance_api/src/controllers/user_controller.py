@@ -28,7 +28,7 @@ def get_db():
 
 # GET - Listar todos os usuários
 @router.get(
-    path=LISTA_USUARIOS, response_model=List[UsuarioResponse], tags=[Tag.Clientes.name]
+    path=LISTA_USUARIOS, response_model=List[UsuarioResponse], tags=[Tag.Usuarios.name]
 )
 def get_users(db: Session = Depends(get_db)):
     users = db.query(Usuario).all()
@@ -52,7 +52,7 @@ def get_users(db: Session = Depends(get_db)):
 
 # GET - Obter usuário por ID
 @router.get(
-    path=OBTER_POR_ID_USUARIO, response_model=UsuarioResponse, tags=[Tag.Clientes.name]
+    path=OBTER_POR_ID_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
 def get_user(usuario_id: int, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.id == usuario_id).first()
@@ -80,7 +80,7 @@ def get_user(usuario_id: int, db: Session = Depends(get_db)):
 # POST - Criar usuário
 @router.post(
 
-    path=CADASTRO_USUARIO, response_model=UsuarioResponse, tags=[Tag.Clientes.name]
+    path=CADASTRO_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
 def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
 
@@ -125,7 +125,7 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
 # PUT - Atualizar usuário
 @router.put(
 
-    path=ATUALIZAR_USUARIO, response_model=UsuarioResponse, tags=[Tag.Clientes.name]
+    path=ATUALIZAR_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
 def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = Depends(get_db)):
 
@@ -162,7 +162,7 @@ def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = De
 
 # DELETE - Apagar usuário
 @router.delete(
-    path=APAGAR_USUARIO, tags=[Tag.Clientes.name]
+    path=APAGAR_USUARIO, tags=[Tag.Usuarios.name]
 )
 def delete_user(usuario_id: int, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.id == usuario_id).first()
