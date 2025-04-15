@@ -14,14 +14,14 @@
   flex-direction: column;
   align-items: center;
   background-color: white;
-  color: black;
+  color: rgb(0, 0, 0);
   padding: 30px;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   padding: 20px;
 }
 
@@ -30,23 +30,27 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: black;
+  background-color: rgb(0, 0, 0);
 }
 
 .input-box input {
   width: 100%;
-  height: 100%;
-  background: white;
+  height: auto;
+  background: rgb(255, 255, 255);
   outline: none;
   border: 2px solid black;
-  border-radius: 15px;
+  border-radius: 8px;
   font-size: 16px;
   color: black;
-  padding: 20px 45px 20px 20px;
+  padding: 16px;
+}
+
+.input-box input:last-child {
+  margin-bottom: 0;
 }
 
 .input-box {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   padding: 40px;
 }
 
@@ -97,8 +101,8 @@ form {
 
 .btn:hover {
   border: 1px solid black;
-  background-color: red;
-  color: black;
+  background-color: rgb(31, 31, 31);
+  color: rgb(255, 255, 255);
 }
 
 label {
@@ -111,3 +115,41 @@ label {
   background-color: #18181B;
   color: white;
 }
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #000000;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #dfdfdf; 
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✔';
+  color: black;
+  font-size: 14px;
+  position: absolute;
+  left: 3px;
+  top: -1px;
+}
+
+label {
+  font-family: sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+

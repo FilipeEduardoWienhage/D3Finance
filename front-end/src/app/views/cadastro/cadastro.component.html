@@ -49,30 +49,30 @@
                     <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações Pessoais</div>
                     <div class="flex flex-col gap-2">
                         <label for="nome">Nome</label>
-                        <input [(ngModel)]="usuario.nome" pInputText id="nome" type="text" placeholder="Nome" fluid />
+                        <input [(ngModel)]="requestCadastro.nome" pInputText id="nome" type="text" placeholder="Nome" fluid />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="email">E-mail</label>
-                        <input [(ngModel)]="usuario.email" pInputText id="email" type="email" placeholder="E-mail" fluid />
+                        <input [(ngModel)]="requestCadastro.email" pInputText id="email" type="email" placeholder="E-mail" fluid />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="cpf">CPF</label>
-                        <p-inputMask mask="999.999.999-99" id="cpf" [(ngModel)]="usuario.cpf" placeholder="000.000.000-00"
+                        <p-inputMask mask="999.999.999-99" id="cpf" [(ngModel)]="requestCadastro.cpf" placeholder="000.000.000-00"
                             aria-describedby="CPF-help" required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="dataNascimento">Data de Nascimento</label>
-                        <p-datepicker id="dataNascimento" [(ngModel)]="usuario.dataNascimento" required
+                        <p-datepicker id="dataNascimento" [(ngModel)]="requestCadastro.dataNascimento" required
                             [showButtonBar]="true" />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="escSexo">Sexo</label>
-                        <p-select [options]="sexoOptions" [(ngModel)]="usuario.selectedSexo" [checkmark]="true" optionLabel="EscSexo"
+                        <p-select [options]="sexoOptions" [(ngModel)]="requestCadastro.selectedSexo" [checkmark]="true" optionLabel="EscSexo"
                             [showClear]="true" placeholder="Selecione o Sexo" class="w-full md:w-56" />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="cargo">Profissão</label>
-                        <input [(ngModel)]="usuario.cargo" pInputText id="cargo" type="text" placeholder="Profissão" fluid />
+                        <input [(ngModel)]="requestCadastro.cargo" pInputText id="cargo" type="text" placeholder="Profissão" fluid />
                     </div>
                 </div>
                 <div class="flex pt-6 justify-end mr-2">
@@ -88,30 +88,30 @@
                     <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações da Empresa/Endereço</div>
                     <div class="flex flex-col gap-2">
                         <label for="cnpj">CNPJ</label>
-                        <p-inputMask mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="usuario.cnpj"
+                        <p-inputMask mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="requestCadastro.cnpj"
                             placeholder="00.000.000/0000-00" aria-describedby="CNPJ-help" required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="nomeEmpresa">Razão Social</label>
-                        <input pInputText id="nomeEmpresa" [(ngModel)]="usuario.nomeEmpresa" placeholder="Nome da Empresa"
+                        <input pInputText id="nomeEmpresa" [(ngModel)]="requestCadastro.nomeEmpresa" placeholder="Nome da Empresa"
                             required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="cep">CEP</label>
-                        <p-inputMask mask="99.999-999" id="cep" [(ngModel)]="usuario.cep" placeholder="00.000-000"
+                        <p-inputMask mask="99.999-999" id="cep" [(ngModel)]="requestCadastro.cep" placeholder="00.000-000"
                             aria-describedby="CEP-help" required (onBlur)="buscarEndereco()" />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="estado">Estado/UF</label>
-                        <input pInputText id="estado" [(ngModel)]="usuario.endereco.uf" placeholder="Estado" required />
+                        <input pInputText id="estado" [(ngModel)]="requestCadastro.endereco.uf" placeholder="Estado" required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="cidade">Cidade</label>
-                        <input pInputText id="cidade" [(ngModel)]="usuario.endereco.localidade" placeholder="Cidade" required />
+                        <input pInputText id="cidade" [(ngModel)]="requestCadastro.endereco.localidade" placeholder="Cidade" required />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="bairro">Bairro</label>
-                        <input pInputText id="bairro" [(ngModel)]="usuario.endereco.bairro" placeholder="Bairro" required />
+                        <input pInputText id="bairro" [(ngModel)]="requestCadastro.endereco.bairro" placeholder="Bairro" required />
                     </div>
                 </div>
                 <div class="flex pt-6 justify-between">
@@ -131,15 +131,15 @@
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="usuario">Usuário</label>
-                        <input [(ngModel)]="usuario" pInputText id="usuario" type="text" placeholder="Usuário" fluid />
+                        <input [(ngModel)]="requestCadastro" pInputText id="usuario" type="text" placeholder="Usuário" fluid />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="password">Senha</label>
-                        <p-password [(ngModel)]="usuario.password" placeholder="Senha" fluid id="password" />
+                        <p-password [(ngModel)]="requestCadastro.password" placeholder="Senha" fluid id="password" />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="confirmarSenha">Confirmar Senha</label>
-                        <p-password [(ngModel)]="usuario.confirmarSenha" placeholder="Confirmar Senha" fluid
+                        <p-password [(ngModel)]="requestCadastro.confirmarSenha" placeholder="Confirmar Senha" fluid
                             id="confirmarSenha" />
                     </div>
                 </div>
@@ -147,7 +147,7 @@
                 <div class="flex pt-6 justify-between">
                     <p-button (onClick)="activateCallback(2)" label="Voltar" severity="secondary"
                         icon="pi pi-arrow-left" />
-                    <p-button (onClick)="activateCallback(3)" label="Cadastrar" icon="pi pi-arrow-right"
+                    <p-button (click)="doCadastro()" (onClick)="activateCallback(3)" label="Cadastrar" icon="pi pi-arrow-right"
                         iconPos="right" />
                 </div>
             </ng-template>
