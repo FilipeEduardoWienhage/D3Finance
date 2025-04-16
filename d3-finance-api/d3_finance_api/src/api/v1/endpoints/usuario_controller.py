@@ -2,10 +2,10 @@ from typing import List
 from fastapi import HTTPException, Depends, status, Response
 from sqlalchemy.orm import Session
 from src.app import router
-from src.database import SessionLocal
-from src.models import Usuario
-from src.controllers.tags import Tag
-from src.schemas import UsuarioCreate, UsuarioUpdate, UsuarioResponse
+from src.database.database import SessionLocal
+from src.database.models import Usuario
+from src.api.tags import Tag
+from src.schemas.usuario_schemas import UsuarioCreate, UsuarioUpdate, UsuarioResponse
 
 # Endpoints
 LISTA_USUARIOS = "/v1/usuarios"
@@ -13,8 +13,6 @@ CADASTRO_USUARIO = "/v1/usuarios"
 ATUALIZAR_USUARIO = "/v1/usuarios/{usuario_id}"
 APAGAR_USUARIO = "/v1/usuarios/{usuario_id}"
 OBTER_POR_ID_USUARIO = "/v1/usuarios/{usuario_id}"
-
-
 
 
 # Dependência para injeção de sessão do banco
