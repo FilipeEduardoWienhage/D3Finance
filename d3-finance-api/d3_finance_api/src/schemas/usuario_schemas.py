@@ -18,6 +18,7 @@ class UsuarioBase:
     estado: str
     cidade: str
     bairro: str
+    usuario: str
 
 
 # Para criação de usuário, adiciona o campo de senha
@@ -41,6 +42,7 @@ class UsuarioUpdate:
     estado: Optional[str] = None
     cidade: Optional[str] = None
     bairro: Optional[str] = None
+    usuario: Optional[str] = None
     senha: Optional[str] = None
 
 

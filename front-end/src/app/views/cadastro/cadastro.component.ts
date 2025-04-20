@@ -44,10 +44,10 @@ export class CadastroComponent implements OnInit {
   public doCadastro(): void {
     console.log(this.requestCadastro);
     this.usuarioService.cadastrarUsuario(this.requestCadastro).subscribe({
-      next: () => alert("Deu boa!"),
+      next: () => alert("Cadastrado com sucesso!"),
       error: erro => {
         console.error(erro)
-        alert("Erro ao carregar os jogos");
+        alert("Erro ao efetuar o cadastro!");
       }
     });
   }

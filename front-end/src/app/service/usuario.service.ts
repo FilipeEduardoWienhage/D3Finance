@@ -28,6 +28,7 @@ export class UsuarioService {
       estado: usuario.estado.toLowerCase(),
       cidade: usuario.cidade,
       bairro: usuario.bairro,
+      usuario: usuario.usuario,
     };
     return this.http.post(this.apiUrl, payload);
   }
