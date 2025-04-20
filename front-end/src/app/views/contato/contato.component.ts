@@ -23,6 +23,5 @@ import { FooterComponent } from '../footer/footer.component';
 export class ContatoComponent {
  githubFilipe: string = 'https://github.com/FilipeEduardoWienhage';
  githubSpezia: string = 'https://github.com/LuisSpezia';
- githubLeonerds: string = 'https://github.com/Leonerds';
 }
 

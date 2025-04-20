@@ -95,49 +95,5 @@ export class CadastroComponent implements OnInit {
 
 }
 
-  // requestCadastro: Usuario = new Usuario();
-  // sexoOptions: Sexo[] = [];
-
-  // ngOnInit() {
-  //   this.sexoOptions = [
-  //     { name: 'Masculino', code: 'MASC' },
-  //     { name: 'Feminino', code: 'FEM' },
-  //     { name: 'Outro', code: 'NA' },
-  //   ];
-  // }
-
-  // buscarEndereco(): void {
-  //   let cep = this.usuario.cep.replace(/[-_.]/g, '');
-
-  //   if (cep.length === 8) {
-  //     const viaCepUrl = `https://viacep.com.br/ws/${cep}/json/`;
-
-  //     fetch(viaCepUrl)
-  //       .then((response) => {
-  //         if (!response.ok) {
-  //           throw new Error('Erro na resposta da API');
-  //         }
-  //         return response.json();
-  //       })
-  //       .then((data) => {
-  //         if (!data.erro) {
-  //           this.usuario.endereco = {
-  //             uf: data.uf,
-  //             localidade: data.localidade,
-  //             bairro: data.bairro,
-  //           };
-  //           console.log('Endereço encontrado:', data);
-  //         } else {
-  //           alert('CEP não encontrado!');
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error('Erro ao buscar o CEP:', error);
-  //         alert('Erro ao buscar o CEP!');
-  //       });
-  //   } else {
-  //     alert('Digite um CEP válido (8 números)!');
-  //   }
-  // }
 
 
