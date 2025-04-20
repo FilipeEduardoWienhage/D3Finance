@@ -52,7 +52,7 @@ export class CadastroComponent implements OnInit {
     });
   }
 
-  public activeStep: number = 0;
+  public activeStep: number = 1;
 
   public sexoOptions = [
     { label: 'Masculino', value: 'Masculino' },

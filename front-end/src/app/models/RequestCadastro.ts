@@ -25,5 +25,5 @@ export class UsuarioCadastroRequestModel {
   cnpj: string = "";
   usuario: string = "";
   cargo: string = "";
-  selectedSexo: { label: string; value: string } = { label: '', value: '' };
+  selectedSexo: { label: string; value: string } | null = null;
 }
