@@ -17,5 +17,6 @@ class Usuario(Base):
     estado = Column(String(2), nullable=False)
     cidade = Column(String(30), nullable=False)
     bairro = Column(String(30), nullable=False)
-    senha = Column(String(30), nullable=False)
+    usuario = Column(String(30), nullable=False)
+    senha = Column(String(250), nullable=False)
 

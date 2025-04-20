@@ -6,6 +6,7 @@ from src.database.database import SessionLocal
 from src.database.models import Usuario
 from src.api.tags import Tag
 from src.schemas.usuario_schemas import UsuarioCreate, UsuarioUpdate, UsuarioResponse
+from src.utils.auth_utils import gerar_hash_senha
 
 # Endpoints
 LISTA_USUARIOS = "/v1/usuarios"
@@ -13,7 +14,6 @@ CADASTRO_USUARIO = "/v1/usuarios"
 ATUALIZAR_USUARIO = "/v1/usuarios/{usuario_id}"
 APAGAR_USUARIO = "/v1/usuarios/{usuario_id}"
 OBTER_POR_ID_USUARIO = "/v1/usuarios/{usuario_id}"
-
 
 # Dependência para injeção de sessão do banco
 def get_db():
@@ -23,7 +23,6 @@ def get_db():
     finally:
         db.close()
 
-
 # GET - Listar todos os usuários
 @router.get(
     path=LISTA_USUARIOS, response_model=List[UsuarioResponse], tags=[Tag.Usuarios.name]
@@ -31,7 +30,6 @@ def get_db():
 def get_users(db: Session = Depends(get_db)):
     users = db.query(Usuario).all()
     return [UsuarioResponse(
-
         id=user.id,
         name=user.name,
         email=user.email,
@@ -44,9 +42,9 @@ def get_users(db: Session = Depends(get_db)):
         cep=user.cep,
         estado=user.estado,
         cidade=user.cidade,
-        bairro=user.bairro
+        bairro=user.bairro,
+        usuario=user.usuario  # Incluindo o campo 'usuario'
     ) for user in users]
-
 
 # GET - Obter usuário por ID
 @router.get(
@@ -71,16 +69,17 @@ def get_user(usuario_id: int, db: Session = Depends(get_db)):
         cep=user.cep,
         estado=user.estado,
         cidade=user.cidade,
-        bairro=user.bairro
+        bairro=user.bairro,
+        usuario=user.usuario  # Incluindo o campo 'usuario'
     )
-
 
 # POST - Criar usuário
 @router.post(
-
     path=CADASTRO_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
 def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
+
+    senha_criptografada = gerar_hash_senha(usuario.senha)
 
     db_user = Usuario(
         name=usuario.name,
@@ -95,14 +94,15 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
         estado=usuario.estado,
         cidade=usuario.cidade,
         bairro=usuario.bairro,
-        senha=usuario.senha  # Idealmente, a senha deve ser criptografada antes de salvar
+        usuario=usuario.usuario,  # Incluindo o campo 'usuario'
+        senha=senha_criptografada  # Armazena a senha criptografada no banco de dados
     )
+
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
     return UsuarioResponse(
-
         id=db_user.id,
         name=db_user.name,
         email=db_user.email,
@@ -115,14 +115,12 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
         cep=db_user.cep,
         estado=db_user.estado,
         cidade=db_user.cidade,
-        bairro=db_user.bairro
+        bairro=db_user.bairro,
+        usuario=db_user.usuario  # Incluindo o campo 'usuario' na resposta
     )
-
-
 
 # PUT - Atualizar usuário
 @router.put(
-
     path=ATUALIZAR_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
 def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = Depends(get_db)):
@@ -141,7 +139,6 @@ def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = De
     db.refresh(user)
 
     return UsuarioResponse(
-
         id=user.id,
         name=user.name,
         email=user.email,
@@ -154,9 +151,9 @@ def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = De
         cep=user.cep,
         estado=user.estado,
         cidade=user.cidade,
-        bairro=user.bairro
+        bairro=user.bairro,
+        usuario=user.usuario  # Incluindo o campo 'usuario' na resposta
     )
-
 
 # DELETE - Apagar usuário
 @router.delete(
@@ -167,6 +164,8 @@ def delete_user(usuario_id: int, db: Session = Depends(get_db)):
 
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
     db.delete(user)
     db.commit()
+    
     return Response(status_code=status.HTTP_204_NO_CONTENT)
