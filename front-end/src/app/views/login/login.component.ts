@@ -17,7 +17,6 @@ import { DialogModule } from 'primeng/dialog';
     FormsModule,
     PasswordModule,
     InputTextModule,
-    AppComponent,
     ButtonModule,
     DialogModule,
   ],
