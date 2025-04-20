@@ -21,7 +21,7 @@ export class UsuarioService {
       data_nascimento: usuario.dataNascimento
         ? usuario.dataNascimento.toISOString().split('T')[0]
         : null,
-      sexo: usuario.selectedSexo,
+      sexo: usuario.selectedSexo ? usuario.selectedSexo.value : null,
       profissao: usuario.cargo,
       cnpj: usuario.cnpj,
       razao_social: usuario.nomeEmpresa,
