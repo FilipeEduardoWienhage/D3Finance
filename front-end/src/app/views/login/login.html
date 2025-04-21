@@ -1,0 +1,73 @@
+<form>
+    <h1>Login</h1>
+    <div class="input-box">
+        <label for="login">Usuário:</label>
+        <input type="text" placeholder="Usuário" id="login"  required>
+    </div>
+    <div class="input-box">
+        <label for="password">Senha:</label>
+        <input type="password" placeholder="Senha"  id="password" required>
+    </div>
+    <div class="remember-forgot">
+        <label><input type="checkbox">Lembrar Senha</label>
+        <a href="#"  (click)="abrirModal()">Esqueceu a senha?</a>
+    </div>
+        <!-- MODAL -->
+        <p-dialog header="Recupere sua senha" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+            <span class="p-text-secondary block mb-8">Insira seu e-mail no campo abaixo</span>
+            <div class="flex items-center gap-4 mb-8">
+                <label for="email" class="email">Email</label>
+                <input pInputText id="email" class="flex-auto" autocomplete="off" placeholder="Digite seu email" />
+            </div>
+            <div class="flex justify-end gap-2">
+                <p-button label="Cancelar" severity="secondary" (click)="visible = false" />
+                <p-button label="Enviar" (click)="visible = false" />
+            </div>
+        </p-dialog>
+        <!-- FIM MODAL -->
+    <button type="submit" class="btn">Login</button>
+
+    <div class="register-link">
+        <a href="/cadastro">Não tem Conta? Cadastre-se</a>
+    </div>
+</form>
+
+<!-- css -->
+ <!-- 
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #000000;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #dfdfdf; 
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✔';
+  color: black;
+  font-size: 14px;
+  position: absolute;
+  left: 3px;
+  top: -1px;
+}
+
+label {
+  font-family: sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  color: rgb(0, 0, 0);
+} -->
