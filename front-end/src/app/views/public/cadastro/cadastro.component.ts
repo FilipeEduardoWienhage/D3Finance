@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FooterComponent } from '../footer/footer.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { InputMask } from 'primeng/inputmask';
@@ -10,8 +10,8 @@ import { StepperModule } from 'primeng/stepper';
 import { CommonModule } from '@angular/common';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { Select } from 'primeng/select';
-import { UsuarioService } from '../../service/usuario.service';
-import { UsuarioCadastroRequestModel } from '../../models/RequestCadastro';
+import { UsuarioService } from '../../../service/usuario.service';
+import { UsuarioCadastroRequestModel } from '../../../models/RequestCadastro';
 
 @Component({
   selector: 'app-cadastro',

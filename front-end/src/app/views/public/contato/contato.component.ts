@@ -4,7 +4,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import "primeicons/primeicons.css";
 import { QRCodeComponent } from 'angularx-qrcode';
-import { FooterComponent } from '../footer/footer.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 
 
 @Component({
