@@ -1,6 +1,15 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+}
+
 .login-form {
-  width: 60%;
-  padding: 10px;
+  width: 450px;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,24 +34,19 @@ form {
   padding: 20px;
 }
 
-.login-image {
-  width: 40%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(0, 0, 0);
-}
-
-.input-box input {
+ /* inputs de login e senha */
+.input-box input, .btn { 
   width: 100%;
-  height: auto;
+  display: flex;
   background: rgb(255, 255, 255);
   outline: none;
   border: 2px solid black;
   border-radius: 8px;
   font-size: 16px;
-  color: black;
+  color: rgb(0, 0, 0);
   padding: 16px;
+  justify-content: center;
+  align-items: center;
 }
 
 .input-box input:last-child {
@@ -62,7 +66,7 @@ form {
 }
 
 .remember-forgot a {
-  color: black;
+  color: rgb(0, 0, 0);
   background-color: white;
   text-decoration: none;
 }
@@ -105,12 +109,6 @@ form {
   color: rgb(255, 255, 255);
 }
 
-label {
-  background-color: white;
-  color: black;
-  font-size: 20px;
-}
-
 .email {
   background-color: #18181B;
   color: white;
@@ -150,6 +148,6 @@ label {
   display: flex;
   align-items: center;
   gap: 8px;
+  background-color: white;
+  color: rgb(0, 0, 0);
 }
-
-
