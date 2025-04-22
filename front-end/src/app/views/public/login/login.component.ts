@@ -6,6 +6,9 @@ import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { CardModule } from 'primeng/card';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 
 @Component({
@@ -18,6 +21,9 @@ import { DialogModule } from 'primeng/dialog';
     InputTextModule,
     ButtonModule,
     DialogModule,
+    CardModule,
+    InputGroupModule,
+    InputGroupAddonModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

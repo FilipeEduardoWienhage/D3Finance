@@ -1,39 +1,53 @@
 <app-nav-bar></app-nav-bar>
-<div class="container">
-    <div class="login-form">
-        <form>
-            <h1>D2 Finance</h1>
-            <div class="input-box">
-                <label for="login">Usuário:</label>
-                <input type="text" placeholder="Usuário" id="login"  required>
+<div class="h-screen flex items-center justify-center">
+    <div class="mb-4 p-8 flex items-center justify-center">
+        <p-card [style]="{ width: '25rem', overflow: 'hidden' }" class="text-center">
+            <ng-template #header>
+                <img alt="Card" class="w-full"
+                    src="https://static.significados.com.br/foto/diamond-316611-1280.jpg?width=1024" />
+            </ng-template>
+            <ng-template #title> D2 Finance </ng-template>
+            <ng-template #subtitle> Login </ng-template>
+
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="username">Usuário</label>
+                    <input pInputText id="username" aria-describedby="username-help" [(ngModel)]="login" class="w-64" />
+                </div>
             </div>
-            <div class="input-box">
-                <label for="password">Senha:</label>
-                <input type="password" placeholder="Senha"  id="password" required>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="password">Senha</label>
+                    <p-password [(ngModel)]="password" [toggleMask]="true" />
+                </div>
             </div>
-            <div class="remember-forgot">
+            <div class="flex justify-between w-full text-sm text-gray-300 mt-2">
                 <label><input type="checkbox">Lembrar Senha</label>
-                <a href="#"  (click)="abrirModal()">Esqueceu a senha?</a>
+                <a href="#" (click)="abrirModal()">Esqueceu a senha?</a>
             </div>
-                <!-- MODAL -->
-                <p-dialog header="Recupere sua senha" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
-                    <span class="p-text-secondary block mb-8">Insira seu e-mail no campo abaixo</span>
-                    <div class="flex items-center gap-4 mb-8">
-                        <label for="email" class="email">Email</label>
-                        <input pInputText id="email" class="flex-auto" autocomplete="off" placeholder="Digite seu email" />
-                    </div>
-                    <div class="flex justify-end gap-2">
-                        <p-button label="Cancelar" severity="secondary" (click)="visible = false" />
-                        <p-button label="Enviar" (click)="visible = false" />
-                    </div>
-                </p-dialog>
-                <!-- FIM MODAL -->
-            <button type="submit" class="btn">Login</button>
-        
-            <div class="register-link">
+            <!-- MODAL -->
+            <p-dialog header="Recupere sua senha" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+                <span class="p-text-secondary block mb-8">Insira seu e-mail no campo abaixo</span>
+                <div class="flex items-center gap-4 mb-8">
+                    <label for="email" class="email">Email</label>
+                    <input pInputText id="email" class="flex-auto" autocomplete="off" placeholder="Digite seu email" />
+                </div>
+                <div class="flex justify-end gap-2">
+                    <p-button label="Cancelar" severity="secondary" (click)="visible = false" />
+                    <p-button label="Enviar" (click)="visible = false" />
+                </div>
+            </p-dialog>
+            <!-- FIM MODAL -->
+            <div class="register-link mt-4 text-center">
                 <a href="/cadastro">Não tem Conta? Cadastre-se</a>
             </div>
-        </form>
+            <ng-template #footer>
+                <div class="flex gap-4 mt-1">
+                    <p-button label="Logar" class="w-full" styleClass="w-full" />
+                </div>
+            </ng-template>
+        </p-card>
     </div>
 </div>
+
 <app-footer></app-footer>
