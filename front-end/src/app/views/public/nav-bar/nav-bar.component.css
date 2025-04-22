@@ -1,15 +1,12 @@
 header {
     display: flex;
-    padding-top: 40px 4%;
-    justify-content: space-between;
-    max-width: 100%;	
     align-items: center;
+    justify-content: space-between;
 }
 
 .navegacao {
-    flex: 1;
     display: flex;
-    justify-content: center;
+    align-items: center;
 }
   
 .navegacao ul {
@@ -83,5 +80,6 @@ span {
 .navegacao-direita {
     display: flex;
     align-items: center;
-    gap: 24px;
-  }  
+    justify-content: flex-end;
+    gap: 16px;
+}
