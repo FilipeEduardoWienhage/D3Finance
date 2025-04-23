@@ -3,11 +3,11 @@ import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.componen
 import { FooterComponent } from "../../shared/footer/footer.component";
 
 @Component({
-  selector: 'app-main-system',
+  selector: 'app-visao-geral',
   imports: [NavBarSystemComponent, FooterComponent],
-  templateUrl: './main-system.component.html',
-  styleUrl: './main-system.component.css'
+  templateUrl: './visao-geral.component.html',
+  styleUrl: './visao-geral.component.css'
 })
-export class MainSystemComponent {
+export class VisaoGeralComponent {
 
 }
