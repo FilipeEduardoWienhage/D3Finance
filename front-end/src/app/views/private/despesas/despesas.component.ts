@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-despesas',
   imports: [FooterComponent, NavBarSystemComponent],
   templateUrl: './despesas.component.html',
-  styleUrl: './despesas.component.css'
+  styleUrl: './despesas.component.css',
+  providers: [MessageService]
 })
 export class DespesasComponent {
 

@@ -31,27 +31,33 @@ export class NavBarSystemComponent {
         items: [
           {
             label: 'Visão Geral',
-            icon: 'pi pi-chart-bar'
+            icon: 'pi pi-chart-bar',
+            command: () => this.router.navigate(['/visaogeral'])
           },
           {
             label: 'Receitas',
-            icon: 'pi pi-chart-line'
+            icon: 'pi pi-chart-line',
+            command: () => this.router.navigate(['/receitas'])
           },
           {
             label: 'Despesas',
-            icon: 'pi pi-chart-line'
+            icon: 'pi pi-chart-line',
+            command: () => this.router.navigate(['/despesas'])
           },
           {
             label: 'Cadastrar Receitas',
-            icon: 'pi pi-plus'
+            icon: 'pi pi-plus',
+            command: () => this.router.navigate(['/cadastrarreceitas'])
           },
           {
             label: 'Cadastrar Despesas',
-            icon: 'pi pi-plus'
+            icon: 'pi pi-plus',
+            command: () => this.router.navigate(['/cadastrardespesas'])
           },
           {
             label: 'Importar arquivo XML',
-            icon: 'pi pi-plus'
+            icon: 'pi pi-plus',
+            command: () => this.router.navigate(['/importararquivo'])
           },
           {
             label: 'Pesquisar',
@@ -64,7 +70,8 @@ export class NavBarSystemComponent {
         items: [
           {
             label: 'Configurações',
-            icon: 'pi pi-cog'
+            icon: 'pi pi-cog',
+            command: () => this.router.navigate(['/configurarperfil'])
           },
           {
             label: 'Logout',
@@ -92,4 +99,6 @@ export class NavBarSystemComponent {
     localStorage.removeItem('authToken');
     this.router.navigate(['/home']);
   }
+
+
 }

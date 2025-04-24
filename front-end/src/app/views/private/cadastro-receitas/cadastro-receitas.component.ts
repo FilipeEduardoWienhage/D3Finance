@@ -10,6 +10,7 @@ import { DatePicker } from 'primeng/datepicker';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 
 
 interface formaRecebimento {
@@ -30,7 +31,8 @@ interface formaRecebimento {
             SelectModule,
             ButtonModule],
   templateUrl: './cadastro-receitas.component.html',
-  styleUrl: './cadastro-receitas.component.css'
+  styleUrl: './cadastro-receitas.component.css',
+  providers: [MessageService]
 })
 export class CadastroReceitasComponent {
   nomeReceita: string = '';

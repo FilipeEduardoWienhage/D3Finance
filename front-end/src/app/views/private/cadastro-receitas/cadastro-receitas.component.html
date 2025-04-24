@@ -1,50 +1,55 @@
-<app-nav-bar-system></app-nav-bar-system>
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
 
-<p-card header="Simple Card">
-    <div class="card flex justify-center">
-        <div class="flex flex-col gap-2">
-            <label for="username">Nome Receita*</label>
-            <input pInputText id="nomeReceita" aria-describedby="nomeReceita" [(ngModel)]="nomeReceita" class="w-64" />
-        </div>
+    <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
+    <app-nav-bar-system></app-nav-bar-system>
     </div>
-    <p-fluid class="card flex justify-center">
-        <div class="flex flex-col gap-2 w-64">
-            <label for="currency-br">
-                Valor Recebido*
-            </label>
-            <p-inputnumber [(ngModel)]="valorReceita" inputId="currency-br" mode="currency" currency="BRL"
-                locale="pt-BR" />
-        </div>
-    </p-fluid>
-    <div class="card flex justify-center">
-        <div class="flex flex-col gap-2">
-            <label for="dataRecebimento">Data de Recebimento</label>
-            <p-datepicker id="dataNascimento" [(ngModel)]="dataRecebimento" required [showButtonBar]="true"
-                class="w-64" />
-        </div>
-    </div>
-    <div class="card flex justify-center">
-        <div class="flex flex-col gap-2">
-            <label for="dataRecebimento">Descrição</label>
-            <textarea rows="3" cols="28" pTextarea [autoResize]="true"></textarea>
-        </div>
-    </div>
-    <div class="card flex justify-center">
-        <div class="flex flex-col gap-2">
-            <label for="dataRecebimento">Forma de recebimento</label>
-            <p-select [options]="formaDeRecebimento" [(ngModel)]="selecionarForma" optionLabel="name"
-                placeholder="Forma de recebimento" class="w-full md:w-64" />
-        </div>
-    </div>
-    <div class="card flex justify-center">
-        <div class="flex flex-col gap-2">
-            <a href="#">
-                <div class="flex gap-4 mt-1">
-                    <p-button label="Cadastrar" class="w-full  md:w-64" styleClass="w-full" />
+    <div class="flex-1 flex items-center justify-center">
+        <p-card header="Cadastrar Receitas">
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="username">Nome Receita*</label>
+                    <input pInputText id="nomeReceita" aria-describedby="nomeReceita" [(ngModel)]="nomeReceita" class="w-64" />
                 </div>
-            </a>
-        </div>
+            </div>
+            <p-fluid class="card flex justify-center">
+                <div class="flex flex-col gap-2 w-64">
+                    <label for="currency-br">
+                        Valor Recebido*
+                    </label>
+                    <p-inputnumber [(ngModel)]="valorReceita" inputId="currency-br" mode="currency" currency="BRL"
+                        locale="pt-BR" />
+                </div>
+            </p-fluid>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Data de Recebimento</label>
+                    <p-datepicker id="dataNascimento" [(ngModel)]="dataRecebimento" required [showButtonBar]="true"
+                        class="w-64" />
+                </div>
+            </div>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Descrição</label>
+                    <textarea rows="3" cols="28" pTextarea [autoResize]="true"></textarea>
+                </div>
+            </div>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Forma de recebimento</label>
+                    <p-select [options]="formaDeRecebimento" [(ngModel)]="selecionarForma" optionLabel="name"
+                        placeholder="Forma de recebimento" class="w-full md:w-64" />
+                </div>
+            </div>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <a href="#">
+                        <div class="flex gap-4 mt-1">
+                            <p-button label="Cadastrar" class="w-full  md:w-64" styleClass="w-full" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </p-card>
     </div>
-</p-card>
-
-<app-footer></app-footer>
+    <app-footer class="mt-auto"></app-footer>
+</div>
