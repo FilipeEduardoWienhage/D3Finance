@@ -1,5 +1,50 @@
 <app-nav-bar-system></app-nav-bar-system>
 
-<p>Tela para cadastrar novas receitas</p>
+<p-card header="Simple Card">
+    <div class="card flex justify-center">
+        <div class="flex flex-col gap-2">
+            <label for="username">Nome Receita*</label>
+            <input pInputText id="nomeReceita" aria-describedby="nomeReceita" [(ngModel)]="nomeReceita" class="w-64" />
+        </div>
+    </div>
+    <p-fluid class="card flex justify-center">
+        <div class="flex flex-col gap-2 w-64">
+            <label for="currency-br">
+                Valor Recebido*
+            </label>
+            <p-inputnumber [(ngModel)]="valorReceita" inputId="currency-br" mode="currency" currency="BRL"
+                locale="pt-BR" />
+        </div>
+    </p-fluid>
+    <div class="card flex justify-center">
+        <div class="flex flex-col gap-2">
+            <label for="dataRecebimento">Data de Recebimento</label>
+            <p-datepicker id="dataNascimento" [(ngModel)]="dataRecebimento" required [showButtonBar]="true"
+                class="w-64" />
+        </div>
+    </div>
+    <div class="card flex justify-center">
+        <div class="flex flex-col gap-2">
+            <label for="dataRecebimento">Descrição</label>
+            <textarea rows="3" cols="28" pTextarea [autoResize]="true"></textarea>
+        </div>
+    </div>
+    <div class="card flex justify-center">
+        <div class="flex flex-col gap-2">
+            <label for="dataRecebimento">Forma de recebimento</label>
+            <p-select [options]="formaDeRecebimento" [(ngModel)]="selecionarForma" optionLabel="name"
+                placeholder="Forma de recebimento" class="w-full md:w-64" />
+        </div>
+    </div>
+    <div class="card flex justify-center">
+        <div class="flex flex-col gap-2">
+            <a href="#">
+                <div class="flex gap-4 mt-1">
+                    <p-button label="Cadastrar" class="w-full  md:w-64" styleClass="w-full" />
+                </div>
+            </a>
+        </div>
+    </div>
+</p-card>
 
 <app-footer></app-footer>
