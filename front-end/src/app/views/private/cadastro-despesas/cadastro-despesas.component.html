@@ -1,5 +1,47 @@
-<app-nav-bar-system></app-nav-bar-system>
-
-<p>Tela para cadastrar novas despesas</p>
-
-<app-footer></app-footer>
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
+    <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
+    <app-nav-bar-system></app-nav-bar-system>
+    </div>
+    <div class="flex-1 flex items-center justify-center">
+        <p-card header="Cadastrar Despesas">
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="username">Nome Despesa</label>
+                    <input pInputText id="nomeDespesa" aria-describedby="nomeDespesa" class="w-64 h-10 px-3 rounded-md bg-black border border-gray-700 text-white" />
+                </div>
+            </div>
+            <p-fluid class="card flex justify-center">
+                <div class="flex flex-col gap-2 w-64">
+                    <label for="currency-br">
+                        Valor da Despesa
+                    </label>
+                    <p-inputnumber inputId="currency-br" mode="currency" currency="BRL"
+                        locale="pt-BR" />
+                </div>
+            </p-fluid>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Data de Recebimento</label>
+                    <p-datepicker id="dataNascimento" required [showButtonBar]="true"
+                        class="w-64" />
+                </div>
+            </div>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Descrição</label>
+                    <textarea rows="3" cols="28" pTextarea [autoResize]="true"></textarea>
+                </div>
+            </div>
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <a href="#">
+                        <div class="flex gap-4 mt-1">
+                            <p-button label="Cadastrar" class="w-full  md:w-64" styleClass="w-full" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </p-card>
+    </div>
+<app-footer class="mt-auto"></app-footer>
+</div>
