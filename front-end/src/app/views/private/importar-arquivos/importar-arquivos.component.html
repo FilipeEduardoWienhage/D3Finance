@@ -1,5 +1,20 @@
 <app-nav-bar-system></app-nav-bar-system>
 
-<p>Tela para importar os arquivos XML</p>
+<div class="card">
+    <p-toast />
+    <p-fileupload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)"
+        [multiple]="true" accept="image/*" maxFileSize="10000000" mode="advanced">
+        <ng-template #empty>
+            <div>Arraste e solte os arquivos aqui para fazer upload</div>
+        </ng-template>
+        <ng-template #content>
+            <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+            </ul>
+        </ng-template>
+    </p-fileupload>
+</div>
+
+
 
 <app-footer></app-footer>
