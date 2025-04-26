@@ -17,6 +17,10 @@ interface formaRecebimento {
   name: string;
 }
 
+interface categoriaReceita {
+  name: string;
+}
+
 @Component({
   selector: 'app-cadastro-receitas',
   imports: [FooterComponent, 
@@ -36,22 +40,40 @@ interface formaRecebimento {
 })
 export class CadastroReceitasComponent {
   nomeReceita: string = '';
+  categoriaReceita: string = '';
   valorReceita: number = 0;
   dataRecebimento: Date | null = null;
-
   formaDeRecebimento: formaRecebimento[] | undefined;
+  selecionarForma: formaRecebimento | undefined;
+  categoriaDaReceita: categoriaReceita[] | undefined;
+  selecionarCategoria: categoriaReceita | undefined;
+  
+  ngOnInit() {
+    this.formaDeRecebimento = [
+      { name: 'Dinheiro' },
+      { name: 'Débito' },
+      { name: 'Crédito' },
+      { name: 'Cheque' },
+      { name: 'Depósito' },
+      { name: 'Pix' }
+    ];
 
-    selecionarForma: formaRecebimento | undefined;
-
-    ngOnInit() {
-        this.formaDeRecebimento = [
-            { name: 'Dinheiro'},
-            { name: 'Débito'},
-            { name: 'Crédito'},
-            { name: 'Cheque'},
-            { name: 'Depósito'},
-            { name: 'Pix'}
-        ];
-    }
-
+    this.categoriaDaReceita = [
+      { name: 'Venda de Produtos' },
+      { name: 'Prestação de Serviços' },
+      { name: 'Receitas de Assinaturas / Mensalidades' },
+      { name: 'Receitas de Consultoria' },
+      { name: 'Receitas de Licenciamento' },
+      { name: 'Receitas de Aluguel de Bens' },
+      { name: 'Receita com Publicidade / Parcerias' },
+      { name: 'Recebimento de Contratos' },
+      { name: 'Royalties Recebidos' },
+      { name: 'Rendimentos de Investimentos' },
+      { name: 'Reembolso de Custos Operacionais' },
+      { name: 'Multas Contratuais Recebidas' },
+      { name: 'Recuperação de Crédito / Cobrança' },
+      { name: 'Outras Receitas Operacionais' },
+      { name: 'Outras Receitas Não Operacionais' }
+    ];
+  }
 }
