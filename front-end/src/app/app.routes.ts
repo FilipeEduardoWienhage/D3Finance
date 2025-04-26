@@ -22,7 +22,7 @@ export const routes: Routes = [
     { path: "despesas", component: DespesasComponent},
     { path: "cadastrarreceitas", component: CadastroReceitasComponent},
     { path: "cadastrardespesas", component: CadastroDespesasComponent},
-    { path: "importaraquivo", component: ImportarArquivosComponent},
+    { path: "importararquivo", component: ImportarArquivosComponent},
     { path: "configurarperfil", component: ConfiguracaoPerfilComponent},
     { path: "**", redirectTo: "/home" }
 ];
