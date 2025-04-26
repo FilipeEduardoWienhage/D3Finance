@@ -4,7 +4,14 @@
     <app-nav-bar-system></app-nav-bar-system>
     </div>
     <div class="flex-1 flex items-center justify-center">
-        <p-card header="Cadastrar Receitas">
+        <p-card header="Cadastrar Receitas" class="w-96">
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-">
+                    <label for="dataRecebimento">Categoria da Receita*</label>
+                    <p-select [options]="categoriaDaReceita" [(ngModel)]="selecionarCategoria" optionLabel="name"
+                        placeholder="Categoria da Receita" class="w-full md:w-64" />
+                </div>
+            </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="username">Nome Receita*</label>
