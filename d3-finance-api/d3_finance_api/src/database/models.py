@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Float
 from src.database.database import Base
 
 class Usuario(Base):
@@ -20,3 +20,26 @@ class Usuario(Base):
     usuario = Column(String(30), nullable=False)
     senha = Column(String(250), nullable=False)
 
+
+class Receitas(Base):
+    __tablename__ = "receitas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    categoria = Column(String(50), nullable=False)
+    nome_receita = Column(String(50), nullable=False)
+    valor_recebido = Column(Float, nullable=False)
+    data_recebimento = Column(Date, nullable=False)
+    descricao = Column(String(250))
+    forma_recebimento = Column(String(50), nullable=False)
+
+
+class Despesas(Base):
+    __tablename__ = "despesas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    categoria = Column(String(50), nullable=False)
+    nome_despesa = Column(String(50), nullable=False)
+    valor_pago = Column(Float, nullable=False)
+    data_pagamento = Column(Date, nullable=False)
+    descricao = Column(String(250))
+    forma_pagamento = Column(String(50), nullable=False)
