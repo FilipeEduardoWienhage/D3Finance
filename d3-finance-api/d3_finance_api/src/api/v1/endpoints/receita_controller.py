@@ -64,8 +64,7 @@ def get_receita_by_id(receitas_id: int, db: Session = Depends(get_db)):
     path=CADASTRO_RECEITAS, response_model=ReceitaResponse, tags=[Tag.Receitas.name]
 )
 def create_receita(receita: ReceitaCreate, db: Session = Depends(get_db)):  
-
-    # Cria a nova receita
+  
     db_receita = Receitas(
         categoria=receita.categoria,
         nome_receita=receita.nome_receita,
