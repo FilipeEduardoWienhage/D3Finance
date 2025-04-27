@@ -5,6 +5,7 @@ from pydantic.dataclasses import dataclass
 
 @dataclass
 class ReceitaBase:
+
     categoria: str
     nome_receita: str
     valor_recebido: float
@@ -37,3 +38,4 @@ class ReceitaResponse:
     data_recebimento: date
     forma_recebimento: str
     descricao: Optional[str] = None
+
