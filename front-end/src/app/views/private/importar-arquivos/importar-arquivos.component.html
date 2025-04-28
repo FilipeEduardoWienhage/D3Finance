@@ -9,11 +9,11 @@
           url="https://www.primefaces.org/cdn/api/upload.php"
           (onUpload)="onUpload($event)"
           [multiple]="true"
-          accept="image/*, .xml"
+          accept="image/*, .xml, .csv"
           maxFileSize="1000000000"
           mode="advanced"
           chooseLabel="Selecionar Arquivos"
-          uploadLabel="Enviar"
+          uploadLabel="Enviar"  
           cancelLabel="Cancelar"
         >
           <ng-template #empty>
