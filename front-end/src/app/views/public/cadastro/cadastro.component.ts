@@ -59,14 +59,15 @@ export class CadastroComponent implements OnInit {
     { label: 'Feminino', value: 'Feminino' },
     { label: 'Outro', value: 'Outro' },
   ];
+   
+  public buscarCnpj(): void {
+    let cnpj = this.requestCadastro.cnpj.replace(/[-_.\/]/g, '');
+    console.log('CNPJ digitado:', cnpj);
   
-  public buscarEndereco(): void {
-    let cep = this.requestCadastro.cep.replace(/[-_.]/g, '');
+    if (cnpj.length === 14) {
+      const brasilApiUrl = `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`;
 
-    if (cep.length === 8) {
-      const viaCepUrl = `https://viacep.com.br/ws/${cep}/json/`;
-
-      fetch(viaCepUrl)
+      fetch(brasilApiUrl)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Erro na resposta da API');
@@ -74,21 +75,24 @@ export class CadastroComponent implements OnInit {
           return response.json();
         })
         .then((data) => {
-          if (!data.erro) {
+          if (data && !data.erro) {
+            this.requestCadastro.nomeEmpresa = data.razao_social;
             this.requestCadastro.estado= data.uf;
-            this.requestCadastro.cidade= data.localidade;
+            this.requestCadastro.cidade= data.municipio;
             this.requestCadastro.bairro= data.bairro;
-            console.log('Endereço encontrado:', data);
+            this.requestCadastro.cep = data.cep.replace(/[-_.]/g, '');
+            
+            console.log('CNPJ encontrado:', data);
           } else {
-            alert('CEP não encontrado!');
+            alert('CNPJ não encontrado!');
           }
         })
         .catch((error) => {
-          console.error('Erro ao buscar o CEP:', error);
-          alert('Erro ao buscar o CEP!');
+          console.error('Erro ao buscar o CNPJ:', error);
+          alert('CNPJ inválido!');
         });
     } else {
-      alert('Digite um CEP válido (8 números)!');
+      alert('Digite um CNPJ válido (14 números)!');
     }
   }
   
