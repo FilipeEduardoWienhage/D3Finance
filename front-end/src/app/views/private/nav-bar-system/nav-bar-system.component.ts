@@ -61,7 +61,8 @@ export class NavBarSystemComponent {
           },
           {
             label: 'Pesquisar',
-            icon: 'pi pi-search'
+            icon: 'pi pi-search',
+            command: () => this.router.navigate(['/pesquisar'])
           }
         ]
       },
