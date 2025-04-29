@@ -11,6 +11,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
+import { SplitterModule } from 'primeng/splitter';
+
 
 
 interface formaRecebimento {
@@ -33,7 +35,9 @@ interface categoriaReceita {
             DatePicker,
             TextareaModule,
             SelectModule,
-            ButtonModule],
+            ButtonModule,
+            SplitterModule
+          ],
   templateUrl: './cadastro-receitas.component.html',
   styleUrl: './cadastro-receitas.component.css',
   providers: [MessageService]

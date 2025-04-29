@@ -1,37 +1,36 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e] relative">
-    <app-nav-bar-system class="fixed top-0 left-0 z-[1000]"></app-nav-bar-system>
-  
-    <div class="flex-grow flex items-center justify-center mt-16">
-      <div class="card w-full max-w-lg p-8">
-        <p-toast></p-toast>
-        <p-fileupload
-          name="demo[]"
-          url="https://www.primefaces.org/cdn/api/upload.php"
-          (onUpload)="onUpload($event)"
-          [multiple]="true"
-          accept="image/*, .xml, .csv"
-          maxFileSize="1000000000"
-          mode="advanced"
-          chooseLabel="Selecionar Arquivos"
-          uploadLabel="Enviar"  
-          cancelLabel="Cancelar"
-        >
-          <ng-template #empty>
-            <div class="text-center text-white">
-              Arraste e solte os arquivos aqui para fazer upload
-            </div>
-          </ng-template>
-          <ng-template #content>
-            <ul *ngIf="uploadedFiles.length" class="text-white">
-              <li *ngFor="let file of uploadedFiles">
-                {{ file.name }} - {{ file.size }} bytes
-              </li>
-            </ul>
-          </ng-template>
-        </p-fileupload>
-      </div>
-    </div>
-  
-    <app-footer class="mt-auto"></app-footer>
+  <app-nav-bar-system class="fixed top-0 left-0 z-[1000]"></app-nav-bar-system>
+
+  <div class="card">
+    <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+      <ng-template #panel>
+        <div class="flex items-center justify-center h-full">D2 Finance</div>
+      </ng-template>
+    </p-splitter>
   </div>
-  
+
+
+  <div class="flex-grow flex items-center justify-center mt-16">
+    <div class="card w-full max-w-lg p-8">
+      <p-toast></p-toast>
+      <p-fileupload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)"
+        [multiple]="true" accept="image/*, .xml, .csv" maxFileSize="1000000000" mode="advanced"
+        chooseLabel="Selecionar Arquivos" uploadLabel="Enviar" cancelLabel="Cancelar">
+        <ng-template #empty>
+          <div class="text-center text-white">
+            Arraste e solte os arquivos aqui para fazer upload
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <ul *ngIf="uploadedFiles.length" class="text-white">
+            <li *ngFor="let file of uploadedFiles">
+              {{ file.name }} - {{ file.size }} bytes
+            </li>
+          </ul>
+        </ng-template>
+      </p-fileupload>
+    </div>
+  </div>
+
+  <app-footer class="mt-auto"></app-footer>
+</div>

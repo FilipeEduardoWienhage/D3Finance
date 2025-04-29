@@ -10,6 +10,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
+import { SplitterModule } from 'primeng/splitter';
+
 
 interface categoriaDespesa {
   name: string;
@@ -28,7 +30,8 @@ interface categoriaDespesa {
     TextareaModule,
     SelectModule,
     ButtonModule,
-    FormsModule
+    FormsModule,
+    SplitterModule,
   ],
   templateUrl: './cadastro-despesas.component.html',
   styleUrl: './cadastro-despesas.component.css',

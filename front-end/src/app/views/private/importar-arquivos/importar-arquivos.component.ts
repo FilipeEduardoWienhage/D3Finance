@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { FileUpload, FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
+import { SplitterModule } from 'primeng/splitter';
 
 @Component({
   selector: 'app-importar-arquivos',
@@ -13,7 +14,8 @@ import { CommonModule } from '@angular/common';
     NavBarSystemComponent,
     FileUpload,
     ToastModule,
-    CommonModule
+    CommonModule,
+    SplitterModule,
   ],
   templateUrl: './importar-arquivos.component.html',
   styleUrl: './importar-arquivos.component.css',

@@ -1,7 +1,15 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
-    <p>Editar perfil</p>
     <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
-    <app-nav-bar-system></app-nav-bar-system>
+        <app-nav-bar-system></app-nav-bar-system>
     </div>
+
+    <div class="card">
+        <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+            <ng-template #panel>
+                <div class="flex items-center justify-center h-full">D2 Finance</div>
+            </ng-template>
+        </p-splitter>
+    </div>
+    <p>Editar perfil</p>
     <app-footer class="mt-auto"></app-footer>
 </div>

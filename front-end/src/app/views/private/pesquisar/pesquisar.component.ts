@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { SplitterModule } from 'primeng/splitter';
 
 @Component({
   selector: 'app-pesquisar',
@@ -16,7 +17,8 @@ import { InputTextModule } from 'primeng/inputtext';
     TableModule,
     InputTextModule,
     FooterComponent,
-    NavBarSystemComponent
+    NavBarSystemComponent,
+    SplitterModule,
   ],
   providers: [MessageService],
   templateUrl: './pesquisar.component.html',
