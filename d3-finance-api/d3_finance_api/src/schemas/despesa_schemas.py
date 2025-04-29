@@ -1,5 +1,5 @@
 from typing import Optional
-from datetime import date
+from datetime import date, datetime
 from pydantic.dataclasses import dataclass
 
 
@@ -37,3 +37,5 @@ class DespesaResponse:
     data_pagamento: date
     forma_pagamento: str
     descricao: Optional[str] = None
+    data_criacao: Optional[datetime] = None
+    data_alteracao: Optional[datetime] = None

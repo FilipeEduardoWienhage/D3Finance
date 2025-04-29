@@ -36,6 +36,8 @@ def get_despesas(db: Session = Depends(get_db)):
         data_pagamento=despesa.data_pagamento,
         descricao=despesa.descricao,
         forma_pagamento=despesa.forma_pagamento,
+        data_criacao=despesa.data_criacao,
+        data_alteracao=despesa.data_alteracao,
     ) for despesa in despesas]
 
 

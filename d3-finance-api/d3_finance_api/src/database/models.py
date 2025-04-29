@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Float
+from sqlalchemy import Column, DateTime, Integer, String, Date, ForeignKey, Float, func
 from src.database.database import Base
 
 class Usuario(Base):
@@ -43,3 +43,5 @@ class Despesas(Base):
     data_pagamento = Column(Date, nullable=False)
     descricao = Column(String(250))
     forma_pagamento = Column(String(50), nullable=False)
+    data_criacao = Column(DateTime, default=func.now(), nullable=False)
+    data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
