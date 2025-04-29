@@ -1,81 +1,67 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e] text-white font-sans relative">
-    <app-nav-bar-system class="fixed top-0 left-0 z-[1000]"></app-nav-bar-system>
-  
-    <div class="flex flex-col items-center justify-center px-4 py-8 w-full">
-      <h1 class="text-2xl font-semibold mb-6">Pesquisar</h1>
-  
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded-lg shadow-lg w-full max-w-5xl mb-6">
-        <div>
-          <label class="block text-sm mb-1">Categoria</label>
-          <input
-            type="text"
-            [(ngModel)]="filters.categoria"
-            (input)="onFilterChange()"
-            class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1"
-          />
-        </div>
-  
-        <div>
-          <label class="block text-sm mb-1">Nome</label>
-          <input
-            type="text"
-            [(ngModel)]="filters.nome"
-            (input)="onFilterChange()"
-            class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1"
-          />
-        </div>
-  
-        <div>
-          <label class="block text-sm mb-1">Valor</label>
-          <input
-            type="number"
-            [(ngModel)]="filters.valor"
-            (input)="onFilterChange()"
-            class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1"
-          />
-        </div>
-  
-        <div>
-          <label class="block text-sm mb-1">Data</label>
-          <input
-            type="date"
-            [(ngModel)]="filters.data"
-            (input)="onFilterChange()"
-            class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1"
-          />
-        </div>
+  <app-nav-bar-system class="fixed top-0 left-0 z-[1000]"></app-nav-bar-system>
+
+  <div class="card">
+    <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+      <ng-template #panel>
+        <div class="flex items-center justify-center h-full">D2 Finance</div>
+      </ng-template>
+    </p-splitter>
+  </div>
+
+  <div class="flex flex-col items-center justify-center px-4 py-8 w-full">
+
+    <h2 class="text-2xl font-semibold mb-6">Pesquisar</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded-lg shadow-lg w-full max-w-5xl mb-6">
+      <div>
+        <label class="block text-sm mb-1">Categoria</label>
+        <input type="text" [(ngModel)]="filters.categoria" (input)="onFilterChange()"
+          class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
       </div>
-  
-      <div class="bg-[#2a2a2a] p-6 rounded-lg shadow-lg w-full max-w-5xl">
-        <p-table
-          [value]="filteredItems"
-          [paginator]="true"
-          [rows]="rows"
-          [first]="first"
-          (onPage)="pageChange($event)"
-          class="p-datatable-sm p-datatable-gridlines"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Categoria</th>
-              <th>Nome</th>
-              <th>Valor</th>
-              <th>Data</th>
-            </tr>
-          </ng-template>
-  
-          <ng-template pTemplate="body" let-item>
-            <tr>
-              <td>{{ item.categoria }}</td>
-              <td>{{ item.nome }}</td>
-              <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
-              <td>{{ item.data | date:'dd/MM/yyyy' }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
+
+      <div>
+        <label class="block text-sm mb-1">Nome</label>
+        <input type="text" [(ngModel)]="filters.nome" (input)="onFilterChange()"
+          class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+      </div>
+
+      <div>
+        <label class="block text-sm mb-1">Valor</label>
+        <input type="number" [(ngModel)]="filters.valor" (input)="onFilterChange()"
+          class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+      </div>
+
+      <div>
+        <label class="block text-sm mb-1">Data</label>
+        <input type="date" [(ngModel)]="filters.data" (input)="onFilterChange()"
+          class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
       </div>
     </div>
-  
-    <app-footer class="mt-auto"></app-footer>
+
+    <div class="bg-[#2a2a2a] p-6 rounded-lg shadow-lg w-full max-w-5xl">
+      <p-table [value]="filteredItems" [paginator]="true" [rows]="rows" [first]="first" (onPage)="pageChange($event)"
+        class="p-datatable-sm p-datatable-gridlines">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Categoria</th>
+            <th>Nome</th>
+            <th>Valor</th>
+            <th>Data</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>{{ item.categoria }}</td>
+            <td>{{ item.nome }}</td>
+            <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td>{{ item.data | date:'dd/MM/yyyy' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <app-footer class="mt-auto"></app-footer>
 </div>
-  
