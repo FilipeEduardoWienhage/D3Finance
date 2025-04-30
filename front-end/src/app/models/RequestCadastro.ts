@@ -1,15 +1,3 @@
-// export interface Endereco {
-//     uf: string;
-//     localidade: string;
-//     bairro: string;
-//   }
-  
-//   export interface Sexo {
-//     name: string;
-//     code: string;
-//   }
-
-
 export class UsuarioCadastroRequestModel {
   nome: string = "";
   email: string = "";

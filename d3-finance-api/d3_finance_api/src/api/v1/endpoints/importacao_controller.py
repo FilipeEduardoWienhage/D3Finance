@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 from io import StringIO
 from fastapi import File, UploadFile, Depends, HTTPException
-from d3_finance_api.src.database.database import SessionLocal
+from src.database.database import SessionLocal
 from src.app import router
 from sqlalchemy.orm import Session
 from src.database.models import Receitas, Despesas

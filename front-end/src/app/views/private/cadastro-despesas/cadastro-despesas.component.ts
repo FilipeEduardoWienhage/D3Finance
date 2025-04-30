@@ -13,6 +13,15 @@ import { FormsModule } from '@angular/forms';
 import { SplitterModule } from 'primeng/splitter';
 
 
+
+interface formaRecebimento {
+  name: string;
+}
+
+interface contaDestino {
+  name: string;
+}
+
 interface categoriaDespesa {
   name: string;
 }
@@ -43,10 +52,14 @@ export class CadastroDespesasComponent{
   nomeDespesa: string = '';
   valorDespesa: number = 0;
   dataRecebimento: Date | null = null;
-  
+  formaDeRecebimento: formaRecebimento[] | undefined;
+  selecionarForma: formaRecebimento | undefined;
   categoriaDespesa: string = '';
   categoriaDaDespesa: categoriaDespesa[] | undefined;  
   selecionarCategoria: categoriaDespesa | undefined;
+  contaDestino: contaDestino[] | undefined;
+  selecionarConta: contaDestino | undefined;
+  
 
   ngOnInit() {
     this.categoriaDaDespesa = [
@@ -62,5 +75,20 @@ export class CadastroDespesasComponent{
       { name: 'Despesas com Terceirizados' },
       { name: 'Outras Despesas' }
     ];
+      this.formaDeRecebimento = [
+        { name: 'Dinheiro' },
+        { name: 'Débito' },
+        { name: 'Crédito' },
+        { name: 'Cheque' },
+        { name: 'Depósito' },
+        { name: 'Pix' }
+    ];
+      this.contaDestino = [
+        { name: 'Banco do Brasil' },
+        { name: 'Itaú' },
+        { name: 'Bradesco' },
+        { name: 'Santander' }
+      ];
+      
   }
 }
