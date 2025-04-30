@@ -60,15 +60,15 @@
                         <p-inputMask class="w-full" mask="999.999.999-99" id="cpf" [(ngModel)]="requestCadastro.cpf" placeholder="000.000.000-00" aria-describedby="CPF-help" required></p-inputMask>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <label for="dataNascimento">Data de Nascimento</label>
+                        <label for="dataNascimento">Data de Nascimento*</label>
                         <p-datepicker class="w-full" id="dataNascimento" [(ngModel)]="requestCadastro.dataNascimento" required [showButtonBar]="true"></p-datepicker>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <label for="label">Sexo</label>
+                        <label for="label">Sexo*</label>
                         <p-select class="w-full" [options]="sexoOptions" [(ngModel)]="requestCadastro.selectedSexo" [checkmark]="false" optionLabel="label" [showClear]="true" placeholder="Selecione o Sexo" />
                     </div>
                     <div class="flex flex-col gap-2">
-                        <label for="cargo">Profissão</label>
+                        <label for="cargo">Profissão*</label>
                         <input class="w-full" [(ngModel)]="requestCadastro.cargo" pInputText id="cargo" type="text" placeholder="Profissão" />
                     </div>
                 </div>

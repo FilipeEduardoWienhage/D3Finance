@@ -12,6 +12,8 @@ import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { SplitterModule } from 'primeng/splitter';
+import { ReceitaRequestModel } from '../../../models/RequestReceitas';
+import { ReceitasService } from '../../../service/receitas.service';
 
 
 
@@ -20,6 +22,10 @@ interface formaRecebimento {
 }
 
 interface categoriaReceita {
+  name: string;
+}
+
+interface contaDestino {
   name: string;
 }
 
@@ -43,6 +49,10 @@ interface categoriaReceita {
   providers: [MessageService]
 })
 export class CadastroReceitasComponent {
+  public requestReceita!: ReceitaRequestModel;
+
+  constructor(private receitaService: ReceitasService) {}
+
   nomeReceita: string = '';
   categoriaReceita: string = '';
   valorReceita: number = 0;
@@ -51,8 +61,12 @@ export class CadastroReceitasComponent {
   selecionarForma: formaRecebimento | undefined;
   categoriaDaReceita: categoriaReceita[] | undefined;
   selecionarCategoria: categoriaReceita | undefined;
+  contaDestino: contaDestino[] | undefined;
+  selecionarConta: contaDestino | undefined;
   
-  ngOnInit() {
+  ngOnInit(): void {
+    this.requestReceita = new ReceitaRequestModel();
+
     this.formaDeRecebimento = [
       { name: 'Dinheiro' },
       { name: 'Débito' },
@@ -79,5 +93,23 @@ export class CadastroReceitasComponent {
       { name: 'Outras Receitas Operacionais' },
       { name: 'Outras Receitas Não Operacionais' }
     ];
+    
+    this.contaDestino = [
+      { name: 'Banco do Brasil' },
+      { name: 'Itaú' },
+      { name: 'Bradesco' },
+      { name: 'Santander' }
+    ];
+  }
+  
+  public doCadastro(): void {
+    console.log(this.requestReceita);
+    this.receitaService.cadastrarReceita(this.requestReceita).subscribe({
+      next: () => alert("Cadastrado com sucesso!"),
+      error: erro => {
+        console.error(erro)
+        alert("Erro ao efetuar o cadastro!");
+      }
+    });
   }
 }
