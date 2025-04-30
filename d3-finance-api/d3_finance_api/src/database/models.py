@@ -56,4 +56,3 @@ class Contas(Base):
     agencia = Column(String(50), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
-
