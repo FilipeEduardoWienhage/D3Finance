@@ -1,30 +1,31 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
 
-    <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
-    <app-nav-bar-system></app-nav-bar-system>
+    <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
+        <app-nav-bar-system></app-nav-bar-system>
     </div>
 
     <div class="card">
         <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
-          <ng-template #panel>
-            <div class="flex items-center justify-center h-full">D2 Finance</div>
-          </ng-template>
+            <ng-template #panel>
+                <div class="flex items-center justify-center h-full">D2 Finance</div>
+            </ng-template>
         </p-splitter>
-      </div>
-      
+    </div>
+
     <div class="flex-1 flex items-center justify-center">
         <p-card header="Cadastrar Receitas" class="w-96">
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
                     <label for="dataRecebimento">Categoria da Receita*</label>
-                    <p-select [options]="categoriaDaReceita" [(ngModel)]="requestReceita.categoria" optionLabel="name" optionValue="name"
-                        placeholder="Categoria da Receita" class="w-full md:w-64" />
+                    <p-select [options]="categoriaDaReceita" [(ngModel)]="requestReceita.categoria" optionLabel="name"
+                        optionValue="name" placeholder="Categoria da Receita" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="username">Nome Receita*</label>
-                    <input pInputText id="nomeReceita" aria-describedby="nomeReceita" [(ngModel)]="requestReceita.nome" class="w-64" />
+                    <input pInputText id="nomeReceita" aria-describedby="nomeReceita" [(ngModel)]="requestReceita.nome"
+                        class="w-64" />
                 </div>
             </div>
             <p-fluid class="card flex justify-center">
@@ -32,8 +33,8 @@
                     <label for="currency-br">
                         Valor Recebido*
                     </label>
-                    <p-inputnumber [(ngModel)]="requestReceita.valor" inputId="currency-br" mode="currency" currency="BRL"
-                        locale="pt-BR" />
+                    <p-inputnumber [(ngModel)]="requestReceita.valor" inputId="currency-br" mode="currency"
+                        currency="BRL" locale="pt-BR" />
                 </div>
             </p-fluid>
             <div class="card flex justify-center">
@@ -46,28 +47,31 @@
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
                     <label for="dataRecebimento">Forma de recebimento*</label>
-                    <p-select [options]="formaDeRecebimento" [(ngModel)]="requestReceita.formaRecebimento" optionLabel="name" optionValue="name"
-                        placeholder="Forma de recebimento" class="w-full md:w-64" />
+                    <p-select [options]="formaDeRecebimento" [(ngModel)]="requestReceita.formaRecebimento"
+                        optionLabel="name" optionValue="name" placeholder="Forma de recebimento"
+                        class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
                     <label for="dataRecebimento">Conta*</label>
-                    <p-select [options]="contaDestino" [(ngModel)]="requestReceita.conta" optionLabel="name" optionValue="name"
-                    placeholder="Forma de recebimento" class="w-full md:w-64" />
+                    <p-select [options]="contaDestino" [(ngModel)]="requestReceita.conta" optionLabel="name"
+                        optionValue="name" placeholder="Forma de recebimento" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="dataRecebimento">Descrição</label>
-                    <textarea rows="3" cols="28" pTextarea [autoResize]="true" [(ngModel)]="requestReceita.descricao"></textarea>
+                    <textarea rows="3" cols="28" pTextarea [autoResize]="true"
+                        [(ngModel)]="requestReceita.descricao"></textarea>
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <a href="#">
                         <div class="flex gap-4 mt-1">
-                            <p-button (click)="doCadastro()" label="Cadastrar" class="w-full  md:w-64" styleClass="w-full" />
+                            <p-button (click)="doCadastro()" label="Cadastrar" class="w-full  md:w-64"
+                                styleClass="w-full" />
                         </div>
                     </a>
                 </div>
