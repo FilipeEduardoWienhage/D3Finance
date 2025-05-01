@@ -16,14 +16,14 @@
         <p-card header="Cadastrar Despesas" class="w-96">
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
-                    <label for="dataRecebimento">Categoria da Despesa*</label>
+                    <label for="dataRecebimento">Categoria da despesa*</label>
                     <p-select [options]="categoriaDaDespesa" [(ngModel)]="requestDespesa.categoria" optionLabel="name"
                         optionValue="name" placeholder="Categoria da Despesa" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2 w-full md:w-64">
-                    <label for="nomeDespesa">Nome Despesa*</label>
+                    <label for="nomeDespesa">Nome despesa*</label>
                     <input pInputText id="nomeDespesa" aria-describedby="nomeDespesa" [(ngModel)]="requestDespesa.nome"
                         class="w-full p-2 rounded-md bg-black text-white border border-gray-700" />
                 </div>
@@ -39,14 +39,14 @@
             </p-fluid>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
-                    <label for="dataRecebimento">Data de Recebimento*</label>
+                    <label for="dataRecebimento">Data de pagamento*</label>
                     <p-datepicker id="dataNascimento" [(ngModel)]="requestDespesa.data" required [showButtonBar]="true"
                         class="w-64" [dateFormat]="'dd/mm/yy'"/>
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Forma de recebimento*</label>
+                    <label for="dataRecebimento">Forma de pagamento*</label>
                     <p-select [options]="formaDeRecebimento" [(ngModel)]="requestDespesa.formaPagamento" optionLabel="name"
                         optionValue="name" placeholder="Forma de recebimento" class="w-full md:w-64" />
                 </div>

@@ -16,14 +16,14 @@
         <p-card header="Cadastrar Receitas" class="w-96">
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Categoria da Receita*</label>
+                    <label for="dataRecebimento">Categoria da receita*</label>
                     <p-select [options]="categoriaDaReceita" [(ngModel)]="requestReceita.categoria" optionLabel="name"
                         optionValue="name" placeholder="Categoria da Receita" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
-                    <label for="username">Nome Receita*</label>
+                    <label for="username">Nome receita*</label>
                     <input pInputText id="nomeReceita" aria-describedby="nomeReceita" [(ngModel)]="requestReceita.nome"
                         class="w-64" />
                 </div>
@@ -39,7 +39,7 @@
             </p-fluid>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
-                    <label for="dataRecebimento">Data de Recebimento*</label>
+                    <label for="dataRecebimento">Data de recebimento*</label>
                     <p-datepicker id="dataNascimento" [(ngModel)]="requestReceita.data" required [showButtonBar]="true"
                         class="w-64" [dateFormat]="'dd/mm/yy'" />
                 </div>
