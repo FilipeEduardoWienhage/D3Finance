@@ -65,7 +65,7 @@ export class NavBarSystemComponent {
             command: () => this.router.navigate(['/contas/cadastrar'])
           },
           {
-            label: 'Importar arquivo XML',
+            label: 'Importar arquivo CSV',
             icon: 'pi pi-cloud-upload',
             command: () => this.router.navigate(['/importararquivo'])
           },

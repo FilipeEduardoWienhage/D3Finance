@@ -16,7 +16,7 @@
     <div class="card w-full max-w-lg p-8">
       <p-toast></p-toast>
       <p-fileupload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)"
-        [multiple]="true" accept="image/*, .xml, .csv" maxFileSize="1000000000" mode="advanced"
+        [multiple]="true" accept=".xml, .csv" maxFileSize="1000000000" mode="advanced"
         chooseLabel="Selecionar Arquivos" uploadLabel="Enviar" cancelLabel="Cancelar">
         <ng-template #empty>
           <div class="text-center text-white">
