@@ -11,7 +11,8 @@ import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { SplitterModule } from 'primeng/splitter';
-
+import { DespesasService } from '../../../service/despesas.service';
+import { DespesaRequestModel } from '../../../models/RequestDespesas';
 
 
 interface formaRecebimento {
@@ -49,6 +50,11 @@ interface categoriaDespesa {
   ]
 })
 export class CadastroDespesasComponent{
+  public requestDespesa!: DespesaRequestModel;
+
+  constructor(private despesasService: DespesasService) {}
+
+
   nomeDespesa: string = '';
   valorDespesa: number = 0;
   dataRecebimento: Date | null = null;
@@ -61,7 +67,9 @@ export class CadastroDespesasComponent{
   selecionarConta: contaDestino | undefined;
   
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.requestDespesa = new DespesaRequestModel();
+
     this.categoriaDaDespesa = [
       { name: 'Despesas com Pessoal' },
       { name: 'Despesas Operacionais' },
@@ -90,5 +98,15 @@ export class CadastroDespesasComponent{
         { name: 'Santander' }
       ];
       
+  }
+  public doCadastroDespesas(): void {
+    console.log(this.requestDespesa);
+    this.despesasService.cadastrarDespesa(this.requestDespesa).subscribe({
+      next: () => alert("Despesa cadastrada com sucesso!"),
+      error: erro => {
+        console.error(erro)
+        alert("Erro ao efetuar o cadastro!");
+      }
+    });
   }
 }

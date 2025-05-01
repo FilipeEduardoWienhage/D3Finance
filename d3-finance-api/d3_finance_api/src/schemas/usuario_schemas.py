@@ -1,5 +1,5 @@
 from typing import Optional
-from datetime import date
+from datetime import date, datetime
 from pydantic.dataclasses import dataclass
 
 
@@ -50,3 +50,5 @@ class UsuarioUpdate:
 @dataclass
 class UsuarioResponse(UsuarioBase):
     id: int
+    data_criacao: Optional[datetime] = None
+    data_alteracao: Optional[datetime] = None
