@@ -45,18 +45,28 @@ export class NavBarSystemComponent {
             command: () => this.router.navigate(['/despesas'])
           },
           {
+            label: 'Movimentação entre contas',
+            icon: 'pi pi-arrow-right-arrow-left',
+            command: () => this.router.navigate(['/movimentarcontas'])
+          },
+          {
             label: 'Cadastrar Receitas',
             icon: 'pi pi-plus',
-            command: () => this.router.navigate(['/cadastrarreceitas'])
+            command: () => this.router.navigate(['/receitas/cadastrar'])
           },
           {
             label: 'Cadastrar Despesas',
             icon: 'pi pi-plus',
-            command: () => this.router.navigate(['/cadastrardespesas'])
+            command: () => this.router.navigate(['/despesas/cadastrar'])
+          },
+          {
+            label: 'Cadastrar Contas',
+            icon: 'pi pi-plus',
+            command: () => this.router.navigate(['/contas/cadastrar'])
           },
           {
             label: 'Importar arquivo XML',
-            icon: 'pi pi-plus',
+            icon: 'pi pi-cloud-upload',
             command: () => this.router.navigate(['/importararquivo'])
           },
           {

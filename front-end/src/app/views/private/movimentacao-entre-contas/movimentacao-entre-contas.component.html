@@ -1,0 +1,17 @@
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
+   
+    <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
+        <app-nav-bar-system></app-nav-bar-system>
+    </div>
+
+    <div class="card">
+        <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+            <ng-template #panel>
+                <div class="flex items-center justify-center h-full">D2 Finance</div>
+            </ng-template>
+        </p-splitter>
+    </div>
+    <p>Movimentação entre contas</p>
+
+    <app-footer class="mt-auto"></app-footer>
+</div>
