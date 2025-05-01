@@ -11,6 +11,8 @@ import { CadastroDespesasComponent } from './views/private/cadastro-despesas/cad
 import { ImportarArquivosComponent } from './views/private/importar-arquivos/importar-arquivos.component';
 import { ConfiguracaoPerfilComponent } from './views/private/configuracao-perfil/configuracao-perfil.component';
 import { PesquisarComponent } from './views/private/pesquisar/pesquisar.component';
+import { CadastroContasComponent } from './views/private/cadastro-contas/cadastro-contas.component';
+import { MovimentacaoEntreContasComponent } from './views/private/movimentacao-entre-contas/movimentacao-entre-contas.component';
 
 export const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -21,10 +23,12 @@ export const routes: Routes = [
     { path: "visaogeral", component: VisaoGeralComponent},
     { path: "receitas", component: ReceitasComponent},
     { path: "despesas", component: DespesasComponent},
-    { path: "cadastrarreceitas", component: CadastroReceitasComponent},
-    { path: "cadastrardespesas", component: CadastroDespesasComponent},
+    { path: "receitas/cadastrar", component: CadastroReceitasComponent},
+    { path: "despesas/cadastrar", component: CadastroDespesasComponent},
     { path: "importararquivo", component: ImportarArquivosComponent},
     { path: "configurarperfil", component: ConfiguracaoPerfilComponent},
     { path: "pesquisar", component: PesquisarComponent},
+    { path: "contas/cadastrar", component: CadastroContasComponent},
+    { path: "movimentarcontas", component: MovimentacaoEntreContasComponent},
     { path: "**", redirectTo: "/home" }
 ];
