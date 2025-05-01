@@ -1,4 +1,5 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
+
     <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
         <app-nav-bar-system></app-nav-bar-system>
     </div>
@@ -16,14 +17,14 @@
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="dataRecebimento">Categoria da Despesa*</label>
-                    <p-select [options]="categoriaDaDespesa" [(ngModel)]="selecionarCategoria" optionLabel="name"
-                        placeholder="Categoria da Despesa" class="w-full md:w-64" />
+                    <p-select [options]="categoriaDaDespesa" [(ngModel)]="requestDespesa.categoria" optionLabel="name"
+                        optionValue="name" placeholder="Categoria da Despesa" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2 w-full md:w-64">
                     <label for="nomeDespesa">Nome Despesa*</label>
-                    <input pInputText id="nomeDespesa" aria-describedby="nomeDespesa" [(ngModel)]="nomeDespesa"
+                    <input pInputText id="nomeDespesa" aria-describedby="nomeDespesa" [(ngModel)]="requestDespesa.nome"
                         class="w-full p-2 rounded-md bg-black text-white border border-gray-700" />
                 </div>
             </div>
@@ -32,42 +33,43 @@
                     <label for="currency-br">
                         Valor da Despesa*
                     </label>
-                    <p-inputnumber [(ngModel)]="valorDespesa" inputId="currency-br" mode="currency" currency="BRL"
+                    <p-inputnumber [(ngModel)]="requestDespesa.valor" inputId="currency-br" mode="currency" currency="BRL"
                         locale="pt-BR" />
                 </div>
             </p-fluid>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="dataRecebimento">Data de Recebimento*</label>
-                    <p-datepicker id="dataNascimento" [(ngModel)]="dataRecebimento" required [showButtonBar]="true"
-                        class="w-64" />
+                    <p-datepicker id="dataNascimento" [(ngModel)]="requestDespesa.data" required [showButtonBar]="true"
+                        class="w-64" [dateFormat]="'dd/mm/yy'"/>
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
                     <label for="dataRecebimento">Forma de recebimento*</label>
-                    <p-select [options]="formaDeRecebimento" [(ngModel)]="selecionarForma" optionLabel="name"
-                    placeholder="Forma de recebimento" class="w-full md:w-64" />
+                    <p-select [options]="formaDeRecebimento" [(ngModel)]="requestDespesa.formaPagamento" optionLabel="name"
+                        optionValue="name" placeholder="Forma de recebimento" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
                     <label for="dataRecebimento">Conta*</label>
-                    <p-select [options]="contaDestino" [(ngModel)]="selecionarConta" optionLabel="name"
-                    placeholder="Forma de recebimento" class="w-full md:w-64" />
+                    <p-select [options]="contaDestino" [(ngModel)]="requestDespesa.conta" optionLabel="name"
+                        optionValue="name" placeholder="Forma de recebimento" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="dataRecebimento">Descrição</label>
-                    <textarea rows="3" cols="28" pTextarea [autoResize]="true"></textarea>
+                    <textarea rows="3" cols="28" pTextarea [autoResize]="true"
+                        [(ngModel)]="requestDespesa.descricao"></textarea>
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <a href="#">
                         <div class="flex gap-4 mt-1">
-                            <p-button label="Cadastrar" class="w-full md:w-64" styleClass="w-full" />
+                            <p-button (click)="doCadastroDespesas()" label="Cadastrar" class="w-full md:w-64" styleClass="w-full" />
                         </div>
                     </a>
                 </div>

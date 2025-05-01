@@ -102,10 +102,10 @@ export class CadastroReceitasComponent {
     ];
   }
   
-  public doCadastro(): void {
+  public doCadastroReceitas(): void {
     console.log(this.requestReceita);
     this.receitaService.cadastrarReceita(this.requestReceita).subscribe({
-      next: () => alert("Cadastrado com sucesso!"),
+      next: () => alert("Receita cadastrada com sucesso!"),
       error: erro => {
         console.error(erro)
         alert("Erro ao efetuar o cadastro!");
