@@ -5,9 +5,8 @@ from pydantic.dataclasses import dataclass
 
 @dataclass
 class ContaBase:
-    banco: str
-    numero_conta: str
-    agencia: str
+    tipo_conta: str
+    nome_conta: str
 
 
 @dataclass
@@ -17,16 +16,14 @@ class ContaCreate(ContaBase):
 
 @dataclass
 class ContaUpdate:
-    banco: Optional[str] = None
-    numero_conta: Optional[str] = None
-    agencia: Optional[str] = None
+    tipo_conta: Optional[str] = None
+    nome_conta: Optional[str] = None
 
 
 @dataclass
 class ContaResponse:
     id: int
-    banco: str
-    numero_conta: str
-    agencia: str
+    tipo_conta: str
+    nome_conta: str
     data_criacao: Optional[datetime] = None
     data_alteracao: Optional[datetime] = None

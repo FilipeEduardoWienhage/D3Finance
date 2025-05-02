@@ -51,8 +51,7 @@ class Contas(Base):
     __tablename__ = "contas"
 
     id = Column(Integer, primary_key=True, index=True)
-    banco = Column(String(50), nullable=False)
-    numero_conta = Column(String(50), nullable=False)
-    agencia = Column(String(50), nullable=False)
+    tipo_conta = Column(String(50), nullable=False)
+    nome_conta = Column(String(50), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)

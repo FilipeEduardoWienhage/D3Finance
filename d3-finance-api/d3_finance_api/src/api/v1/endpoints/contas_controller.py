@@ -31,9 +31,8 @@ def get_contas(db: Session = Depends(get_db)):
     contas = db.query(Contas).all()
     return [ContaResponse(
         id=conta.id,
-        banco=conta.banco,
-        numero_conta=conta.numero_conta,
-        agencia=conta.agencia,
+        tipo_conta=conta.tipo_conta,
+        nome_conta=conta.nome_conta,
         data_criacao=conta.data_criacao,
         data_alteracao=conta.data_alteracao,
     ) for conta in contas]
@@ -51,9 +50,8 @@ def conta_by_id(contas_id: int, db: Session = Depends(get_db)):
         )
     return ContaResponse(
         id=conta.id,
-        banco=conta.banco,
-        numero_conta=conta.numero_conta,
-        agencia=conta.agencia,
+        tipo_conta=conta.tipo_conta,
+        nome_conta=conta.nome_conta,
         data_criacao=conta.data_criacao,
         data_alteracao=conta.data_alteracao,
     )
@@ -65,9 +63,8 @@ def conta_by_id(contas_id: int, db: Session = Depends(get_db)):
 def create_contas(conta: ContaCreate, db: Session = Depends(get_db)):
 
     db_conta = Contas(
-        banco=conta.banco,
-        numero_conta=conta.numero_conta,
-        agencia=conta.agencia,
+        tipo_conta=conta.tipo_conta,
+        nome_conta=conta.nome_conta,
     )
 
     db.add(db_conta)
@@ -76,16 +73,15 @@ def create_contas(conta: ContaCreate, db: Session = Depends(get_db)):
 
     return ContaResponse(
         id=db_conta.id,
-        banco=db_conta.banco,
-        numero_conta=db_conta.numero_conta,
-        agencia=db_conta.agencia
+        tipo_conta=conta.tipo_conta,
+        nome_conta=conta.nome_conta,
     )
 
 
 @router.put(
     path=ATUALIZAR_CONTAS, response_model=ContaResponse, tags=[Tag.Contas.name]
 )
-def update_despesa(conta_id: int, conta_update: ContaUpdate, db: Session = Depends(get_db)):
+def update_conta(conta_id: int, conta_update: ContaUpdate, db: Session = Depends(get_db)):
     conta = db.query(Contas).filter(Contas.id == conta_id).first()
 
     if not conta:
@@ -103,8 +99,8 @@ def update_despesa(conta_id: int, conta_update: ContaUpdate, db: Session = Depen
 
     return ContaResponse(
         id=conta.id,
-        banco=conta.banco,
-        numero_conta=conta.numero_conta
+        tipo_conta=conta.tipo_conta,
+        nome_conta=conta.nome_conta,
     )
 
 

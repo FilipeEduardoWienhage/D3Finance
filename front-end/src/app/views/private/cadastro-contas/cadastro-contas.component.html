@@ -1,5 +1,5 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
-   
+
     <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
         <app-nav-bar-system></app-nav-bar-system>
     </div>
@@ -11,7 +11,36 @@
             </ng-template>
         </p-splitter>
     </div>
-    <p>Cadastrar contas</p>
 
+    <div class="flex-1 flex items-center justify-center">
+        <p-card header="Cadastrar Contas" class="w-96">
+            
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-">
+                    <label for="tipoConta">Tipo da Conta*</label>
+                    <p-select [options]="tipoConta" [(ngModel)]="requestConta.tipoConta" optionLabel="name"
+                        optionValue="name" placeholder="Tipo da Conta" class="w-full md:w-64" />
+                </div>
+            </div>
+
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2 w-full md:w-64">
+                    <label for="nomeConta">Nome da Conta*</label>
+                    <input pInputText id="nomeConta" aria-describedby="nomeContas" [(ngModel)]="requestConta.nomeConta"
+                        class="w-full p-2 rounded-md bg-black text-white border border-gray-700" />
+                </div>
+            </div>
+
+            <div class="card flex justify-center">
+                <div class="flex flex-col gap-2">
+                    <a href="#">
+                        <div class="flex gap-4 mt-1">
+                            <p-button (click)="doCadastroContas()" label="Cadastrar" class="w-full md:w-64" styleClass="w-full" />
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </p-card>
+    </div>
     <app-footer class="mt-auto"></app-footer>
 </div>

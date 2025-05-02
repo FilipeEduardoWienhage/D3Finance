@@ -39,23 +39,23 @@
             </p-fluid>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
-                    <label for="dataRecebimento">Data de pagamento*</label>
-                    <p-datepicker id="dataNascimento" [(ngModel)]="requestDespesa.data" required [showButtonBar]="true"
+                    <label for="dataPagamento">Data de pagamento*</label>
+                    <p-datepicker id="dataPagamento" [(ngModel)]="requestDespesa.data" required [showButtonBar]="true"
                         class="w-64" [dateFormat]="'dd/mm/yy'"/>
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Forma de pagamento*</label>
+                    <label for="formaPagamento">Forma de pagamento*</label>
                     <p-select [options]="formaDeRecebimento" [(ngModel)]="requestDespesa.formaPagamento" optionLabel="name"
-                        optionValue="name" placeholder="Forma de recebimento" class="w-full md:w-64" />
+                        optionValue="name" placeholder="Forma de pagamento" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Conta*</label>
+                    <label for="conta">Conta*</label>
                     <p-select [options]="contaDestino" [(ngModel)]="requestDespesa.conta" optionLabel="name"
-                        optionValue="name" placeholder="Forma de recebimento" class="w-full md:w-64" />
+                        optionValue="name" placeholder="Conta destino" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
