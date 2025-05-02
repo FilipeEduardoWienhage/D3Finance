@@ -14,8 +14,8 @@ export class ContasService {
 
     cadastrarConta(conta: ContaRequestModel): Observable<any> {
         let payload = {
-            tipoConta: conta.tipoConta,
-            nomeConta: conta.nomeConta
+            tipo_conta: conta.tipoConta,
+            nome_conta: conta.nomeConta
         };
         console.log(payload);
 
