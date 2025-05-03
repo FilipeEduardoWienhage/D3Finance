@@ -4,7 +4,7 @@ export class ReceitaRequestModel {
     valor: number = 0;
     data: Date | null = null;
     formaRecebimento: string = "";
-    conta: string = "";
+    conta_id: number = 0;
     descricao: string = "";
   }
   

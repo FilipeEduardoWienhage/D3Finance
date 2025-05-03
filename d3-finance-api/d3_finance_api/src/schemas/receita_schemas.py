@@ -11,6 +11,7 @@ class ReceitaBase:
     valor_recebido: float
     data_recebimento: date
     forma_recebimento: str
+    conta_id: int
     descricao: Optional[str] = None
 
 
@@ -37,6 +38,7 @@ class ReceitaResponse:
     valor_recebido: float
     data_recebimento: date
     forma_recebimento: str
+    conta_id: int
     descricao: Optional[str] = None
     data_criacao: Optional[datetime] = None
     data_alteracao: Optional[datetime] = None

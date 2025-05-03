@@ -33,6 +33,11 @@ class Receitas(Base):
     data_recebimento = Column(Date, nullable=False)
     descricao = Column(String(250))
     forma_recebimento = Column(String(50), nullable=False)
+    conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
+    data_criacao = Column(DateTime, default=func.now(), nullable=False)
+    data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
+
+    conta = relationship("Contas", back_populates="receitas")
 
 
 class Despesas(Base):
@@ -62,3 +67,4 @@ class Contas(Base):
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 
     despesas = relationship("Despesas", back_populates="conta")
+    receitas = relationship("Receitas", back_populates="conta")

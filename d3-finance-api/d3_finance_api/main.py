@@ -1,9 +1,17 @@
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 from src.app import app
 from src.database.database import engine, Base
 from src.api.v1.endpoints import usuario_controller, receita_controller, despesa_controller, contas_controller, importacao_controller
 
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Cria as tabelas no banco de dados. Este comando verifica todos os modelos definidos em Base e cria as
 # tabelas correspondentes no banco de dados.
 # Em um projeto real, você pode querer usar Alembic para gerenciar migrações do banco de dados.
