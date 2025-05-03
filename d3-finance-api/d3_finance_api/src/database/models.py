@@ -1,5 +1,7 @@
 from sqlalchemy import Column, DateTime, Integer, String, Date, ForeignKey, Float, func
 from src.database.database import Base
+from sqlalchemy.orm import relationship
+
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -43,8 +45,11 @@ class Despesas(Base):
     data_pagamento = Column(Date, nullable=False)
     descricao = Column(String(250))
     forma_pagamento = Column(String(50), nullable=False)
+    conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
+
+    conta = relationship("Contas", back_populates="despesas")
 
 
 class Contas(Base):
@@ -55,3 +60,5 @@ class Contas(Base):
     nome_conta = Column(String(50), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
+
+    despesas = relationship("Despesas", back_populates="conta")

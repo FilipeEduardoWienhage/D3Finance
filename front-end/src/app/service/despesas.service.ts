@@ -14,11 +14,11 @@ export class DespesasService {
     cadastrarDespesa(despesa: DespesaRequestModel): Observable<any> {
         let payload = {
             categoria: despesa.categoria,
-            nome_despesa: despesa.nome,
-            valor_pago: despesa.valor,
-            data_pagamento: despesa.data ? despesa.data.toISOString().split('T')[0] : null,
-            forma_pagamento: despesa.formaPagamento,
-            conta: despesa.conta,
+            nome_despesa: despesa.nome_despesa,
+            valor_pago: despesa.valor_pago,
+            data_pagamento: despesa.data_pagamento ? despesa.data_pagamento.toISOString().split('T')[0] : null,
+            forma_pagamento: despesa.forma_pagamento,
+            conta_id: despesa.conta_id,
             descricao: despesa.descricao
         };
         console.log(payload);

@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { SplitterModule } from 'primeng/splitter';
 import { DespesasService } from '../../../service/despesas.service';
 import { DespesaRequestModel } from '../../../models/RequestDespesas';
+import { ContasService } from '../../../service/contas.service';
 
 
 interface formaRecebimento {
@@ -20,6 +21,7 @@ interface formaRecebimento {
 }
 
 interface contaDestino {
+  id: number;
   name: string;
 }
 
@@ -31,7 +33,7 @@ interface categoriaDespesa {
   selector: 'app-cadastro-despesas',
   standalone: true,
   imports: [
-    FooterComponent, 
+    FooterComponent,
     NavBarSystemComponent,
     CardModule,
     Fluid,
@@ -49,10 +51,13 @@ interface categoriaDespesa {
     MessageService,
   ]
 })
-export class CadastroDespesasComponent{
+export class CadastroDespesasComponent {
   public requestDespesa!: DespesaRequestModel;
 
-  constructor(private despesasService: DespesasService) {}
+  constructor(private despesasService: DespesasService
+    , private contasService: ContasService
+  ) { }
+  
 
 
   nomeDespesa: string = '';
@@ -61,11 +66,11 @@ export class CadastroDespesasComponent{
   formaDeRecebimento: formaRecebimento[] | undefined;
   selecionarForma: formaRecebimento | undefined;
   categoriaDespesa: string = '';
-  categoriaDaDespesa: categoriaDespesa[] | undefined;  
+  categoriaDaDespesa: categoriaDespesa[] | undefined;
   selecionarCategoria: categoriaDespesa | undefined;
   contaDestino: contaDestino[] | undefined;
   selecionarConta: contaDestino | undefined;
-  
+
 
   ngOnInit(): void {
     this.requestDespesa = new DespesaRequestModel();
@@ -83,23 +88,33 @@ export class CadastroDespesasComponent{
       { name: 'Despesas com Terceirizados' },
       { name: 'Outras Despesas' }
     ];
-      this.formaDeRecebimento = [
-        { name: 'Dinheiro' },
-        { name: 'Débito' },
-        { name: 'Crédito' },
-        { name: 'Cheque' },
-        { name: 'Depósito' },
-        { name: 'Pix' }
+    this.formaDeRecebimento = [
+      { name: 'Dinheiro' },
+      { name: 'Débito' },
+      { name: 'Crédito' },
+      { name: 'Cheque' },
+      { name: 'Depósito' },
+      { name: 'Pix' }
     ];
-      this.contaDestino = [
-        { name: 'Banco do Brasil' },
-        { name: 'Itaú' },
-        { name: 'Bradesco' },
-        { name: 'Santander' }
-      ];
-      
+    this.contasService.listarContas().subscribe({
+      next: (contas) => {
+        this.contaDestino = contas.map(conta => ({
+          id: conta.id,
+          name: conta.nome_conta
+        }));
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar contas:', erro);
+      }
+    });
+
   }
   public doCadastroDespesas(): void {
+
+    if (this.selecionarConta) {
+      this.requestDespesa.conta_id = this.selecionarConta.id;
+    }
+
     console.log(this.requestDespesa);
     this.despesasService.cadastrarDespesa(this.requestDespesa).subscribe({
       next: () => alert("Despesa cadastrada com sucesso!"),

@@ -10,7 +10,9 @@ class DespesaBase:
     valor_pago: float
     data_pagamento: date
     forma_pagamento: str
+    conta_id: int
     descricao: Optional[str] = None
+
 
 
 @dataclass
@@ -36,6 +38,7 @@ class DespesaResponse:
     valor_pago: float
     data_pagamento: date
     forma_pagamento: str
+    conta_id: int
     descricao: Optional[str] = None
     data_criacao: Optional[datetime] = None
     data_alteracao: Optional[datetime] = None
