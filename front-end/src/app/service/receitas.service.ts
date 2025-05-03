@@ -18,7 +18,7 @@ export class ReceitasService {
             valor_recebido: receita.valor,
             data_recebimento: receita.data ? receita.data.toISOString().split('T')[0] : null,
             forma_recebimento: receita.formaRecebimento,
-            conta: receita.conta,
+            conta_id: receita.conta_id,
             descricao: receita.descricao
         };
         console.log(payload);

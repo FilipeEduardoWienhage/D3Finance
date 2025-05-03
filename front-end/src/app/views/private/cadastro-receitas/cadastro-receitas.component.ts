@@ -14,7 +14,7 @@ import { MessageService } from 'primeng/api';
 import { SplitterModule } from 'primeng/splitter';
 import { ReceitaRequestModel } from '../../../models/RequestReceitas';
 import { ReceitasService } from '../../../service/receitas.service';
-
+import { ContasService } from '../../../service/contas.service';
 
 
 interface formaRecebimento {
@@ -26,6 +26,7 @@ interface categoriaReceita {
 }
 
 interface contaDestino {
+  id: number;
   name: string;
 }
 
@@ -51,7 +52,7 @@ interface contaDestino {
 export class CadastroReceitasComponent {
   public requestReceita!: ReceitaRequestModel;
 
-  constructor(private receitaService: ReceitasService) {}
+  constructor(private receitaService: ReceitasService, private contasService: ContasService) {}
 
   nomeReceita: string = '';
   categoriaReceita: string = '';
@@ -94,15 +95,25 @@ export class CadastroReceitasComponent {
       { name: 'Outras Receitas Não Operacionais' }
     ];
     
-    this.contaDestino = [
-      { name: 'Banco do Brasil' },
-      { name: 'Itaú' },
-      { name: 'Bradesco' },
-      { name: 'Santander' }
-    ];
+    this.contasService.listarContas().subscribe({
+      next: (contas) => {
+        this.contaDestino = contas.map(conta => ({
+          id: conta.id,
+          name: conta.nome_conta
+        }));
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar contas:', erro);
+      }
+    });
   }
   
   public doCadastroReceitas(): void {
+
+    if (this.selecionarConta) {
+      this.requestReceita.conta_id = this.selecionarConta.id;
+    }
+
     console.log(this.requestReceita);
     this.receitaService.cadastrarReceita(this.requestReceita).subscribe({
       next: () => alert("Receita cadastrada com sucesso!"),

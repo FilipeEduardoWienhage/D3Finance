@@ -36,6 +36,9 @@ def get_receitas(db: Session = Depends(get_db)):
         data_recebimento=receita.data_recebimento,
         descricao=receita.descricao,
         forma_recebimento=receita.forma_recebimento,
+        conta_id=receita.conta_id,
+        data_criacao=receita.data_criacao,
+        data_alteracao=receita.data_alteracao,
     ) for receita in receitas]
 
 
@@ -57,6 +60,9 @@ def get_receita_by_id(receitas_id: int, db: Session = Depends(get_db)):
         data_recebimento=receita.data_recebimento,
         descricao=receita.descricao,
         forma_recebimento=receita.forma_recebimento,
+        conta_id=receita.conta_id,
+        data_criacao=receita.data_criacao,
+        data_alteracao=receita.data_alteracao,
     )
 
 
@@ -71,7 +77,8 @@ def create_receita(receita: ReceitaCreate, db: Session = Depends(get_db)):
         valor_recebido=receita.valor_recebido,
         data_recebimento=receita.data_recebimento,
         forma_recebimento=receita.forma_recebimento,
-        descricao=receita.descricao
+        descricao=receita.descricao,
+        conta_id=receita.conta_id,
     )
 
     db.add(db_receita)  
@@ -86,6 +93,9 @@ def create_receita(receita: ReceitaCreate, db: Session = Depends(get_db)):
         data_recebimento=db_receita.data_recebimento,
         descricao=db_receita.descricao,
         forma_recebimento=db_receita.forma_recebimento,
+        conta_id=receita.conta_id,
+        data_criacao=db_receita.data_criacao,
+        data_alteracao=db_receita.data_alteracao,
     )
 
 # PUT - Atualizar receita
@@ -114,6 +124,9 @@ def update_receita(receitas_id: int, receita_update: ReceitaUpdate, db: Session 
         data_recebimento=receita.data_recebimento,
         descricao=receita.descricao,
         forma_recebimento=receita.forma_recebimento,
+        conta_id=receita.conta_id,
+        data_criacao=receita.data_criacao,
+        data_alteracao=receita.data_alteracao,
     )
 
 
