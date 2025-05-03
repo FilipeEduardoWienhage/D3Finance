@@ -3,6 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ContaRequestModel } from '../models/RequestContas';
 
+export interface ContaResponseModel {
+    id: number;
+    nome_conta: string;
+}
+
 @Injectable({
     providedIn: 'root'})
 
@@ -21,4 +26,9 @@ export class ContasService {
 
         return this.http.post(this.apiUrl, payload);
     }
+
+    listarContas(): Observable<ContaResponseModel[]> {
+        return this.http.get<ContaResponseModel[]>(this.apiUrl);
+    }
 }
+

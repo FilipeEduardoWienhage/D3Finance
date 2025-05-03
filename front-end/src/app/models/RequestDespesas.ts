@@ -1,10 +1,10 @@
 export class DespesaRequestModel {
     categoria: string = "";
-    nome: string = "";
-    valor: number = 0;
-    data: Date | null = null;
-    formaPagamento: string = "";
-    conta: string = "";
+    nome_despesa: string = "";
+    valor_pago: number = 0;
+    data_pagamento: Date | null = null;
+    forma_pagamento: string = "";
+    conta_id: number = 0;
     descricao: string = "";
   }
   

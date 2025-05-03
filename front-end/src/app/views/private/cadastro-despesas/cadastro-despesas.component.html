@@ -24,7 +24,7 @@
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2 w-full md:w-64">
                     <label for="nomeDespesa">Nome despesa*</label>
-                    <input pInputText id="nomeDespesa" aria-describedby="nomeDespesa" [(ngModel)]="requestDespesa.nome"
+                    <input pInputText id="nomeDespesa" aria-describedby="nomeDespesa" [(ngModel)]="requestDespesa.nome_despesa"
                         class="w-full p-2 rounded-md bg-black text-white border border-gray-700" />
                 </div>
             </div>
@@ -33,29 +33,29 @@
                     <label for="currency-br">
                         Valor da Despesa*
                     </label>
-                    <p-inputnumber [(ngModel)]="requestDespesa.valor" inputId="currency-br" mode="currency" currency="BRL"
+                    <p-inputnumber [(ngModel)]="requestDespesa.valor_pago" inputId="currency-br" mode="currency" currency="BRL"
                         locale="pt-BR" />
                 </div>
             </p-fluid>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="dataPagamento">Data de pagamento*</label>
-                    <p-datepicker id="dataPagamento" [(ngModel)]="requestDespesa.data" required [showButtonBar]="true"
+                    <p-datepicker id="dataPagamento" [(ngModel)]="requestDespesa.data_pagamento" required [showButtonBar]="true"
                         class="w-64" [dateFormat]="'dd/mm/yy'"/>
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
                     <label for="formaPagamento">Forma de pagamento*</label>
-                    <p-select [options]="formaDeRecebimento" [(ngModel)]="requestDespesa.formaPagamento" optionLabel="name"
+                    <p-select [options]="formaDeRecebimento" [(ngModel)]="requestDespesa.forma_pagamento" optionLabel="name"
                         optionValue="name" placeholder="Forma de pagamento" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
                     <label for="conta">Conta*</label>
-                    <p-select [options]="contaDestino" [(ngModel)]="requestDespesa.conta" optionLabel="name"
-                        optionValue="name" placeholder="Conta destino" class="w-full md:w-64" />
+                    <p-select [options]="contaDestino" [(ngModel)]="requestDespesa.conta_id" optionLabel="name"
+                        optionValue="id" placeholder="Conta destino" class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
