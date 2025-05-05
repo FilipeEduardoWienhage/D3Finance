@@ -1,146 +1,149 @@
-<app-nav-bar></app-nav-bar>
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
 
-<p-stepper [(value)]="activeStep" class="basis-[40rem]">
-    <p-step-list>
-        <p-step [value]="1" class="flex flex-row flex-auto gap-2">
-            <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
-                    <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value <= activeStep,
-                                'border-surface': value > activeStep
-                            }">
-                        <i class="pi pi-user"></i>
-                    </span>
-                </button>
-            </ng-template>
-        </p-step>
+ <app-nav-bar></app-nav-bar>
 
-        <p-step [value]="2" class="flex flex-row flex-auto gap-2">
-            <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
-                    <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value <= activeStep,
-                                'border-surface': value > activeStep
-                            }">
-                        <i class="pi pi-user"></i>
-                    </span>
-                </button>
-            </ng-template>
-        </p-step>
+    <p-stepper [(value)]="activeStep" class="basis-[40rem]">
+        <p-step-list>
+            <p-step [value]="1" class="flex flex-row flex-auto gap-2">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                        <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                                    'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                                    'border-surface': value > activeStep
+                                }">
+                            <i class="pi pi-user"></i>
+                        </span>
+                    </button>
+                </ng-template>
+            </p-step>
 
-        <p-step [value]="3" class="flex flex-row flex-auto gap-2">
-            <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
-                    <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value <= activeStep,
-                                'border-surface': value > activeStep
-                            }">
-                        <i class="pi pi-user"></i>
-                    </span>
-                </button>
-            </ng-template>
-        </p-step>
-    </p-step-list>
+            <p-step [value]="2" class="flex flex-row flex-auto gap-2">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                        <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                                    'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                                    'border-surface': value > activeStep
+                                }">
+                            <i class="pi pi-user"></i>
+                        </span>
+                    </button>
+                </ng-template>
+            </p-step>
 
-    <p-step-panels>
-        <p-step-panel [value]="1">
-            <ng-template #content let-activateCallback="activateCallback">
-                <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
-                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações pessoais</div>
-                    <div class="flex flex-col gap-2">
-                        <label for="nome">Nome*</label>
-                        <input class="w-full" [(ngModel)]="requestCadastro.nome" pInputText id="nome" type="text" placeholder="Nome" />
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="email">E-mail*</label>
-                        <input class="w-full" [(ngModel)]="requestCadastro.email" pInputText id="email" type="email" placeholder="E-mail" />
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="cpf">CPF*</label>
-                        <p-inputMask class="w-full" mask="999.999.999-99" id="cpf" [(ngModel)]="requestCadastro.cpf" placeholder="000.000.000-00" aria-describedby="CPF-help" required></p-inputMask>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="dataNascimento">Data de nascimento*</label>
-                        <p-datepicker class="w-full" id="dataNascimento" [(ngModel)]="requestCadastro.dataNascimento" required [showButtonBar]="true" [dateFormat]="'dd/mm/yy'"></p-datepicker>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="label">Sexo*</label>
-                        <p-select class="w-full" [options]="sexoOptions" [(ngModel)]="requestCadastro.selectedSexo" [checkmark]="false" optionLabel="label" [showClear]="true" placeholder="Selecione o Sexo" />
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="cargo">Profissão*</label>
-                        <input class="w-full" [(ngModel)]="requestCadastro.cargo" pInputText id="cargo" type="text" placeholder="Profissão" />
-                    </div>
-                </div>
-                <div class="flex pt-6 justify-end mr-2">
-                    <p-button (onClick)="activateCallback(2)" label="Próximo" icon="pi pi-arrow-right" iconPos="right" />
-                </div>
-            </ng-template>
-        </p-step-panel>
+            <p-step [value]="3" class="flex flex-row flex-auto gap-2">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="bg-transparent border-0 inline-flex flex-col gap-2" (click)="activateCallback()">
+                        <span class="rounded-full border-2 w-12 h-12 inline-flex items-center justify-center" [ngClass]="{
+                                    'bg-primary text-primary-contrast border-primary': value <= activeStep,
+                                    'border-surface': value > activeStep
+                                }">
+                            <i class="pi pi-user"></i>
+                        </span>
+                    </button>
+                </ng-template>
+            </p-step>
+        </p-step-list>
 
-        <p-step-panel [value]="2">
-            <ng-template #content let-activateCallback="activateCallback">
-                <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
-                    <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações da Empresa/Endereço</div>
-                    <div class="flex flex-col gap-2">
-                        <label for="cnpj">CNPJ*</label>
-                        <p-inputMask class="w-full" mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="requestCadastro.cnpj" placeholder="00.000.000/0000-00" aria-describedby="CNPJ-help" required (onBlur)="buscarCnpj()"></p-inputMask>
+        <p-step-panels>
+            <p-step-panel [value]="1">
+                <ng-template #content let-activateCallback="activateCallback">
+                    <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
+                        <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações pessoais</div>
+                        <div class="flex flex-col gap-2">
+                            <label for="nome">Nome*</label>
+                            <input class="w-full" [(ngModel)]="requestCadastro.nome" pInputText id="nome" type="text" placeholder="Nome" />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="email">E-mail*</label>
+                            <input class="w-full" [(ngModel)]="requestCadastro.email" pInputText id="email" type="email" placeholder="E-mail" />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="cpf">CPF*</label>
+                            <p-inputMask class="w-full" mask="999.999.999-99" id="cpf" [(ngModel)]="requestCadastro.cpf" placeholder="000.000.000-00" aria-describedby="CPF-help" required></p-inputMask>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="dataNascimento">Data de nascimento*</label>
+                            <p-datepicker class="w-full" id="dataNascimento" [(ngModel)]="requestCadastro.dataNascimento" required [showButtonBar]="true" [dateFormat]="'dd/mm/yy'"></p-datepicker>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="label">Sexo*</label>
+                            <p-select class="w-full" [options]="sexoOptions" [(ngModel)]="requestCadastro.selectedSexo" [checkmark]="false" optionLabel="label" [showClear]="true" placeholder="Selecione o Sexo" />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="cargo">Profissão*</label>
+                            <input class="w-full" [(ngModel)]="requestCadastro.cargo" pInputText id="cargo" type="text" placeholder="Profissão" />
+                        </div>
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="nomeEmpresa">Razão social*</label>
-                        <input class="w-full" pInputText id="nomeEmpresa" [(ngModel)]="requestCadastro.nomeEmpresa" name="nomeEmpresa" placeholder="Nome da Empresa" required />
+                    <div class="flex pt-6 justify-end mr-2">
+                        <p-button (onClick)="activateCallback(2)" label="Próximo" icon="pi pi-arrow-right" iconPos="right" />
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="cep">CEP*</label>
-                        <p-inputMask class="w-full" mask="99.999-999" id="cep" [(ngModel)]="requestCadastro.cep" placeholder="00.000-000" aria-describedby="CEP-help" required ></p-inputMask>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="estado">Estado/UF*</label>
-                        <input class="w-full" pInputText id="estado" [(ngModel)]="requestCadastro.estado" placeholder="Estado" required />
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="cidade">Cidade*</label>
-                        <input class="w-full" pInputText id="cidade" [(ngModel)]="requestCadastro.cidade" placeholder="Cidade" required />
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="bairro">Bairro*</label>
-                        <input class="w-full" pInputText id="bairro" [(ngModel)]="requestCadastro.bairro" placeholder="Bairro" required />
-                    </div>
-                </div>
-                <div class="flex pt-6 justify-between">
-                    <p-button (onClick)="activateCallback(1)" label="Voltar" severity="secondary" icon="pi pi-arrow-left" />
-                    <p-button (onClick)="activateCallback(3)" label="Próximo" icon="pi pi-arrow-right" iconPos="right" />
-                </div>
-            </ng-template>
-        </p-step-panel>
+                </ng-template>
+            </p-step-panel>
 
-        <p-step-panel [value]="3">
-            <ng-template #content let-activateCallback="activateCallback">
-                <div class="flex flex-col gap-4 mx-auto pt-6 pb-12" style="min-height: 35rem; max-width: 24rem;">
+            <p-step-panel [value]="2">
+                <ng-template #content let-activateCallback="activateCallback">
                     <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
-                        <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações de Perfil/Login</div>
-                        <div class="text-center"></div>
+                        <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações da Empresa/Endereço</div>
                         <div class="flex flex-col gap-2">
-                            <label for="usuario">Usuário*</label>
-                            <input class="w-full" [(ngModel)]="requestCadastro.usuario" pInputText id="usuario" type="text" placeholder="Usuário" />
+                            <label for="cnpj">CNPJ*</label>
+                            <p-inputMask class="w-full" mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="requestCadastro.cnpj" placeholder="00.000.000/0000-00" aria-describedby="CNPJ-help" required (onBlur)="buscarCnpj()"></p-inputMask>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="password">Senha*</label>
-                            <p-password class="w-full" [(ngModel)]="requestCadastro.password" placeholder="Senha" id="password"></p-password>
+                            <label for="nomeEmpresa">Razão social*</label>
+                            <input class="w-full" pInputText id="nomeEmpresa" [(ngModel)]="requestCadastro.nomeEmpresa" name="nomeEmpresa" placeholder="Nome da Empresa" required />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="confirmarSenha">Confirmar Senha*</label>
-                            <p-password class="w-full" [(ngModel)]="requestCadastro.confirmarSenha" placeholder="Confirmar Senha" id="confirmarSenha"></p-password>
+                            <label for="cep">CEP*</label>
+                            <p-inputMask class="w-full" mask="99.999-999" id="cep" [(ngModel)]="requestCadastro.cep" placeholder="00.000-000" aria-describedby="CEP-help" required ></p-inputMask>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="estado">Estado/UF*</label>
+                            <input class="w-full" pInputText id="estado" [(ngModel)]="requestCadastro.estado" placeholder="Estado" required />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="cidade">Cidade*</label>
+                            <input class="w-full" pInputText id="cidade" [(ngModel)]="requestCadastro.cidade" placeholder="Cidade" required />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="bairro">Bairro*</label>
+                            <input class="w-full" pInputText id="bairro" [(ngModel)]="requestCadastro.bairro" placeholder="Bairro" required />
                         </div>
                     </div>
-                </div>
-                <div class="flex pt-6 justify-between">
-                    <p-button (onClick)="activateCallback(2)" label="Voltar" severity="secondary" icon="pi pi-arrow-left" />
-                    <p-button (click)="doCadastro()" (onClick)="activateCallback(3)" label="Cadastrar" icon="pi pi-arrow-right" iconPos="right" />
-                </div>
-            </ng-template>
-        </p-step-panel>
-    </p-step-panels>
-</p-stepper>
+                    <div class="flex pt-6 justify-between">
+                        <p-button (onClick)="activateCallback(1)" label="Voltar" severity="secondary" icon="pi pi-arrow-left" />
+                        <p-button (onClick)="activateCallback(3)" label="Próximo" icon="pi pi-arrow-right" iconPos="right" />
+                    </div>
+                </ng-template>
+            </p-step-panel>
 
-<app-footer></app-footer>
+            <p-step-panel [value]="3">
+                <ng-template #content let-activateCallback="activateCallback">
+                    <div class="flex flex-col gap-4 mx-auto pt-6 pb-12" style="min-height: 35rem; max-width: 24rem;">
+                        <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+                            <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações de Perfil/Login</div>
+                            <div class="text-center"></div>
+                            <div class="flex flex-col gap-2">
+                                <label for="usuario">Usuário*</label>
+                                <input class="w-full" [(ngModel)]="requestCadastro.usuario" pInputText id="usuario" type="text" placeholder="Usuário" />
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label for="password">Senha*</label>
+                                <p-password class="w-full" [(ngModel)]="requestCadastro.password" placeholder="Senha" id="password"></p-password>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label for="confirmarSenha">Confirmar Senha*</label>
+                                <p-password class="w-full" [(ngModel)]="requestCadastro.confirmarSenha" placeholder="Confirmar Senha" id="confirmarSenha"></p-password>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex pt-6 justify-between">
+                        <p-button (onClick)="activateCallback(2)" label="Voltar" severity="secondary" icon="pi pi-arrow-left" />
+                        <p-button (click)="doCadastro()" (onClick)="activateCallback(3)" label="Cadastrar" icon="pi pi-arrow-right" iconPos="right" />
+                    </div>
+                </ng-template>
+            </p-step-panel>
+        </p-step-panels>
+    </p-stepper>
+
+    <app-footer class="mt-auto"></app-footer>
+</div>
