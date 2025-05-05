@@ -12,6 +12,7 @@ import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { Select } from 'primeng/select';
 import { UsuarioService } from '../../../service/usuario.service';
 import { UsuarioCadastroRequestModel } from '../../../models/RequestCadastro';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro',
@@ -35,7 +36,7 @@ import { UsuarioCadastroRequestModel } from '../../../models/RequestCadastro';
 export class CadastroComponent implements OnInit {
   public requestCadastro!: UsuarioCadastroRequestModel;
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService, private router: Router) {}
   
   ngOnInit(): void {
     this.requestCadastro = new UsuarioCadastroRequestModel();
@@ -44,7 +45,10 @@ export class CadastroComponent implements OnInit {
   public doCadastro(): void {
     console.log(this.requestCadastro);
     this.usuarioService.cadastrarUsuario(this.requestCadastro).subscribe({
-      next: () => alert("Cadastrado com sucesso!"),
+      next: () => {alert("Cadastrado com sucesso!");
+        this.router.navigate(['/login']);
+
+      },
       error: erro => {
         console.error(erro)
         alert("Erro ao efetuar o cadastro!");
