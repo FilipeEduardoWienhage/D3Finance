@@ -7,6 +7,7 @@ from src.database.models import Usuario
 from src.api.tags import Tag
 from src.schemas.usuario_schemas import UsuarioCreate, UsuarioUpdate, UsuarioResponse
 from src.utils.auth_utils import gerar_hash_senha
+from sqlalchemy.exc import IntegrityError
 
 # Endpoints
 LISTA_USUARIOS = "/v1/usuarios"
@@ -94,30 +95,46 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
         estado=usuario.estado,
         cidade=usuario.cidade,
         bairro=usuario.bairro,
-        usuario=usuario.usuario,  # Incluindo o campo 'usuario'
-        senha=senha_criptografada  # Armazena a senha criptografada no banco de dados
+        usuario=usuario.usuario,
+        senha=senha_criptografada
     )
 
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
+    try:
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
 
-    return UsuarioResponse(
-        id=db_user.id,
-        name=db_user.name,
-        email=db_user.email,
-        cpf=db_user.cpf,
-        data_nascimento=db_user.data_nascimento,
-        sexo=db_user.sexo,
-        profissao=db_user.profissao,
-        cnpj=db_user.cnpj,
-        razao_social=db_user.razao_social,
-        cep=db_user.cep,
-        estado=db_user.estado,
-        cidade=db_user.cidade,
-        bairro=db_user.bairro,
-        usuario=db_user.usuario  # Incluindo o campo 'usuario' na resposta
-    )
+        return UsuarioResponse(
+            id=db_user.id,
+            name=db_user.name,
+            email=db_user.email,
+            cpf=db_user.cpf,
+            data_nascimento=db_user.data_nascimento,
+            sexo=db_user.sexo,
+            profissao=db_user.profissao,
+            cnpj=db_user.cnpj,
+            razao_social=db_user.razao_social,
+            cep=db_user.cep,
+            estado=db_user.estado,
+            cidade=db_user.cidade,
+            bairro=db_user.bairro,
+            usuario=db_user.usuario
+        )
+
+    except IntegrityError as e:
+        db.rollback()
+        error_msg = str(e.orig)
+
+        if "email" in error_msg:
+            raise HTTPException(status_code=400, detail="E-mail já cadastrado.")
+        if "cpf" in error_msg:
+            raise HTTPException(status_code=400, detail="CPF já cadastrado.")
+        if "cnpj" in error_msg:
+            raise HTTPException(status_code=400, detail="CNPJ já cadastrado.")
+        if "usuario" in error_msg:
+            raise HTTPException(status_code=400, detail="Nome de usuário já existe.")
+        
+        raise HTTPException(status_code=500, detail="Erro ao cadastrar usuário.")
 
 # PUT - Atualizar usuário
 @router.put(

@@ -13,13 +13,13 @@ class Usuario(Base):
     data_nascimento = Column(Date, nullable=False)
     sexo = Column(String(20), nullable=False)
     profissao = Column(String(45), nullable=False)
-    cnpj = Column(String(18), nullable=False)
+    cnpj = Column(String(18), unique=True, nullable=False)
     razao_social = Column(String(55), nullable=False)
     cep = Column(String(14), nullable=False)
     estado = Column(String(2), nullable=False)
     cidade = Column(String(30), nullable=False)
     bairro = Column(String(30), nullable=False)
-    usuario = Column(String(30), nullable=False)
+    usuario = Column(String(30), unique=True, nullable=False)
     senha = Column(String(250), nullable=False)
 
 
