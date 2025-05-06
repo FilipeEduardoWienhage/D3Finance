@@ -1,6 +1,7 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
 
  <app-nav-bar></app-nav-bar>
+    <p-toast></p-toast>
 
     <p-stepper [(value)]="activeStep" class="basis-[40rem]">
         <p-step-list>
@@ -50,27 +51,27 @@
                     <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
                         <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações pessoais</div>
                         <div class="flex flex-col gap-2">
-                            <label for="nome">Nome*</label>
+                            <label for="nome">Nome<span class="asterisco">*</span></label>
                             <input class="w-full" [(ngModel)]="requestCadastro.nome" pInputText id="nome" type="text" placeholder="Nome" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="email">E-mail*</label>
+                            <label for="email">E-mail<span class="asterisco">*</span></label>
                             <input class="w-full" [(ngModel)]="requestCadastro.email" pInputText id="email" type="email" placeholder="E-mail" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="cpf">CPF*</label>
+                            <label for="cpf">CPF<span class="asterisco">*</span></label>
                             <p-inputMask class="w-full" mask="999.999.999-99" id="cpf" [(ngModel)]="requestCadastro.cpf" placeholder="000.000.000-00" aria-describedby="CPF-help" required></p-inputMask>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="dataNascimento">Data de nascimento*</label>
+                            <label for="dataNascimento">Data de nascimento<span class="asterisco">*</span></label>
                             <p-datepicker class="w-full" id="dataNascimento" [(ngModel)]="requestCadastro.dataNascimento" required [showButtonBar]="true" [dateFormat]="'dd/mm/yy'"></p-datepicker>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="label">Sexo*</label>
+                            <label for="label">Sexo<span class="asterisco">*</span></label>
                             <p-select class="w-full" [options]="sexoOptions" [(ngModel)]="requestCadastro.selectedSexo" [checkmark]="false" optionLabel="label" [showClear]="true" placeholder="Selecione o Sexo" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="cargo">Profissão*</label>
+                            <label for="cargo">Profissão<span class="asterisco">*</span></label>
                             <input class="w-full" [(ngModel)]="requestCadastro.cargo" pInputText id="cargo" type="text" placeholder="Profissão" />
                         </div>
                     </div>
@@ -85,27 +86,27 @@
                     <div class="flex flex-col gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
                         <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações da Empresa/Endereço</div>
                         <div class="flex flex-col gap-2">
-                            <label for="cnpj">CNPJ*</label>
+                            <label for="cnpj">CNPJ<span class="asterisco">*</span></label>
                             <p-inputMask class="w-full" mask="99.999.999/9999-99" id="cnpj" [(ngModel)]="requestCadastro.cnpj" placeholder="00.000.000/0000-00" aria-describedby="CNPJ-help" required (onBlur)="buscarCnpj()"></p-inputMask>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="nomeEmpresa">Razão social*</label>
+                            <label for="nomeEmpresa">Razão social<span class="asterisco">*</span></label>
                             <input class="w-full" pInputText id="nomeEmpresa" [(ngModel)]="requestCadastro.nomeEmpresa" name="nomeEmpresa" placeholder="Nome da Empresa" required />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="cep">CEP*</label>
+                            <label for="cep">CEP<span class="asterisco">*</span></label>
                             <p-inputMask class="w-full" mask="99.999-999" id="cep" [(ngModel)]="requestCadastro.cep" placeholder="00.000-000" aria-describedby="CEP-help" required ></p-inputMask>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="estado">Estado/UF*</label>
+                            <label for="estado">Estado/UF<span class="asterisco">*</span></label>
                             <input class="w-full" pInputText id="estado" [(ngModel)]="requestCadastro.estado" placeholder="Estado" required />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="cidade">Cidade*</label>
+                            <label for="cidade">Cidade<span class="asterisco">*</span></label>
                             <input class="w-full" pInputText id="cidade" [(ngModel)]="requestCadastro.cidade" placeholder="Cidade" required />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="bairro">Bairro*</label>
+                            <label for="bairro">Bairro<span class="asterisco">*</span></label>
                             <input class="w-full" pInputText id="bairro" [(ngModel)]="requestCadastro.bairro" placeholder="Bairro" required />
                         </div>
                     </div>
@@ -123,16 +124,16 @@
                             <div class="text-center mt-4 mb-4 text-xl font-semibold">Informações de Perfil/Login</div>
                             <div class="text-center"></div>
                             <div class="flex flex-col gap-2">
-                                <label for="usuario">Usuário*</label>
+                                <label for="usuario">Usuário<span class="asterisco">*</span></label>
                                 <input class="w-full" [(ngModel)]="requestCadastro.usuario" pInputText id="usuario" type="text" placeholder="Usuário" />
                             </div>
                             <div class="flex flex-col gap-2">
-                                <label for="password">Senha*</label>
-                                <p-password class="w-full" [(ngModel)]="requestCadastro.password" placeholder="Senha" id="password"></p-password>
+                                <label for="password">Senha<span class="asterisco">*</span></label>
+                                <p-password promptLabel="Crie sua senha" weakLabel="Muito fraca" mediumLabel="Boa" strongLabel="Excelente" class="w-full" [(ngModel)]="requestCadastro.password" placeholder="Senha" id="password"></p-password>
                             </div>
                             <div class="flex flex-col gap-2">
-                                <label for="confirmarSenha">Confirmar Senha*</label>
-                                <p-password class="w-full" [(ngModel)]="requestCadastro.confirmarSenha" placeholder="Confirmar Senha" id="confirmarSenha"></p-password>
+                                <label for="confirmarSenha">Confirmar Senha<span class="asterisco">*</span></label>
+                                <p-password promptLabel="Crie sua senha" weakLabel="Muito fraca" mediumLabel="Boa" strongLabel="Excelente" class="w-full" [(ngModel)]="requestCadastro.confirmarSenha" placeholder="Confirmar Senha" id="confirmarSenha"></p-password>
                             </div>
                         </div>
                     </div>
@@ -144,6 +145,5 @@
             </p-step-panel>
         </p-step-panels>
     </p-stepper>
-
     <app-footer class="mt-auto"></app-footer>
 </div>
