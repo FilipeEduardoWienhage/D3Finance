@@ -13,6 +13,8 @@ import { Select } from 'primeng/select';
 import { UsuarioService } from '../../../service/usuario.service';
 import { UsuarioCadastroRequestModel } from '../../../models/RequestCadastro';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-cadastro',
@@ -29,14 +31,16 @@ import { Router } from '@angular/router';
     CommonModule,
     NavBarComponent,
     Select,
+    ToastModule
   ],
+  providers:[MessageService],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css'
 })
 export class CadastroComponent implements OnInit {
   public requestCadastro!: UsuarioCadastroRequestModel;
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private router: Router, private messageService: MessageService ) {}
   
   ngOnInit(): void {
     this.requestCadastro = new UsuarioCadastroRequestModel();
@@ -44,14 +48,24 @@ export class CadastroComponent implements OnInit {
 
   public doCadastro(): void {
     console.log(this.requestCadastro);
+  
     this.usuarioService.cadastrarUsuario(this.requestCadastro).subscribe({
-      next: () => {alert("Cadastrado com sucesso!");
-        this.router.navigate(['/login']);
-
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Cadastrado com sucesso!'
+        });
+        setTimeout(() => this.router.navigate(['/login']), 1500);
       },
+  
       error: erro => {
-        console.error(erro)
-        alert("Erro ao efetuar o cadastro!");
+        console.error(erro);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao efetuar o cadastro!'
+        });
       }
     });
   }
