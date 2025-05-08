@@ -62,7 +62,7 @@ class Contas(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tipo_conta = Column(String(50), nullable=False)
-    nome_conta = Column(String(50), nullable=False)
+    nome_conta = Column(String(50),unique=True, nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 

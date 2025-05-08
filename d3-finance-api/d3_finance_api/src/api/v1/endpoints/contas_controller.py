@@ -6,6 +6,7 @@ from src.database.database import SessionLocal
 from src.database.models import Contas
 from src.schemas.contas_schemas import ContaCreate, ContaUpdate, ContaResponse
 from src.api.tags import Tag
+from sqlalchemy.exc import IntegrityError
 
 
 # Endpoints
@@ -67,16 +68,29 @@ def create_contas(conta: ContaCreate, db: Session = Depends(get_db)):
         nome_conta=conta.nome_conta,
     )
 
-    db.add(db_conta)
-    db.commit()
-    db.refresh(db_conta)
+    try:
+        db.add(db_conta)
+        db.commit()
+        db.refresh(db_conta)
 
-    return ContaResponse(
-        id=db_conta.id,
-        tipo_conta=conta.tipo_conta,
-        nome_conta=conta.nome_conta,
-    )
+        return ContaResponse(
+            id=db_conta.id,
+            tipo_conta=conta.tipo_conta,
+            nome_conta=conta.nome_conta,
+        )
+    except IntegrityError as e:
+        db.rollback()
+        error_msg = str(e.orig)
 
+        if 'nome_conta' in error_msg:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Já existe uma conta com esse nome.",
+            )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao cadastrar conta.",
+        )
 
 @router.put(
     path=ATUALIZAR_CONTAS, response_model=ContaResponse, tags=[Tag.Contas.name]
