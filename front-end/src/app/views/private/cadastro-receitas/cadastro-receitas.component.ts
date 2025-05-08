@@ -15,6 +15,7 @@ import { SplitterModule } from 'primeng/splitter';
 import { ReceitaRequestModel } from '../../../models/RequestReceitas';
 import { ReceitasService } from '../../../service/receitas.service';
 import { ContasService } from '../../../service/contas.service';
+import { ToastModule } from 'primeng/toast';
 
 
 interface formaRecebimento {
@@ -43,7 +44,8 @@ interface contaDestino {
             TextareaModule,
             SelectModule,
             ButtonModule,
-            SplitterModule
+            SplitterModule,
+            ToastModule
           ],
   templateUrl: './cadastro-receitas.component.html',
   styleUrl: './cadastro-receitas.component.css',
@@ -52,7 +54,10 @@ interface contaDestino {
 export class CadastroReceitasComponent {
   public requestReceita!: ReceitaRequestModel;
 
-  constructor(private receitaService: ReceitasService, private contasService: ContasService) {}
+  constructor(
+  private receitaService: ReceitasService,
+  private contasService: ContasService,
+  private messageService: MessageService) {}
 
   nomeReceita: string = '';
   categoriaReceita: string = '';
@@ -116,10 +121,24 @@ export class CadastroReceitasComponent {
 
     console.log(this.requestReceita);
     this.receitaService.cadastrarReceita(this.requestReceita).subscribe({
-      next: () => alert("Receita cadastrada com sucesso!"),
-      error: erro => {
-        console.error(erro)
-        alert("Erro ao efetuar o cadastro!");
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Receita cadastrada com sucesso!'
+        })
+        this.requestReceita = new ReceitaRequestModel();
+        this.selecionarForma = undefined;
+        this.selecionarCategoria = undefined;
+        this.selecionarConta = undefined;
+      },
+      error: (erro) => {
+        console.error('Erro ao cadastrar receita:', erro);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao cadastrar receita. Tente novamente.'
+        });
       }
     });
   }

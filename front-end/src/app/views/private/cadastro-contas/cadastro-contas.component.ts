@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ContaRequestModel } from '../../../models/RequestContas';
 import { ContasService } from '../../../service/contas.service';
+import { ToastModule } from 'primeng/toast';
 
 
 interface tipoConta {
@@ -18,7 +19,16 @@ interface tipoConta {
 
 @Component({
   selector: 'app-cadastro-contas',
-  imports: [SplitterModule, NavBarSystemComponent, FooterComponent, CardModule, SelectModule, FormsModule, ButtonModule],
+  imports: [
+  SplitterModule,
+  ToastModule,
+  NavBarSystemComponent,
+  FooterComponent,
+  CardModule,
+  SelectModule,
+  FormsModule,
+  ButtonModule,
+  ],
   templateUrl: './cadastro-contas.component.html',
   styleUrl: './cadastro-contas.component.css',
   providers: [
@@ -28,7 +38,7 @@ interface tipoConta {
 export class CadastroContasComponent {
   public requestConta!: ContaRequestModel;
 
-  constructor(private contasService: ContasService) {}
+  constructor(private contasService: ContasService,private messageService: MessageService) {}
 
   tipoConta: tipoConta[] | undefined;
   selecionarTipoConta: tipoConta | undefined;
@@ -41,17 +51,32 @@ export class CadastroContasComponent {
       { name: 'Empresa' },
       { name: 'Despesas' },
     ];
-
   }
 
   public doCadastroContas(): void {
     console.log(this.requestConta);
     this.contasService.cadastrarConta(this.requestConta).subscribe({
-      next: () => alert("Conta cadastrada com sucesso!"),
-      error: erro => {
-        console.error(erro)
-        alert("Erro ao efetuar o cadastro!");
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Conta cadastrada com sucesso!',
+        });
+
+        this.requestConta = {
+          tipoConta: '',
+          nomeConta: ''
+        };
+      },
+      error: (err) => {
+        const msg = err.error?.detail || 'Erro ao cadastrar conta';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: msg,
+        });
       }
     });
   }
 }
+

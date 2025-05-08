@@ -14,6 +14,7 @@ import { SplitterModule } from 'primeng/splitter';
 import { DespesasService } from '../../../service/despesas.service';
 import { DespesaRequestModel } from '../../../models/RequestDespesas';
 import { ContasService } from '../../../service/contas.service';
+import { ToastModule } from 'primeng/toast';
 
 
 interface formaRecebimento {
@@ -44,6 +45,7 @@ interface categoriaDespesa {
     ButtonModule,
     FormsModule,
     SplitterModule,
+    ToastModule,
   ],
   templateUrl: './cadastro-despesas.component.html',
   styleUrl: './cadastro-despesas.component.css',
@@ -54,8 +56,10 @@ interface categoriaDespesa {
 export class CadastroDespesasComponent {
   public requestDespesa!: DespesaRequestModel;
 
-  constructor(private despesasService: DespesasService
-    , private contasService: ContasService
+  constructor(
+  private despesasService: DespesasService,
+  private contasService: ContasService,
+  private messageService: MessageService,
   ) { }
   
 
@@ -117,10 +121,31 @@ export class CadastroDespesasComponent {
 
     console.log(this.requestDespesa);
     this.despesasService.cadastrarDespesa(this.requestDespesa).subscribe({
-      next: () => alert("Despesa cadastrada com sucesso!"),
-      error: erro => {
-        console.error(erro)
-        alert("Erro ao efetuar o cadastro!");
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Despesa cadastrada com sucesso!',
+        });
+
+      this.requestDespesa = new DespesaRequestModel();
+      this.selecionarForma = undefined;
+      this.selecionarCategoria = undefined;
+      this.selecionarConta = undefined;
+      this.nomeDespesa = '';
+      this.valorDespesa = 0;
+      this.dataRecebimento = null;
+      this.categoriaDespesa = '';
+      this.contaDestino = undefined;
+      this.formaDeRecebimento = undefined;
+      },
+      error: (erro) => {
+        console.error('Erro ao cadastrar despesa:', erro);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao cadastrar despesa. Tente novamente.',
+        });
       }
     });
   }

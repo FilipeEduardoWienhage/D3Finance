@@ -110,6 +110,4 @@ export class NavBarSystemComponent {
     localStorage.removeItem('authToken');
     this.router.navigate(['/home']);
   }
-
-
 }
