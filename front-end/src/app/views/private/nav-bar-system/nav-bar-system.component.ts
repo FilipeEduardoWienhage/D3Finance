@@ -80,9 +80,9 @@ export class NavBarSystemComponent {
         label: 'Perfil',
         items: [
           {
-            label: 'Configurações',
+            label: 'Editar Perfil',
             icon: 'pi pi-cog',
-            command: () => this.router.navigate(['/configurarperfil'])
+            command: () => this.router.navigate(['/editarperfil'])
           },
           {
             label: 'Logout',
