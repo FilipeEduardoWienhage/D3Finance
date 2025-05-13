@@ -1,3 +1,4 @@
+import os
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from src.app import app
@@ -7,7 +8,7 @@ from src.api.v1.endpoints import usuario_controller, receita_controller, despesa
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=["http://localhost:4200", "https://d3-finance.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,4 +33,5 @@ app.include_router(importacao_controller.router)
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app")
+    host = os.environ.get("HOST", "0.0.0.0")
+    uvicorn.run("main:app", host=host, port=8000, reload=False)

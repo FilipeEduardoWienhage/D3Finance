@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ContaRequestModel } from '../models/RequestContas';
+import { environment } from '../../environments/environment';
 
 export interface ContaResponseModel {
     id: number;
@@ -13,7 +14,7 @@ export interface ContaResponseModel {
 
 
 export class ContasService {
-    private apiUrl = 'http://localhost:8000/v1/contas';
+    private apiUrl = `${environment.apiUrl}/v1/contas`;
 
     constructor(private http: HttpClient) {}
 

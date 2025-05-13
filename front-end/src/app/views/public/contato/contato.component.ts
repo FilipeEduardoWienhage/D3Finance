@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import "primeicons/primeicons.css";
 import { QRCodeComponent } from 'angularx-qrcode';
 import { FooterComponent } from '../../shared/footer/footer.component';
 
