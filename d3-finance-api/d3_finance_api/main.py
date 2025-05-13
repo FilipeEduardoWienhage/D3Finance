@@ -34,4 +34,5 @@ app.include_router(importacao_controller.router)
 
 if __name__ == "__main__":
     host = os.environ.get("HOST", "0.0.0.0")
-    uvicorn.run("main:app", host=host, port=8000, reload=False)
+    port = os.environ.get("PORT", "8000")
+    uvicorn.run("main:app", host=host, port=port, reload=False)
