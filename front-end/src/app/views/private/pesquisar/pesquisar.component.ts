@@ -13,6 +13,8 @@ import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-pesquisar',
@@ -28,14 +30,18 @@ import { MultiSelectModule } from 'primeng/multiselect';
     TabMenuModule,
     ButtonModule,
     DropdownModule,
-    MultiSelectModule
+    MultiSelectModule,
+    DialogModule,
+    CalendarModule,
   ],
   providers: [MessageService],
   templateUrl: './pesquisar.component.html',
   styleUrls: ['./pesquisar.component.css']
 })
 export class PesquisarComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+  ) {}
 
   categoriaDaReceita = [
     { name: 'Venda de Produtos' },
@@ -69,6 +75,9 @@ export class PesquisarComponent implements OnInit {
       { name: 'Outras Despesas' }
   ];
 
+  editarReceitaModalVisible = false;
+  receitaSelecionada: any = null;
+
   receitas: any[] = [];
   despesas: any[] = [];
 
@@ -78,7 +87,7 @@ export class PesquisarComponent implements OnInit {
   filters = {
   categoria: [] as { name: string }[],
   desc: '',
-  conta_id: '',
+  conta: '',
   data: ''
   };
 
@@ -103,7 +112,7 @@ export class PesquisarComponent implements OnInit {
       this.filteredReceitas = this.receitas.filter(item =>
         (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
         item.nome_receita.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
-        (this.filters.conta_id === '' || item.conta_id === +this.filters.conta_id) &&
+        (this.filters.conta === '' || item.conta.conta_id === +this.filters.conta) &&
         (this.filters.data === '' || item.data_recebimento === this.filters.data)
       );
     }
@@ -112,7 +121,7 @@ export class PesquisarComponent implements OnInit {
       this.filteredDespesas = this.despesas.filter(item =>
         (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
         item.nome_despesa.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
-        (this.filters.conta_id === '' || item.conta_id === +this.filters.conta_id) &&
+        (this.filters.conta === '' || item.conta.conta_id === +this.filters.conta) &&
         (this.filters.data === '' || item.data_pagamento === this.filters.data)
       );    
     }
@@ -151,11 +160,12 @@ export class PesquisarComponent implements OnInit {
   
 
   editarItem(index: number) {
-    const item = this.activeTab.label === 'Receitas' ? this.filteredReceitas[index] : this.filteredDespesas[index];
-    console.log('Editar:', item);
+    const item = this.filteredReceitas[index];
+    this.receitaSelecionada = { ...item };
+    this.editarReceitaModalVisible = true;
   }
   
-  apagarItem(index: number) {
+  apagarItem(index: number): void {
     const isReceita = this.activeTab.label === 'Receitas';
     const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
     const tipo = isReceita ? 'receitas' : 'despesas';
@@ -174,5 +184,27 @@ export class PesquisarComponent implements OnInit {
       }
     });
   }
+
+  salvarEdicaoReceita() {
+    const receitaAtualizada = {
+      ...this.receitaSelecionada,
+      data_recebimento: this.formatarData(this.receitaSelecionada.data_recebimento)
+    };
   
+    this.http.put(`http://localhost:8000/v1/receitas/${receitaAtualizada.id}`, receitaAtualizada)
+      .subscribe({
+        next: () => {
+          this.editarReceitaModalVisible = false;
+          this.onTabChange(this.activeTab);  // Atualiza os dados
+        },
+        error: err => {
+          console.error('Erro ao salvar edição:', err);
+        }
+      });
+  }
+ 
+  formatarData(data: any): string {
+    const d = new Date(data);
+    return d.toISOString().split('T')[0];  // Formato 'YYYY-MM-DD'
+  }
 }

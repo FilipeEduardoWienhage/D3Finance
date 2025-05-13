@@ -132,12 +132,6 @@ export class CadastroDespesasComponent {
       this.selecionarForma = undefined;
       this.selecionarCategoria = undefined;
       this.selecionarConta = undefined;
-      this.nomeDespesa = '';
-      this.valorDespesa = 0;
-      this.dataRecebimento = null;
-      this.categoriaDespesa = '';
-      this.contaDestino = undefined;
-      this.formaDeRecebimento = undefined;
       },
       error: (erro) => {
         console.error('Erro ao cadastrar despesa:', erro);

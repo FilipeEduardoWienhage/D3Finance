@@ -20,13 +20,13 @@
 
   <!-- RECEITAS -->
   <div *ngIf="activeTab.label === 'Receitas'" class="flex flex-col items-center justify-center px-4 py-8 w-full">
+        <h1>Filtros</h1>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded-lg shadow-lg w-full max-w-5xl mb-6">
       <div>
-        <div>
-          <label class="block text-sm mb-1">Categoria</label>
-          <p-multiselect [options]="categoriaDaReceita" (onChange)="onFilterChange()" [(ngModel)]="filters.categoria" optionLabel="name" placeholder="Selecione uma categoria" [maxSelectedLabels]="3" class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
-        </div>
+        <label class="block text-sm mb-1">Categoria</label>
+        <p-multiselect [options]="categoriaDaReceita" (onChange)="onFilterChange()" [(ngModel)]="filters.categoria" optionLabel="name" placeholder="Selecione uma categoria" [maxSelectedLabels]="3" class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
       </div>
+
       <div>
         <label class="block text-sm mb-1">Descrição</label>
         <input type="text" [(ngModel)]="filters.desc" (input)="onFilterChange()"
@@ -35,7 +35,7 @@
 
       <div>
         <label class="block text-sm mb-1">Contas</label>
-        <input type="text" [(ngModel)]="filters.conta_id" (input)="onFilterChange()"
+        <input type="text" [(ngModel)]="filters.conta" (input)="onFilterChange()"
           class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
       </div>
 
@@ -46,35 +46,40 @@
       </div>
     </div>
 
-    <p-table [value]="filteredReceitas" [paginator]="true" [rows]="rows" [first]="first" (onPage)="pageChange($event)"
-  class="p-datatable-sm p-datatable-gridlines">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>Categoria</th>
-      <th>Descrição</th>
-      <th>Conta</th>
-      <th>Data Recebimento</th>
-      <th>Ações</th> 
-    </tr>
-  </ng-template>
+    <div class="bg-[#2a2a2a] p-6 rounded-lg shadow-lg w-full max-w-5xl">
+      <p-table [value]="filteredReceitas" [paginator]="true" [rows]="rows" [first]="first" (onPage)="pageChange($event)"
+        class="p-datatable-sm p-datatable-gridlines">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Categoria</th>
+            <th>Descrição</th>
+            <th>Conta</th>
+            <th>Data de Recebimento</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
 
-  <ng-template pTemplate="body" let-item let-i="rowIndex"> 
-    <tr>
-      <td>{{ item.categoria }}</td>
-      <td>{{ item.descricao }}</td>
-      <td>{{ item.conta_id }}</td>
-      <td>{{ item.data_recebimento | date:'dd/MM/yyyy' }}</td>
-      <td>
-        <button pButton icon="pi pi-pencil" (click)="editarItem(i)" class="p-button-sm p-button-rounded p-button-info"></button>
-        <button pButton icon="pi pi-trash" (click)="apagarItem(i)" class="p-button-sm p-button-rounded p-button-danger"></button>
-      </td>
-    </tr>
-  </ng-template>
-    </p-table>
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ item.categoria }}</td>
+            <td>{{ item.descricao }}</td>
+            <td>{{ item.conta_id}}</td>
+            <td>{{ item.data_recebimento | date:'dd/MM/yyyy' }}</td>
+            <td class="flex gap-2">
+              <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
+                (click)="editarItem(rowIndex)"></button>
+              <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
+                (click)="apagarItem(rowIndex)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
 
   <!-- DESPESAS -->
   <div *ngIf="activeTab.label === 'Despesas'" class="flex flex-col items-center justify-center px-4 py-8 w-full">
+    <h1>Filtros</h1>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded-lg shadow-lg w-full max-w-5xl mb-6">
       <div>
         <label class="block text-sm mb-1">Categoria</label>
@@ -89,7 +94,7 @@
 
       <div>
         <label class="block text-sm mb-1">Contas</label>
-        <input type="text" [(ngModel)]="filters.conta_id" (input)="onFilterChange()"
+        <input type="text" [(ngModel)]="filters.conta" (input)="onFilterChange()"
           class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
       </div>
 
@@ -108,7 +113,7 @@
             <th>Categoria</th>
             <th>Descrição</th>
             <th>Conta</th>
-            <th>Data Pagamento</th>
+            <th>Data de Pagamento</th>
             <th>Ações</th>
           </tr>
         </ng-template>

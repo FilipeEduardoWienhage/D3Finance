@@ -26,7 +26,7 @@ export const routes: Routes = [
     { path: "receitas/cadastrar", component: CadastroReceitasComponent},
     { path: "despesas/cadastrar", component: CadastroDespesasComponent},
     { path: "importararquivo", component: ImportarArquivosComponent},
-    { path: "configurarperfil", component: ConfiguracaoPerfilComponent},
+    { path: "editarperfil", component: ConfiguracaoPerfilComponent},
     { path: "pesquisar", component: PesquisarComponent},
     { path: "contas/cadastrar", component: CadastroContasComponent},
     { path: "movimentarcontas", component: MovimentacaoEntreContasComponent},
