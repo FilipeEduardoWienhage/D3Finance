@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
 import { MessageService } from 'primeng/api';
@@ -7,6 +8,11 @@ import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SplitterModule } from 'primeng/splitter';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-pesquisar',
@@ -19,45 +25,154 @@ import { SplitterModule } from 'primeng/splitter';
     FooterComponent,
     NavBarSystemComponent,
     SplitterModule,
+    TabMenuModule,
+    ButtonModule,
+    DropdownModule,
+    MultiSelectModule
   ],
   providers: [MessageService],
   templateUrl: './pesquisar.component.html',
-  styleUrl: './pesquisar.component.css'
+  styleUrls: ['./pesquisar.component.css']
 })
-export class PesquisarComponent {
-  items = [
-    { categoria: 'Salário', nome: 'Pagamento Mensal', valor: 5000, data: '2025-04-01' },
-    { categoria: 'Aluguel', nome: 'Apartamento', valor: 1200, data: '2025-04-05' },
-    { categoria: 'Comida', nome: 'Supermercado', valor: 450, data: '2025-04-10' },
-    { categoria: 'Lazer', nome: 'Cinema', valor: 50, data: '2025-04-15' },
-    { categoria: 'Lazer', nome: 'Academia', valor: 120, data: '2025-04-15' },
-    { categoria: 'Lazer', nome: 'Parque', valor: 520, data: '2025-04-25' },
+export class PesquisarComponent implements OnInit {
+  constructor(private http: HttpClient) {}
+
+  categoriaDaReceita = [
+    { name: 'Venda de Produtos' },
+    { name: 'Prestação de Serviços' },
+    { name: 'Receitas de Assinaturas / Mensalidades' },
+    { name: 'Receitas de Consultoria' },
+    { name: 'Receitas de Licenciamento' },
+    { name: 'Receitas de Aluguel de Bens' },
+    { name: 'Receita com Publicidade / Parcerias' },
+    { name: 'Recebimento de Contratos' },
+    { name: 'Royalties Recebidos' },
+    { name: 'Rendimentos de Investimentos' },
+    { name: 'Reembolso de Custos Operacionais' },
+    { name: 'Multas Contratuais Recebidas' },
+    { name: 'Recuperação de Crédito / Cobrança' },
+    { name: 'Outras Receitas Operacionais' },
+    { name: 'Outras Receitas Não Operacionais' }
   ];
 
-  filteredItems = [...this.items];
+  categoriaDaDespesa = [
+      { name: 'Despesas com Pessoal' },
+      { name: 'Despesas Operacionais' },
+      { name: 'Despesas com Materiais' },
+      { name: 'Despesas Administrativas' },
+      { name: 'Despesas com Marketing' },
+      { name: 'Despesas com Transporte' },
+      { name: 'Impostos e Taxas' },
+      { name: 'Despesas Financeiras' },
+      { name: 'Manutenção e Reparos' },
+      { name: 'Despesas com Terceirizados' },
+      { name: 'Outras Despesas' }
+  ];
+
+  receitas: any[] = [];
+  despesas: any[] = [];
+
+  filteredReceitas: any[] = [];
+  filteredDespesas: any[] = [];
 
   filters = {
-    categoria: '',
-    nome: '',
-    valor: '',
-    data: ''
+  categoria: [] as { name: string }[],
+  desc: '',
+  conta_id: '',
+  data: ''
   };
 
   first = 0;
   rows = 10;
 
+  tabItems: MenuItem[] = [
+    { label: 'Receitas', icon: 'pi pi-dollar' },
+    { label: 'Despesas', icon: 'pi pi-credit-card' }
+  ];
+
+  activeTab: MenuItem = this.tabItems[0];
+
+  ngOnInit(): void {
+    this.onTabChange(this.activeTab);
+  }
+  
   onFilterChange() {
-    this.filteredItems = this.items.filter(item =>
-      item.categoria.toLowerCase().includes(this.filters.categoria.toLowerCase()) &&
-      item.nome.toLowerCase().includes(this.filters.nome.toLowerCase()) &&
-      (this.filters.valor === '' || item.valor === +this.filters.valor) &&
-      (this.filters.data === '' || item.data === this.filters.data)
-    );
+    const categoriasSelecionadas = this.filters.categoria.map((c: any) => c.name);
+  
+    if (this.activeTab.label === 'Receitas') {
+      this.filteredReceitas = this.receitas.filter(item =>
+        (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
+        item.nome_receita.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
+        (this.filters.conta_id === '' || item.conta_id === +this.filters.conta_id) &&
+        (this.filters.data === '' || item.data_recebimento === this.filters.data)
+      );
+    }
+  
+    if (this.activeTab.label === 'Despesas') {
+      this.filteredDespesas = this.despesas.filter(item =>
+        (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
+        item.nome_despesa.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
+        (this.filters.conta_id === '' || item.conta_id === +this.filters.conta_id) &&
+        (this.filters.data === '' || item.data_pagamento === this.filters.data)
+      );    
+    }
+  
     this.first = 0;
   }
-
+  
   pageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
   }
+
+  onTabChange(item: MenuItem) {
+    this.activeTab = item;
+  
+    if (item.label === 'Receitas') {
+      this.http.get<any[]>('http://localhost:8000/v1/receitas').subscribe({
+        next: (data) => {
+          this.receitas = data;
+          this.filteredReceitas = [...data];
+        },
+        error: (err) => console.error('Erro ao carregar receitas:', err)
+      });
+    }
+  
+    if (item.label === 'Despesas') {
+      this.http.get<any[]>('http://localhost:8000/v1/despesas').subscribe({
+        next: (data) => {
+          this.despesas = data;
+          this.filteredDespesas = [...data];
+        },
+        error: (err) => console.error('Erro ao carregar despesas:', err)
+      });
+    }
+  }
+  
+
+  editarItem(index: number) {
+    const item = this.activeTab.label === 'Receitas' ? this.filteredReceitas[index] : this.filteredDespesas[index];
+    console.log('Editar:', item);
+  }
+  
+  apagarItem(index: number) {
+    const isReceita = this.activeTab.label === 'Receitas';
+    const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
+    const tipo = isReceita ? 'receitas' : 'despesas';
+  
+    this.http.delete(`http://localhost:8000/v1/${tipo}/${item.id}`).subscribe({
+      next: () => {
+        if (isReceita) {
+          this.receitas = this.receitas.filter(i => i.id !== item.id);
+        } else {
+          this.despesas = this.despesas.filter(i => i.id !== item.id);
+        }
+        this.onFilterChange();
+      },
+      error: (err) => {
+        console.error(`Erro ao apagar ${tipo.slice(0, -1)}:`, err);
+      }
+    });
+  }
+  
 }
