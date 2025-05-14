@@ -15,6 +15,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 
 @Component({
   selector: 'app-pesquisar',
@@ -33,17 +36,20 @@ import { CalendarModule } from 'primeng/calendar';
     MultiSelectModule,
     DialogModule,
     CalendarModule,
+    ConfirmDialogModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './pesquisar.component.html',
   styleUrls: ['./pesquisar.component.css']
 })
 export class PesquisarComponent implements OnInit {
   constructor(
     private http: HttpClient,
+    private confirmationService: ConfirmationService,
   ) {}
 
-  categoriaDaReceita = [
+  categoriaDaReceita = 
+  [
     { name: 'Venda de Produtos' },
     { name: 'Prestação de Serviços' },
     { name: 'Receitas de Assinaturas / Mensalidades' },
@@ -61,18 +67,19 @@ export class PesquisarComponent implements OnInit {
     { name: 'Outras Receitas Não Operacionais' }
   ];
 
-  categoriaDaDespesa = [
-      { name: 'Despesas com Pessoal' },
-      { name: 'Despesas Operacionais' },
-      { name: 'Despesas com Materiais' },
-      { name: 'Despesas Administrativas' },
-      { name: 'Despesas com Marketing' },
-      { name: 'Despesas com Transporte' },
-      { name: 'Impostos e Taxas' },
-      { name: 'Despesas Financeiras' },
-      { name: 'Manutenção e Reparos' },
-      { name: 'Despesas com Terceirizados' },
-      { name: 'Outras Despesas' }
+  categoriaDaDespesa = 
+  [
+    { name: 'Despesas com Pessoal' },
+    { name: 'Despesas Operacionais' },
+    { name: 'Despesas com Materiais' },
+    { name: 'Despesas Administrativas' },
+    { name: 'Despesas com Marketing' },
+    { name: 'Despesas com Transporte' },
+    { name: 'Impostos e Taxas' },
+    { name: 'Despesas Financeiras' },
+    { name: 'Manutenção e Reparos' },
+    { name: 'Despesas com Terceirizados' },
+    { name: 'Outras Despesas' }
   ];
 
   editarReceitaModalVisible = false;
@@ -84,17 +91,21 @@ export class PesquisarComponent implements OnInit {
   filteredReceitas: any[] = [];
   filteredDespesas: any[] = [];
 
-  filters = {
+  filters = 
+  {
   categoria: [] as { name: string }[],
   desc: '',
   conta: '',
-  data: ''
+  data: '',
+  formaRecebimento: '',
+  valor: '',
   };
 
   first = 0;
   rows = 10;
 
-  tabItems: MenuItem[] = [
+  tabItems: MenuItem[] = 
+  [
     { label: 'Receitas', icon: 'pi pi-dollar' },
     { label: 'Despesas', icon: 'pi pi-credit-card' }
   ];
@@ -105,6 +116,7 @@ export class PesquisarComponent implements OnInit {
     this.onTabChange(this.activeTab);
   }
   
+  
   onFilterChange() {
     const categoriasSelecionadas = this.filters.categoria.map((c: any) => c.name);
   
@@ -112,8 +124,10 @@ export class PesquisarComponent implements OnInit {
       this.filteredReceitas = this.receitas.filter(item =>
         (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
         item.nome_receita.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
-        (this.filters.conta === '' || item.conta.conta_id === +this.filters.conta) &&
-        (this.filters.data === '' || item.data_recebimento === this.filters.data)
+        (this.filters.conta === '' || item.conta.nome_conta === this.filters.conta) &&
+        (this.filters.data === '' || item.data_recebimento === this.filters.data) &&
+        (this.filters.formaRecebimento === ''  ||  item.forma_recebimento == this.filters.formaRecebimento) &&
+        (this.filters.valor === '' || item.valor_recebido == this.filters.valor)
       );
     }
   
@@ -121,18 +135,21 @@ export class PesquisarComponent implements OnInit {
       this.filteredDespesas = this.despesas.filter(item =>
         (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
         item.nome_despesa.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
-        (this.filters.conta === '' || item.conta.conta_id === +this.filters.conta) &&
-        (this.filters.data === '' || item.data_pagamento === this.filters.data)
+        (this.filters.conta === '' || item.conta.nome_conta === this.filters.conta) &&
+        (this.filters.data === '' || item.data_pagamento === this.filters.data) &&
+        (this.filters.formaRecebimento === ''  ||  item.forma_recebimento == this.filters.formaRecebimento) &&
+        (this.filters.valor === '' || item.valor_recebido == this.filters.valor)
       );    
     }
-  
     this.first = 0;
   }
   
+
   pageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
   }
+
 
   onTabChange(item: MenuItem) {
     this.activeTab = item;
@@ -162,27 +179,37 @@ export class PesquisarComponent implements OnInit {
   editarItem(index: number) {
     const item = this.filteredReceitas[index];
     this.receitaSelecionada = { ...item };
-    this.editarReceitaModalVisible = true;
   }
   
   apagarItem(index: number): void {
-    const isReceita = this.activeTab.label === 'Receitas';
-    const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
-    const tipo = isReceita ? 'receitas' : 'despesas';
-  
-    this.http.delete(`http://localhost:8000/v1/${tipo}/${item.id}`).subscribe({
-      next: () => {
-        if (isReceita) {
-          this.receitas = this.receitas.filter(i => i.id !== item.id);
-        } else {
-          this.despesas = this.despesas.filter(i => i.id !== item.id);
+  const isReceita = this.activeTab.label === 'Receitas';
+  const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
+  const tipo = isReceita ? 'receitas' : 'despesas';
+
+  this.confirmationService.confirm({
+    message: `Tem certeza que deseja apagar esta ${tipo.slice(0, -1)}?`,
+    header: 'Confirmação',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Sim',
+    rejectLabel: 'Cancelar',
+    accept: () => {
+      this.http.delete(`http://localhost:8000/v1/${tipo}/${item.id}`).subscribe({
+        next: () => {
+          if (isReceita) {
+            this.receitas = this.receitas.filter(i => i.id !== item.id);
+          } else {
+            this.despesas = this.despesas.filter(i => i.id !== item.id);
+          }
+          this.onFilterChange();
+        },
+        error: (err) => {
+          console.error(`Erro ao apagar ${tipo.slice(0, -1)}:`, err);
         }
-        this.onFilterChange();
-      },
-      error: (err) => {
-        console.error(`Erro ao apagar ${tipo.slice(0, -1)}:`, err);
-      }
-    });
+      });
+    }
+  });
+
+
   }
 
   salvarEdicaoReceita() {
@@ -195,7 +222,7 @@ export class PesquisarComponent implements OnInit {
       .subscribe({
         next: () => {
           this.editarReceitaModalVisible = false;
-          this.onTabChange(this.activeTab);  // Atualiza os dados
+          this.onTabChange(this.activeTab);
         },
         error: err => {
           console.error('Erro ao salvar edição:', err);
@@ -205,6 +232,7 @@ export class PesquisarComponent implements OnInit {
  
   formatarData(data: any): string {
     const d = new Date(data);
-    return d.toISOString().split('T')[0];  // Formato 'YYYY-MM-DD'
+    return d.toISOString().split('T')[0];
   }
 }
+

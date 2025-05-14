@@ -54,6 +54,8 @@
             <th>Categoria</th>
             <th>Descrição</th>
             <th>Conta</th>
+            <th>Valor</th>
+            <th>Forma de Recebimento</th>
             <th>Data de Recebimento</th>
             <th>Ações</th>
           </tr>
@@ -64,6 +66,8 @@
             <td>{{ item.categoria }}</td>
             <td>{{ item.descricao }}</td>
             <td>{{ item.conta_id}}</td>
+            <td>{{ item.valor_recebido | currency:'BRL':'symbol-narrow':'1.2-2' }}</td>
+            <td>{{ item.forma_recebimento}}</td>
             <td>{{ item.data_recebimento | date:'dd/MM/yyyy' }}</td>
             <td class="flex gap-2">
               <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
@@ -113,6 +117,8 @@
             <th>Categoria</th>
             <th>Descrição</th>
             <th>Conta</th>
+            <th>Valor</th>
+            <th>Forma de Pagamento</th>
             <th>Data de Pagamento</th>
             <th>Ações</th>
           </tr>
@@ -123,6 +129,8 @@
             <td>{{ item.categoria }}</td>
             <td>{{ item.descricao }}</td>
             <td>{{ item.conta_id}}</td>
+            <td>{{ item.valor_pago | currency:'BRL':'symbol-narrow':'1.2-2' }}</td>
+            <td>{{ item.forma_pagamento}}</td>
             <td>{{ item.data_pagamento | date:'dd/MM/yyyy' }}</td>
             <td class="flex gap-2">
               <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
@@ -135,5 +143,6 @@
       </p-table>
     </div>
   </div>
+  <p-confirmDialog></p-confirmDialog>
   <app-footer class="mt-auto"></app-footer>
 </div>

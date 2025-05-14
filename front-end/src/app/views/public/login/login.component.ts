@@ -115,6 +115,18 @@ export class LoginComponent {
       });
     }
   }
+
+  resetarRecuperacaoSenha() {
+  this.email = '';
+  this.codigoOTP = '';
+  this.novaSenhaInput = '';
+  this.confirmarSenhaInput = '';
+  this.codigoEnviado = false;
+  this.carregando = false;
+  this.novaSenha = false;
+  this.codigoInvalido = false;
+ }
+
 }
 
 

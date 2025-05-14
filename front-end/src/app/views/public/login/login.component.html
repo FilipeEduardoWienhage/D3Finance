@@ -26,7 +26,7 @@
       </div>
 
       <!-- MODAL -->
-      <p-dialog header="Recupere sua senha" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+      <p-dialog header="Recupere sua senha" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }" (onHide)="resetarRecuperacaoSenha()">
 
         <div *ngIf="carregando" class="flex flex-col items-center justify-center py-8">
             <p-progressSpinner strokeWidth="4" styleClass="mb-4" />
@@ -64,7 +64,7 @@
           <span class="p-text-secondary block mb-4 text-center">Digite sua nova senha abaixo.</span>
           <div class="flex flex-col gap-3 mb-4">
             <p-password [(ngModel)]="novaSenhaInput" placeholder="Nova senha" inputStyleClass="w-full" promptLabel="Crie sua senha" weakLabel="Muito fraca" mediumLabel="Boa" strongLabel="Excelente"/>
-            <p-password [(ngModel)]="confirmarSenhaInput" placeholder="Confirmar senha" inputStyleClass="w-full" promptLabel="Confirme sua senha" weakLabel="Muito fraca" mediumLabel="Boa" strongLabel="Excelente"/>
+            <p-password [(ngModel)]="confirmarSenhaInput" placeholder="Confirmar senha" inputStyleClass="w-full" [feedback]="false"/>
           </div>
           <div class="flex justify-end gap-2">
             <p-button label="Salvar senha" (click)="salvarNovaSenha()" />
