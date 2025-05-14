@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://d3-finance-api.onrender.com'
+  apiUrl: 'https://d3financeapi.onrender.com/'
 };
