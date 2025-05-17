@@ -24,5 +24,25 @@ export class DespesasService {
         console.log(payload);
 
         return this.http.post(this.apiUrl, payload);
-    }
+  }
+
+  getDespesas(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:8000/v1/despesas');
+  }
+
+  deletarDespesa(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  editarDespesa(id: number, dados: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, {
+      categoria: dados.categoria,
+      descricao: dados.descricao,
+      conta_id: dados.conta_id,
+      valor_pago: dados.valor,
+      forma_pagamento: dados.forma_pagamento,
+      data_pagamento: dados.data
+    });
+  }
+
 }

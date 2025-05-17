@@ -11,20 +11,19 @@
     </p-splitter>
   </div>
 
-  <p-tabMenu 
-    [model]="tabItems" 
-    [(activeItem)]="activeTab" 
-    (activeItemChange)="onTabChange($event)" 
+  <p-tabMenu [model]="tabItems" [(activeItem)]="activeTab" (activeItemChange)="onTabChange($event)"
     class="mb-6 w-full max-w-5xl self-center">
   </p-tabMenu>
 
   <!-- RECEITAS -->
   <div *ngIf="activeTab.label === 'Receitas'" class="flex flex-col items-center justify-center px-4 py-8 w-full">
-        <h1>Filtros</h1>
+    <h1>Filtros</h1>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded-lg shadow-lg w-full max-w-5xl mb-6">
       <div>
         <label class="block text-sm mb-1">Categoria</label>
-        <p-multiselect [options]="categoriaDaReceita" (onChange)="onFilterChange()" [(ngModel)]="filters.categoria" optionLabel="name" placeholder="Selecione uma categoria" [maxSelectedLabels]="3" class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+        <p-multiselect [options]="categoriaDaReceita" (onChange)="onFilterChange()" [(ngModel)]="filters.categoria"
+          optionLabel="name" placeholder="Selecione uma categoria" [maxSelectedLabels]="3"
+          class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
       </div>
 
       <div>
@@ -54,6 +53,8 @@
             <th>Categoria</th>
             <th>Descrição</th>
             <th>Conta</th>
+            <th>Valor</th>
+            <th>Forma de Recebimento</th>
             <th>Data de Recebimento</th>
             <th>Ações</th>
           </tr>
@@ -64,6 +65,8 @@
             <td>{{ item.categoria }}</td>
             <td>{{ item.descricao }}</td>
             <td>{{ item.conta_id}}</td>
+            <td>{{ item.valor_recebido | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td>{{item.forma_recebimento}}</td>
             <td>{{ item.data_recebimento | date:'dd/MM/yyyy' }}</td>
             <td class="flex gap-2">
               <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
@@ -83,7 +86,9 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded-lg shadow-lg w-full max-w-5xl mb-6">
       <div>
         <label class="block text-sm mb-1">Categoria</label>
-        <p-multiselect [options]="categoriaDaDespesa" (onChange)="onFilterChange()" [(ngModel)]="filters.categoria" optionLabel="name" placeholder="Selecione uma categoria" [maxSelectedLabels]="3" class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+        <p-multiselect [options]="categoriaDaDespesa" (onChange)="onFilterChange()" [(ngModel)]="filters.categoria"
+          optionLabel="name" placeholder="Selecione uma categoria" [maxSelectedLabels]="3"
+          class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
       </div>
 
       <div>
@@ -113,6 +118,8 @@
             <th>Categoria</th>
             <th>Descrição</th>
             <th>Conta</th>
+            <th>Valor</th>
+            <th>Forma de Pagamento</th>
             <th>Data de Pagamento</th>
             <th>Ações</th>
           </tr>
@@ -123,6 +130,8 @@
             <td>{{ item.categoria }}</td>
             <td>{{ item.descricao }}</td>
             <td>{{ item.conta_id}}</td>
+            <td>{{ item.valor_pago | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td>{{ item.forma_pagamento}}</td>
             <td>{{ item.data_pagamento | date:'dd/MM/yyyy' }}</td>
             <td class="flex gap-2">
               <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
@@ -135,5 +144,19 @@
       </p-table>
     </div>
   </div>
+
+  <p-confirmDialog></p-confirmDialog>
+  <div>
+    <p-dialog header="{{ isEditandoReceita ? 'Editar Receita' : 'Editar Despesa' }}" [(visible)]="modalEdicaoVisivel"
+      [modal]="true" [style]="{width: '450px'}" [closable]="false" [baseZIndex]="10000">
+      <div class="p-fluid p-formgrid p-grid" style="padding: 1rem;">
+        <div class="p-field p-col-12">
+          <label for="descricao">Descrição</label>
+        </div>
+      </div>
+    </p-dialog>
+
+  </div>
+  <p-toast></p-toast>
   <app-footer class="mt-auto"></app-footer>
 </div>
