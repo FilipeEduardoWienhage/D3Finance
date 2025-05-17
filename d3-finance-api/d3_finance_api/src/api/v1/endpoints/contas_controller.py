@@ -8,13 +8,12 @@ from src.schemas.contas_schemas import ContaCreate, ContaUpdate, ContaResponse
 from src.api.tags import Tag
 from sqlalchemy.exc import IntegrityError
 
-
 # Endpoints
 LISTA_CONTAS = "/v1/contas"
 CADASTRO_CONTAS = "/v1/contas"
-ATUALIZAR_CONTAS = "/v1/contas/{contas_id}"
-APAGAR_CONTAS = "/v1/contas/{contas_id}"
-OBTER_POR_ID_CONTAS = "/v1/contas/{contas_id}"
+ATUALIZAR_CONTAS = "/v1/contas/{conta_id}"
+APAGAR_CONTAS = "/v1/contas/{conta_id}"
+OBTER_POR_ID_CONTAS = "/v1/contas/{conta_id}"
 
 
 def get_db():
@@ -34,6 +33,7 @@ def get_contas(db: Session = Depends(get_db)):
         id=conta.id,
         tipo_conta=conta.tipo_conta,
         nome_conta=conta.nome_conta,
+        saldo=conta.saldo,
         data_criacao=conta.data_criacao,
         data_alteracao=conta.data_alteracao,
     ) for conta in contas]
@@ -42,8 +42,8 @@ def get_contas(db: Session = Depends(get_db)):
 @router.get(
     path=OBTER_POR_ID_CONTAS, response_model=ContaResponse, tags=[Tag.Contas.name]
 )
-def conta_by_id(contas_id: int, db: Session = Depends(get_db)):
-    conta = db.query(Contas).filter(Contas.id == contas_id).first()
+def conta_by_id(conta_id: int, db: Session = Depends(get_db)):
+    conta = db.query(Contas).filter(Contas.id == conta_id).first()
     if not conta:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -53,6 +53,7 @@ def conta_by_id(contas_id: int, db: Session = Depends(get_db)):
         id=conta.id,
         tipo_conta=conta.tipo_conta,
         nome_conta=conta.nome_conta,
+        saldo=conta.saldo,
         data_criacao=conta.data_criacao,
         data_alteracao=conta.data_alteracao,
     )
@@ -66,6 +67,7 @@ def create_contas(conta: ContaCreate, db: Session = Depends(get_db)):
     db_conta = Contas(
         tipo_conta=conta.tipo_conta,
         nome_conta=conta.nome_conta,
+        saldo=conta.saldo if conta.saldo is not None else 0.0,
     )
 
     try:
@@ -77,6 +79,9 @@ def create_contas(conta: ContaCreate, db: Session = Depends(get_db)):
             id=db_conta.id,
             tipo_conta=conta.tipo_conta,
             nome_conta=conta.nome_conta,
+            saldo=db_conta.saldo,
+            data_criacao=db_conta.data_criacao,
+            data_alteracao=db_conta.data_alteracao,
         )
     except IntegrityError as e:
         db.rollback()
@@ -91,6 +96,7 @@ def create_contas(conta: ContaCreate, db: Session = Depends(get_db)):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erro ao cadastrar conta.",
         )
+
 
 @router.put(
     path=ATUALIZAR_CONTAS, response_model=ContaResponse, tags=[Tag.Contas.name]
@@ -115,14 +121,17 @@ def update_conta(conta_id: int, conta_update: ContaUpdate, db: Session = Depends
         id=conta.id,
         tipo_conta=conta.tipo_conta,
         nome_conta=conta.nome_conta,
+        saldo=conta.saldo,
+        data_criacao=conta.data_criacao,
+        data_alteracao=conta.data_alteracao,
     )
 
 
 @router.delete(
     path=APAGAR_CONTAS, tags=[Tag.Contas.name]
 )
-def delete_conta(contas_id: int, db: Session = Depends(get_db)):
-    conta = db.query(Contas).filter(Contas.id == contas_id).first()
+def delete_conta(conta_id: int, db: Session = Depends(get_db)):
+    conta = db.query(Contas).filter(Contas.id == conta_id).first()
 
     if not conta:
         raise HTTPException(

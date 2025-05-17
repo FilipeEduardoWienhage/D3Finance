@@ -7,7 +7,6 @@ from pydantic.dataclasses import dataclass
 class ReceitaBase:
 
     categoria: str
-    nome_receita: str
     valor_recebido: float
     data_recebimento: date
     forma_recebimento: str
@@ -23,7 +22,6 @@ class ReceitaCreate(ReceitaBase):
 @dataclass
 class ReceitaUpdate:
     categoria: Optional[str] = None
-    nome_receita: Optional[str] = None
     valor_recebido: Optional[float] = None
     data_recebimento: Optional[date] = None
     descricao: Optional[str] = None
@@ -34,7 +32,6 @@ class ReceitaUpdate:
 class ReceitaResponse:
     id: int
     categoria: str
-    nome_receita: str
     valor_recebido: float
     data_recebimento: date
     forma_recebimento: str

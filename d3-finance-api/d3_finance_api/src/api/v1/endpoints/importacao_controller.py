@@ -5,7 +5,7 @@ from fastapi import File, UploadFile, Depends, HTTPException
 from src.database.database import SessionLocal
 from src.app import router
 from sqlalchemy.orm import Session
-from src.database.models import Receitas, Despesas
+from src.database.models import Receitas, Despesas, Contas
 
 
 def get_db():
@@ -30,6 +30,15 @@ def importar_transacoes_csv(
     for linha in leitor:
         tipo = linha.get("tipo", "").strip().lower()
         try:
+            conta_id_str = linha.get("conta_id")
+            if not conta_id_str:
+                raise ValueError("Campo 'conta_id' é obrigatório.")
+            conta_id = int(conta_id_str)
+
+            conta = db.query(Contas).filter(Contas.id == conta_id).first()
+            if not conta:
+                raise ValueError(f"Conta com ID {conta_id} não encontrada.")
+
             if tipo == "receita":
                 nova = Receitas(
                     categoria=linha["categoria"],
@@ -37,9 +46,11 @@ def importar_transacoes_csv(
                     valor_recebido=float(linha["valor"]),
                     data_recebimento=datetime.strptime(linha["data"], "%Y-%m-%d").date(),
                     forma_recebimento=linha["forma"],
+                    conta_id=conta_id,
                     descricao=linha.get("descricao")
                 )
                 db.add(nova)
+                conta.saldo = (conta.saldo or 0.0) + float(linha["valor"])
                 receitas += 1
 
             elif tipo == "despesa":
@@ -49,10 +60,13 @@ def importar_transacoes_csv(
                     valor_pago=float(linha["valor"]),
                     data_pagamento=datetime.strptime(linha["data"], "%Y-%m-%d").date(),
                     forma_pagamento=linha["forma"],
+                    conta_id=conta_id,
                     descricao=linha.get("descricao")
                 )
                 db.add(nova)
+                conta.saldo = (conta.saldo or 0.0) - float(linha["valor"])
                 despesas += 1
+
             else:
                 raise ValueError(f"Tipo inválido: {tipo}")
 
