@@ -24,5 +24,26 @@ export class ReceitasService {
         console.log(payload);
 
         return this.http.post(this.apiUrl, payload);
-    }
+  }
+    
+  getReceitas(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
+
+  deletarReceita(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  editarReceita(id: number, dados: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, {
+      categoria: dados.categoria,
+      descricao: dados.descricao,
+      conta_id: dados.conta_id,
+      valor_recebido: dados.valor,
+      forma_recebimento: dados.forma_recebimento,
+      data_recebimento: dados.data
+    });
+  }
+
+
 }
