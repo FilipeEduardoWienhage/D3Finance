@@ -3,7 +3,7 @@ from fastapi import HTTPException, Depends, status, Response
 from sqlalchemy.orm import Session
 from src.app import router
 from src.database.database import SessionLocal
-from src.database.models import Despesas
+from src.database.models import Despesas, Contas
 from src.api.tags import Tag
 from src.schemas.despesa_schemas import DespesaCreate, DespesaUpdate, DespesaResponse
 
@@ -29,7 +29,6 @@ def get_despesas(db: Session = Depends(get_db)):
         DespesaResponse(
             id=despesa.id,
             categoria=despesa.categoria,
-            nome_despesa=despesa.nome_despesa,
             valor_pago=despesa.valor_pago,
             data_pagamento=despesa.data_pagamento,
             descricao=despesa.descricao,
@@ -54,7 +53,6 @@ def get_despesa_by_id(despesas_id: int, db: Session = Depends(get_db)):
     return DespesaResponse(
         id=despesa.id,
         categoria=despesa.categoria,
-        nome_despesa=despesa.nome_despesa,
         valor_pago=despesa.valor_pago,
         data_pagamento=despesa.data_pagamento,
         descricao=despesa.descricao,
@@ -68,9 +66,12 @@ def get_despesa_by_id(despesas_id: int, db: Session = Depends(get_db)):
     path=CADASTRO_DESPESAS, response_model=DespesaResponse, tags=[Tag.Despesas.name]
 )
 def create_despesa(despesa: DespesaCreate, db: Session = Depends(get_db)):
+    conta = db.query(Contas).filter(Contas.id == despesa.conta_id).first()
+    if not conta:
+        raise HTTPException(status_code=404, detail="Conta não encontrada")
+
     db_despesa = Despesas(
         categoria=despesa.categoria,
-        nome_despesa=despesa.nome_despesa,
         valor_pago=despesa.valor_pago,
         data_pagamento=despesa.data_pagamento,
         descricao=despesa.descricao,
@@ -79,13 +80,16 @@ def create_despesa(despesa: DespesaCreate, db: Session = Depends(get_db)):
     )
 
     db.add(db_despesa)
+
+    # Atualiza saldo da conta subtraindo o valor pago (despesa diminui saldo)
+    conta.saldo -= despesa.valor_pago
+
     db.commit()
     db.refresh(db_despesa)
 
     return DespesaResponse(
         id=db_despesa.id,
         categoria=db_despesa.categoria,
-        nome_despesa=db_despesa.nome_despesa,
         valor_pago=db_despesa.valor_pago,
         data_pagamento=db_despesa.data_pagamento,
         descricao=db_despesa.descricao,
@@ -100,13 +104,21 @@ def create_despesa(despesa: DespesaCreate, db: Session = Depends(get_db)):
 )
 def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, db: Session = Depends(get_db)):
     despesa = db.query(Despesas).filter(Despesas.id == despesas_id).first()
-    
     if not despesa:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Despesa não encontrada")
-    
+
+    conta = db.query(Contas).filter(Contas.id == despesa.conta_id).first()
+    if not conta:
+        raise HTTPException(status_code=404, detail="Conta não encontrada")
+
+    # Ajusta o saldo: soma o valor antigo (pois vai ser removido) e depois subtrai o novo valor
+    conta.saldo += despesa.valor_pago
+
     for field, value in despesa_update.__dict__.items():
         if value is not None:
             setattr(despesa, field, value)
+
+    conta.saldo -= despesa.valor_pago
 
     db.commit()
     db.refresh(despesa)
@@ -114,7 +126,6 @@ def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, db: Session 
     return DespesaResponse(
         id=despesa.id,
         categoria=despesa.categoria,
-        nome_despesa=despesa.nome_despesa,
         valor_pago=despesa.valor_pago,
         data_pagamento=despesa.data_pagamento,
         descricao=despesa.descricao,
@@ -129,9 +140,15 @@ def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, db: Session 
 )
 def delete_despesa(despesas_id: int, db: Session = Depends(get_db)):
     despesa = db.query(Despesas).filter(Despesas.id == despesas_id).first()
-    
     if not despesa:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Despesa não encontrada")
+
+    conta = db.query(Contas).filter(Contas.id == despesa.conta_id).first()
+    if not conta:
+        raise HTTPException(status_code=404, detail="Conta não encontrada")
+
+    # Ao deletar despesa, soma o valor pago de volta no saldo da conta
+    conta.saldo += despesa.valor_pago
 
     db.delete(despesa)
     db.commit()

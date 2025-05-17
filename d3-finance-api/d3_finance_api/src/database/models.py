@@ -28,7 +28,6 @@ class Receitas(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     categoria = Column(String(50), nullable=False)
-    nome_receita = Column(String(50), nullable=False)
     valor_recebido = Column(Float, nullable=False)
     data_recebimento = Column(Date, nullable=False)
     descricao = Column(String(250))
@@ -37,7 +36,7 @@ class Receitas(Base):
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 
-    conta = relationship("Contas", back_populates="receitas")
+    conta = relationship("Contas", back_populates="receitas", foreign_keys=[conta_id])
 
 
 class Despesas(Base):
@@ -45,7 +44,6 @@ class Despesas(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     categoria = Column(String(50), nullable=False)
-    nome_despesa = Column(String(50), nullable=False)
     valor_pago = Column(Float, nullable=False)
     data_pagamento = Column(Date, nullable=False)
     descricao = Column(String(250))
@@ -54,7 +52,7 @@ class Despesas(Base):
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 
-    conta = relationship("Contas", back_populates="despesas")
+    conta = relationship("Contas", back_populates="despesas", foreign_keys=[conta_id])
 
 
 class Contas(Base):
@@ -62,9 +60,26 @@ class Contas(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tipo_conta = Column(String(50), nullable=False)
-    nome_conta = Column(String(50),unique=True, nullable=False)
+    nome_conta = Column(String(50), unique=True, nullable=False)
+    saldo = Column(Float, default=0.0, nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 
-    despesas = relationship("Despesas", back_populates="conta")
-    receitas = relationship("Receitas", back_populates="conta")
+    despesas = relationship("Despesas", back_populates="conta", foreign_keys="[Despesas.conta_id]")
+    receitas = relationship("Receitas", back_populates="conta", foreign_keys="[Receitas.conta_id]")
+    transacoes_origem = relationship("Transacoes", foreign_keys="[Transacoes.conta_origem_id]", back_populates="conta_origem")
+    transacoes_destino = relationship("Transacoes", foreign_keys="[Transacoes.conta_destino_id]", back_populates="conta_destino")
+
+
+class Transacoes(Base):
+    __tablename__ = "transacoes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    conta_origem_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
+    conta_destino_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
+    valor = Column(Float, nullable=False)
+    data_transacao = Column(DateTime, default=func.now(), nullable=False)
+    descricao = Column(String(250))
+
+    conta_origem = relationship("Contas", foreign_keys=[conta_origem_id], back_populates="transacoes_origem")
+    conta_destino = relationship("Contas", foreign_keys=[conta_destino_id], back_populates="transacoes_destino")
