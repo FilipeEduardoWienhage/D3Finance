@@ -64,7 +64,7 @@ export class CadastroDespesasComponent {
   
 
 
-  nomeDespesa: string = '';
+
   valorDespesa: number = 0;
   dataRecebimento: Date | null = null;
   formaDeRecebimento: formaRecebimento[] | undefined;

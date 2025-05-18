@@ -59,7 +59,7 @@ export class CadastroReceitasComponent {
   private contasService: ContasService,
   private messageService: MessageService) {}
 
-  nomeReceita: string = '';
+  
   categoriaReceita: string = '';
   valorReceita: number = 0;
   dataRecebimento: Date | null = null;
