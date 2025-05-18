@@ -7,7 +7,7 @@
     <div class="card">
         <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
             <ng-template #panel>
-                <div class="flex items-center justify-center h-full">D2 Finance</div>
+                <div class="flex items-center justify-center h-full">D3 Finance</div>
             </ng-template>
         </p-splitter>
     </div>
@@ -18,7 +18,7 @@
 
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Conta origem*</label>
+                    <label for="dataRecebimento">Conta origem<span class="asterisco">*</span></label>
                     <p-select [options]="contas" [(ngModel)]="transacao.conta_origem_id" optionLabel="name" optionValue="id" placeholder="Conta origem"
                         class="w-full md:w-64" />
                 </div>
@@ -27,7 +27,7 @@
             <p-fluid class="card flex justify-center">
                 <div class="flex flex-col gap-2 w-64">
                     <label for="currency-br">
-                        Valor Movimentado*
+                        Valor Movimentado<span class="asterisco">*</span>
                     </label>
                     <p-inputnumber inputId="currency-br" mode="currency" currency="BRL" locale="pt-BR" [(ngModel)]="transacao.valor" />
                 </div>
@@ -35,7 +35,7 @@
 
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Conta destino*</label>
+                    <label for="dataRecebimento">Conta destino<span class="asterisco">*</span></label>
                     <p-select [options]="contas" [(ngModel)]="transacao.conta_destino_id" optionLabel="name" optionValue="id" placeholder="Conta destino"
                         class="w-full md:w-64" />
                 </div>

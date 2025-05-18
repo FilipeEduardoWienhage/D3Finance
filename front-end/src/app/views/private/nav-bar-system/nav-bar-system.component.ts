@@ -27,10 +27,10 @@ export class NavBarSystemComponent {
   ngOnInit() {
     this.items = [
       {
-        label: 'D2 Finance',
+        label: 'D3 Finance',
         items: [
           {
-            label: 'Visão Geral',
+            label: 'Visão geral',
             icon: 'pi pi-chart-bar',
             command: () => this.router.navigate(['/visaogeral'])
           },
@@ -50,17 +50,17 @@ export class NavBarSystemComponent {
             command: () => this.router.navigate(['/movimentarcontas'])
           },
           {
-            label: 'Cadastrar Receitas',
+            label: 'Cadastrar receitas',
             icon: 'pi pi-plus',
             command: () => this.router.navigate(['/receitas/cadastrar'])
           },
           {
-            label: 'Cadastrar Despesas',
+            label: 'Cadastrar despesas',
             icon: 'pi pi-plus',
             command: () => this.router.navigate(['/despesas/cadastrar'])
           },
           {
-            label: 'Cadastrar Contas',
+            label: 'Cadastrar contas',
             icon: 'pi pi-plus',
             command: () => this.router.navigate(['/contas/cadastrar'])
           },
@@ -70,7 +70,7 @@ export class NavBarSystemComponent {
             command: () => this.router.navigate(['/importararquivo'])
           },
           {
-            label: 'Pesquisar',
+            label: 'Pesquisar histórico',
             icon: 'pi pi-search',
             command: () => this.router.navigate(['/pesquisar'])
           }

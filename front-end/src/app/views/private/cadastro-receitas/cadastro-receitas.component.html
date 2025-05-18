@@ -8,7 +8,7 @@
     <div class="card">
         <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
             <ng-template #panel>
-                <div class="flex items-center justify-center h-full">D2 Finance</div>
+                <div class="flex items-center justify-center h-full">D3 Finance</div>
             </ng-template>
         </p-splitter>
     </div>
@@ -16,8 +16,8 @@
     <div class="flex-1 flex items-center justify-center">
         <p-card header="Cadastrar Receitas" class="w-96">
             <div class="card flex justify-center">
-                <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Categoria da receita*</label>
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Categoria da receita<span class="asterisco">*</span></label>
                     <p-select [options]="categoriaDaReceita" [(ngModel)]="requestReceita.categoria" optionLabel="name"
                         optionValue="name" placeholder="Categoria da Receita" class="w-full md:w-64" />
                 </div>
@@ -25,7 +25,7 @@
             <p-fluid class="card flex justify-center">
                 <div class="flex flex-col gap-2 w-64">
                     <label for="currency-br">
-                        Valor Recebido*
+                        Valor Recebido<span class="asterisco">*</span>
                     </label>
                     <p-inputnumber [(ngModel)]="requestReceita.valor" inputId="currency-br" mode="currency"
                         currency="BRL" locale="pt-BR" />
@@ -33,22 +33,22 @@
             </p-fluid>
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
-                    <label for="dataRecebimento">Data de recebimento*</label>
+                    <label for="dataRecebimento">Data de recebimento<span class="asterisco">*</span></label>
                     <p-datepicker id="dataNascimento" [(ngModel)]="requestReceita.data" required [showButtonBar]="true"
                         class="w-64" [dateFormat]="'dd/mm/yy'" />
                 </div>
             </div>
             <div class="card flex justify-center">
-                <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Forma de recebimento*</label>
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Forma de recebimento<span class="asterisco">*</span></label>
                     <p-select [options]="formaDeRecebimento" [(ngModel)]="requestReceita.formaRecebimento"
                         optionLabel="name" optionValue="name" placeholder="Forma de recebimento"
                         class="w-full md:w-64" />
                 </div>
             </div>
             <div class="card flex justify-center">
-                <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Conta*</label>
+                <div class="flex flex-col gap-2">
+                    <label for="dataRecebimento">Conta<span class="asterisco">*</span></label>
                     <p-select [options]="contaDestino" [(ngModel)]="requestReceita.conta_id" optionLabel="name"
                         optionValue="id" placeholder="Conta destino" class="w-full md:w-64" />
                 </div>
