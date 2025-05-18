@@ -14,7 +14,6 @@ export class DespesasService {
     cadastrarDespesa(despesa: DespesaRequestModel): Observable<any> {
         let payload = {
             categoria: despesa.categoria,
-            nome_despesa: despesa.nome_despesa,
             valor_pago: despesa.valor_pago,
             data_pagamento: despesa.data_pagamento ? despesa.data_pagamento.toISOString().split('T')[0] : null,
             forma_pagamento: despesa.forma_pagamento,

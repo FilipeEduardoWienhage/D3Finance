@@ -1,6 +1,5 @@
 export class DespesaRequestModel {
     categoria: string = "";
-    nome_despesa: string = "";
     valor_pago: number = 0;
     data_pagamento: Date | null = null;
     forma_pagamento: string = "";
