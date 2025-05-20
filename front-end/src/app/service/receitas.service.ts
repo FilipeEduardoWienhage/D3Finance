@@ -33,16 +33,8 @@ export class ReceitasService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  editarReceita(id: number, dados: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, {
-      categoria: dados.categoria,
-      descricao: dados.descricao,
-      conta_id: dados.conta_id,
-      valor_recebido: dados.valor,
-      forma_recebimento: dados.forma_recebimento,
-      data_recebimento: dados.data
-    });
-  }
-
+  atualizarReceita(id: number, receitaAtualizada: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, receitaAtualizada);
+  }  
 
 }

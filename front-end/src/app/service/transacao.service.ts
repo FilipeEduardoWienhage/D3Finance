@@ -21,4 +21,8 @@ export class TransacaoService {
         console.log(payload);
         return this.http.post(this.apiUrl, payload);
     }
+
+    getTransacoes(): Observable<any[]> {
+        return this.http.get<any[]>(this.apiUrl);
+      }
 }

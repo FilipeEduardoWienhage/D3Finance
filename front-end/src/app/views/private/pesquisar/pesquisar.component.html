@@ -64,13 +64,13 @@
           <tr>
             <td>{{ item.categoria }}</td>
             <td>{{ item.descricao }}</td>
-            <td>{{ item.conta_id}}</td>
+            <td>{{ item.conta_nome }}</td>
             <td>{{ item.valor_recebido | currency:'BRL':'symbol':'1.2-2' }}</td>
             <td>{{item.forma_recebimento}}</td>
             <td>{{ item.data_recebimento | date:'dd/MM/yyyy' }}</td>
             <td class="flex gap-2">
               <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
-                (click)="editarItem(rowIndex)"></button>
+              (click)=" abrirEdicao(item)"></button>
               <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
                 (click)="apagarItem(rowIndex)"></button>
             </td>
@@ -129,13 +129,13 @@
           <tr>
             <td>{{ item.categoria }}</td>
             <td>{{ item.descricao }}</td>
-            <td>{{ item.conta_id}}</td>
+            <td>{{ item.conta_nome}}</td>
             <td>{{ item.valor_pago | currency:'BRL':'symbol':'1.2-2' }}</td>
             <td>{{ item.forma_pagamento}}</td>
             <td>{{ item.data_pagamento | date:'dd/MM/yyyy' }}</td>
             <td class="flex gap-2">
               <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
-                (click)="editarItem(rowIndex)"></button>
+              ></button>
               <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
                 (click)="apagarItem(rowIndex)"></button>
             </td>
@@ -145,18 +145,94 @@
     </div>
   </div>
 
-  <p-confirmDialog></p-confirmDialog>
-  <div>
-    <p-dialog header="{{ isEditandoReceita ? 'Editar Receita' : 'Editar Despesa' }}" [(visible)]="modalEdicaoVisivel"
-      [modal]="true" [style]="{width: '450px'}" [closable]="false" [baseZIndex]="10000">
-      <div class="p-fluid p-formgrid p-grid" style="padding: 1rem;">
-        <div class="p-field p-col-12">
-          <label for="descricao">Descrição</label>
-        </div>
+  <!-- TRANSAÇÕES -->
+  <div *ngIf="activeTab.label === 'Transações'" class="flex flex-col items-center justify-center px-4 py-8 w-full">
+    <h1>Filtros</h1>
+    <div class="flex justify-center items-center gap-6">
+      <div>
+        <label class="block text-sm mb-1">Contas</label>
+        <input type="text" [(ngModel)]="filters.conta" (input)="onFilterChange()"
+          class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
       </div>
-    </p-dialog>
+    
+      <div>
+        <label class="block text-sm mb-1">Data</label>
+        <input type="date" [(ngModel)]="filters.data" (input)="onFilterChange()"
+          class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+      </div>
+    </div>    
 
+    <div class="bg-[#2a2a2a] p-6 rounded-lg shadow-lg w-full max-w-5xl">
+      <p-table [value]="filteredTransacoes" [paginator]="true" [rows]="rows" [first]="first" (onPage)="pageChange($event)"
+        class="p-datatable-sm p-datatable-gridlines">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Conta de Origem</th>
+            <th>Conta de Destino</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+          <tr>
+            <td>{{ item.conta_origem_nome}}</td>
+            <td>{{ item.conta_destino_nome}}</td>
+            <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td>{{ item.data_transacao | date:'dd/MM/yyyy' }}</td>
+            <td class="flex gap-2">
+              <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
+              ></button>
+              <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
+                (click)="apagarItem(rowIndex)"></button>
+            </td>
+          </tr>
+        </ng-template>        
+      </p-table>
+    </div>
   </div>
+
+  <p-confirmDialog></p-confirmDialog>
+  <p-dialog
+  header="Editar Receita"
+  [(visible)]="editDialogVisible"
+  [modal]="true"
+  [style]="{ width: '400px' }"
+  [baseZIndex]="10000"
+  (onHide)="fecharDialog()"
+>
+  <div *ngIf="receitaSelecionada">
+    <label class="block text-sm mb-1">Descrição</label>
+    <input
+      type="text"
+      [(ngModel)]="receitaSelecionada.descricao"
+      class="p-inputtext w-full mb-3"
+    />
+
+    <label class="block text-sm mb-1">Valor</label>
+    <input
+      type="number"
+      [(ngModel)]="receitaSelecionada.valor"
+      class="p-inputtext w-full mb-3"
+    />
+
+    <label class="block text-sm mb-1">Data</label>
+    <input
+      type="date"
+      [(ngModel)]="receitaSelecionada.data"
+      class="p-inputtext w-full mb-3"
+    />
+
+    <button
+      pButton
+      label="Salvar"
+      class="p-button-success w-full"
+      (click)="salvarEdicao()"
+    ></button>
+  </div>
+</p-dialog>
+
   <p-toast></p-toast>
   <app-footer class="mt-auto"></app-footer>
 </div>
