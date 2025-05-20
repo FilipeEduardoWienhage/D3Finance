@@ -30,5 +30,9 @@ export class ContasService {
     listarContas(): Observable<ContaResponseModel[]> {
         return this.http.get<ContaResponseModel[]>(this.apiUrl);
     }
+
+    getContas() {
+        return this.http.get<any[]>(this.apiUrl);
+      }
 }
 

@@ -17,9 +17,11 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { ReceitasService } from '../../../service/receitas.service';
 import { DespesasService } from '../../../service/despesas.service';
-import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { TransacaoService } from '../../../service/transacao.service';
+import { ContasService } from '../../../service/contas.service';
 
 
 @Component({
@@ -41,7 +43,7 @@ import { ToastModule } from 'primeng/toast';
     CalendarModule,
     ConfirmDialogModule,
     ToastModule,
-
+    FormsModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './pesquisar.component.html',
@@ -54,6 +56,8 @@ export class PesquisarComponent implements OnInit {
   private despesasService: DespesasService,
   private confirmationService: ConfirmationService,
   private messageService: MessageService,
+  private transacaoService: TransacaoService,
+  private contasService: ContasService
 ) {}
 
   categoriaDaReceita = [
@@ -88,14 +92,17 @@ export class PesquisarComponent implements OnInit {
       { name: 'Outras Despesas' }
   ];
 
-  editarReceitaModalVisible = false;
+  editDialogVisible = false;
   receitaSelecionada: any = null;
 
   receitas: any[] = [];
   despesas: any[] = [];
+  transacoes: any[] = [];
+  contas: any[] = [];
 
   filteredReceitas: any[] = [];
   filteredDespesas: any[] = [];
+  filteredTransacoes: any[] = [];
 
   filters = {
   categoria: [] as { name: string }[],
@@ -103,55 +110,69 @@ export class PesquisarComponent implements OnInit {
   conta: '',
   data: '',
   valor: '',
-  forma_pag: '',
-  forma_receb:'',
+  forma_pagamento: '',
+  forma_recebimento:'',
   };
 
-  itemEditando: any = undefined;
-  modalEdicaoVisivel: boolean = false;
-  isEditandoReceita: boolean = false;
 
   first = 0;
   rows = 10;
 
   tabItems: MenuItem[] = [
     { label: 'Receitas', icon: 'pi pi-dollar' },
-    { label: 'Despesas', icon: 'pi pi-credit-card' }
+    { label: 'Despesas', icon: 'pi pi-credit-card' },
+    { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left' }
   ];
 
   activeTab: MenuItem = this.tabItems[0];
 
   ngOnInit(): void {
     this.onTabChange(this.activeTab);
+    this.contasService.getContas().subscribe({
+      next: (data) => {
+        this.contas = data;
+        console.log('Contas carregadas:', this.contas);
+        this.onTabChange(this.activeTab); // Só carrega transações depois que contas estão disponíveis
+      },
+      error: (err) => console.error('Erro ao carregar contas:', err)
+    });
+
   }
   
   onFilterChange() {
+    
     const categoriasSelecionadas = this.filters.categoria.map((c: any) => c.name);
-  
     if (this.activeTab.label === 'Receitas') {
-      this.filteredReceitas = this.receitas.filter(item =>
-        (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
-        item.nome_receita.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
-        (this.filters.conta === '' || item.conta.conta_id === +this.filters.conta) &&
-        (this.filters.data === '' || item.data_recebimento === this.filters.data) &&
-        (this.filters.valor ==='' || item.valor === this.filters.valor) &&
-        (this.filters.forma_receb === '' || item.forma_receb === this.filters.forma_receb)
-      );
-    }
+    this.filteredReceitas = this.receitas.filter(item => {
+      return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
+        (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
+        (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
+        (this.filters.data === '' || item.data === this.filters.data) &&
+        (this.filters.forma_recebimento === '' || item.forma_recebimento === this.filters.forma_recebimento);
+    });
+  }
   
     if (this.activeTab.label === 'Despesas') {
-      this.filteredDespesas = this.despesas.filter(item =>
-        (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
-        item.nome_despesa.toLowerCase().includes(this.filters.desc.toLowerCase()) &&
-        (this.filters.conta === '' || item.conta.conta_id === +this.filters.conta) &&
-        (this.filters.data === '' || item.data_pagamento === this.filters.data) &&
-        (this.filters.valor === '' || item.valor === this.filters.valor) &&
-        (this.filters.forma_pag === '' || item.forma_pag === this.filters.forma_pag)
-      );    
+      this.filteredDespesas = this.despesas.filter(item => {
+        return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
+          (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
+          (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
+          (this.filters.data === '' || item.data === this.filters.data) &&
+          (this.filters.forma_pagamento === '' || item.forma_pagamento === this.filters.forma_pagamento);
+      });
+    }
+  
+    if (this.activeTab.label === 'Transações') {
+      this.filteredTransacoes = this.transacoes.filter(item =>
+        (this.filters.conta === '' || item.conta_origem_id === +this.filters.conta || item.conta_destino_id === +this.filters.conta) &&
+        (this.filters.data === '' || (item.data_transacao) === this.filters.data) &&
+        (this.filters.valor === '' || item.valor === +this.filters.valor)
+      );
     }
   
     this.first = 0;
   }
+  
   
   pageChange(event: any) {
     this.first = event.first;
@@ -165,8 +186,14 @@ export class PesquisarComponent implements OnInit {
     if (item.label === 'Receitas') {
       this.receitasService.getReceitas().subscribe({
         next: (data) => {
-          this.receitas = data;
-          this.filteredReceitas = [...data];
+          this.receitas = data.map(receita => {
+            const conta = this.contas.find(c => c.id === receita.conta_id);
+            return {
+              ...receita,
+              conta_nome: conta?.nome_conta || 'Desconhecida'
+            };
+          });
+          this.filteredReceitas = [...this.receitas];
         },
         error: (err) => console.error('Erro ao carregar receitas:', err)
       });
@@ -175,135 +202,124 @@ export class PesquisarComponent implements OnInit {
     if (item.label === 'Despesas') {
       this.despesasService.getDespesas().subscribe({
         next: (data) => {
-          this.despesas = data;
-          this.filteredDespesas = [...data];
+          this.despesas = data.map(despesa => {
+            const conta = this.contas.find(c => c.id === despesa.conta_id);
+            return {
+              ...despesa,
+              conta_nome: conta?.nome_conta || 'Desconhecida'
+            };
+          });
+    
+          this.filteredDespesas = [...this.despesas];
         },
         error: (err) => console.error('Erro ao carregar despesas:', err)
       });
+    }
+    
+
+    if (item.label === 'Transações') {
+      this.transacaoService.getTransacoes().subscribe({
+        next: (data) => {
+          this.transacoes = data.map(item => {
+            const origemId = Number(item.conta_origem_id);
+            const destinoId = Number(item.conta_destino_id);
+      
+            const contaOrigem = this.contas.find(c => Number(c.id) === origemId);
+            const contaDestino = this.contas.find(c => Number(c.id) === destinoId);
+      
+            return {
+              ...item,
+              conta_origem_nome: contaOrigem?.nome_conta || 'Desconhecida',
+              conta_destino_nome: contaDestino?.nome_conta || 'Desconhecida'
+            };
+          });
+      
+          console.log('Transações enriquecidas:', this.transacoes);
+          this.filteredTransacoes = [...this.transacoes];
+        },
+        error: (err) => console.error('Erro ao carregar transações:', err)
+      });      
     }
   }
   
   
   apagarItem(index: number): void {
-  const isReceita = this.activeTab.label === 'Receitas';
-  const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
-  const tipo = isReceita ? 'receita' : 'despesa';
-
-  this.confirmationService.confirm({
-    message: `Tem certeza que deseja apagar esta ${tipo}?`,
-    header: 'Confirmação',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel: 'Sim',
-    rejectLabel: 'Cancelar',
-    accept: () => {
-      const observable = isReceita
-        ? this.receitasService.deletarReceita(item.id)
-        : this.despesasService.deletarDespesa(item.id);
-
-      observable.subscribe({
-        next: () => {
-          if (isReceita) {
-            this.receitas = this.receitas.filter(i => i.id !== item.id);
-          } else {
-            this.despesas = this.despesas.filter(i => i.id !== item.id);
+    const isReceita = this.activeTab.label === 'Receitas';
+    const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
+    const tipo = isReceita ? 'receita' : 'despesa';
+  
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja apagar esta ${tipo}?`,
+      header: 'Confirmação',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        const deleteObservable = isReceita
+          ? this.receitasService.deletarReceita(item.id)
+          : this.despesasService.deletarDespesa(item.id);
+  
+        deleteObservable.subscribe({
+          next: () => {
+            if (isReceita) {
+              this.receitas = this.receitas.filter(r => r.id !== item.id);
+              this.filteredReceitas = this.filteredReceitas.filter(r => r.id !== item.id);
+            } else {
+              this.despesas = this.despesas.filter(d => d.id !== item.id);
+              this.filteredDespesas = this.filteredDespesas.filter(d => d.id !== item.id);
+            }
+  
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: `${isReceita ? 'Receita' : 'Despesa'} apagada com sucesso`
+            });
+          },
+          error: (err) => {
+            console.error(`Erro ao apagar ${tipo}:`, err);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `Erro ao apagar ${tipo}.`
+            });
           }
-          this.onFilterChange();
-
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: `${isReceita ? 'Receita' : 'Despesa'} apagada com sucesso`
-          });
-        },
-        error: (err) => {
-          console.error(`Erro ao apagar ${tipo}:`, err);
-        }
-      });
-    }
-  });
-  }
-
-
-  editarItem(index: number): void {
-  const isReceita = this.activeTab.label === 'Receitas';
-  const itemOriginal = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
-
-  this.itemEditando = itemOriginal ? { ...itemOriginal } : { descricao: '' };
-  this.isEditandoReceita = isReceita;
-  this.modalEdicaoVisivel = true;
-}
-
-
-  confirmarEdicao(): void {
-  const item = this.itemEditando;
-  const isReceita = this.isEditandoReceita;
-
-  // Formata a data para 'yyyy-MM-dd' se for Date, ou usa string direto
-  let dataFormatada: string | null = null;
-  if (item.data) {
-    if (item.data instanceof Date) {
-      dataFormatada = item.data.toISOString().split('T')[0];
-    } else {
-      dataFormatada = item.data; // supondo que já seja string no formato correto
-    }
-  }
-
-  const payload = {
-    categoria: item.categoria,
-    descricao: item.descricao,
-    conta_id: item.conta_id,
-    valor_recebido: isReceita ? item.valor : undefined,
-    valor_pago: !isReceita ? item.valor : undefined,
-    data_recebimento: isReceita ? dataFormatada : undefined,
-    data_pagamento: !isReceita ? dataFormatada : undefined,
-    forma_recebimento: isReceita ? item.forma_recebimento : undefined,
-    forma_pagamento: !isReceita ? item.forma_pagamento : undefined
-  };
-
-  const observable = isReceita
-    ? this.receitasService.editarReceita(item.id, payload)
-    : this.despesasService.editarDespesa(item.id, payload);
-
-  observable.subscribe({
-    next: () => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: `${isReceita ? 'Receita' : 'Despesa'} editada com sucesso`
-      });
-      this.modalEdicaoVisivel = false;
-      this.recarregarDados(); // Atualiza a lista de receitas/despesas
-    },
-    error: (err) => {
-      console.error('Erro ao editar:', err);
-    }
-  });
-}
-
-
-recarregarDados(): void {
-  if (this.activeTab.label === 'Receitas') {
-    this.receitasService.getReceitas().subscribe({
-      next: (data) => {
-        this.receitas = data;
-        this.filteredReceitas = [...data];
-        this.onFilterChange(); // Caso queira re-aplicar filtros após recarregar
-      },
-      error: (err) => console.error('Erro ao carregar receitas:', err)
+        });
+      }
     });
-  } else if (this.activeTab.label === 'Despesas') {
-    this.despesasService.getDespesas().subscribe({
-      next: (data) => {
-        this.despesas = data;
-        this.filteredDespesas = [...data];
-        this.onFilterChange();
-      },
-      error: (err) => console.error('Erro ao carregar despesas:', err)
+  }  
+
+  abrirEdicao(receita: any) {
+    this.receitaSelecionada = { ...receita }; // faz cópia
+    this.editDialogVisible = true;
+  }
+  
+  fecharDialog() {
+    this.editDialogVisible = false;
+    this.receitaSelecionada = null;
+  }
+  
+
+  carregarReceitas() {
+    this.receitasService.getReceitas().subscribe((receitas) => {
+      this.receitas = receitas;
     });
   }
-}
 
 
-
-
+  salvarEdicao() {
+    if (this.receitaSelecionada && this.receitaSelecionada.id) {
+      this.receitasService.atualizarReceita(this.receitaSelecionada.id, this.receitaSelecionada)
+        .subscribe({
+          next: () => {
+            console.log('Receita atualizada com sucesso');
+            this.fecharDialog(); // ou outra forma de fechar modal
+            this.carregarReceitas();   // recarrega a lista
+          },
+          error: (err) => {
+            console.error('Erro ao atualizar receita:', err);
+          }
+        });
+    }
+  }
+  
 }
