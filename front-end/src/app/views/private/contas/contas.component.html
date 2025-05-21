@@ -1,0 +1,56 @@
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
+    <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
+        <app-nav-bar-system></app-nav-bar-system>
+    </div>
+
+    <div class="card">
+        <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+            <ng-template #panel>
+                <div class="flex items-center justify-center h-full">D3 Finance</div>
+            </ng-template>
+        </p-splitter>
+    </div>
+    <p>Contas</p>
+
+    <div class="flex-1 flex items-center justify-center">
+        <p-card class="w-full max-w-4xl">
+          <ng-template pTemplate="header">
+            <div class="w-full text-center text-xl font-semibold">
+              Contas
+            </div>
+          </ng-template>
+      
+          <div class="p-6">
+            <p-table 
+              [value]="conta"
+              [paginator]="true"
+              [rows]="10"
+              class="p-datatable-sm p-datatable-gridlines w-full">
+      
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Tipo</th>
+                  <th>Nome</th>
+                  <th>Saldo</th>
+                  <th>Ações</th>
+                </tr>
+              </ng-template>
+      
+              <ng-template pTemplate="body" let-conta>
+                <tr>
+                  <td>{{ conta.tipo_conta }}</td>
+                  <td>{{ conta.nome_conta }}</td>
+                  <td >{{ conta.saldo | currency:'BRL':'symbol':'1.2-2'  }}</td>
+                  <td class="flex gap-2 border-b border-gray-700">
+                    <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"></button>
+                    <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"></button>
+                  </td>
+                </tr>
+              </ng-template>
+      
+            </p-table>
+          </div>
+        </p-card>
+      </div>
+    <app-footer class="mt-auto"></app-footer>
+</div>

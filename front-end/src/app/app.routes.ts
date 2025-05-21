@@ -13,6 +13,7 @@ import { ConfiguracaoPerfilComponent } from './views/private/configuracao-perfil
 import { PesquisarComponent } from './views/private/pesquisar/pesquisar.component';
 import { CadastroContasComponent } from './views/private/cadastro-contas/cadastro-contas.component';
 import { MovimentacaoEntreContasComponent } from './views/private/movimentacao-entre-contas/movimentacao-entre-contas.component';
+import { ContasComponent } from './views/private/contas/contas.component';
 
 export const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -30,5 +31,6 @@ export const routes: Routes = [
     { path: "pesquisar", component: PesquisarComponent},
     { path: "contas/cadastrar", component: CadastroContasComponent},
     { path: "movimentarcontas", component: MovimentacaoEntreContasComponent},
+    { path: "contas", component: ContasComponent},
     { path: "**", redirectTo: "/home" }
 ];

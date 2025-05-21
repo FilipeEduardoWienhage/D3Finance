@@ -132,7 +132,7 @@ export class PesquisarComponent implements OnInit {
       next: (data) => {
         this.contas = data;
         console.log('Contas carregadas:', this.contas);
-        this.onTabChange(this.activeTab); // Só carrega transações depois que contas estão disponíveis
+        this.onTabChange(this.activeTab); 
       },
       error: (err) => console.error('Erro ao carregar contas:', err)
     });
@@ -164,8 +164,10 @@ export class PesquisarComponent implements OnInit {
   
     if (this.activeTab.label === 'Transações') {
       this.filteredTransacoes = this.transacoes.filter(item =>
-        (this.filters.conta === '' || item.conta_origem_id === +this.filters.conta || item.conta_destino_id === +this.filters.conta) &&
-        (this.filters.data === '' || (item.data_transacao) === this.filters.data) &&
+        (this.filters.conta === '' ||
+          item.conta_origem_nome?.toLowerCase().includes(this.filters.conta.toLowerCase()) ||
+          item.conta_destino_nome?.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
+        (this.filters.data === '' || item.data_transacao === this.filters.data) &&
         (this.filters.valor === '' || item.valor === +this.filters.valor)
       );
     }
@@ -220,6 +222,7 @@ export class PesquisarComponent implements OnInit {
     if (item.label === 'Transações') {
       this.transacaoService.getTransacoes().subscribe({
         next: (data) => {
+          console.log(item)
           this.transacoes = data.map(item => {
             const origemId = Number(item.conta_origem_id);
             const destinoId = Number(item.conta_destino_id);
