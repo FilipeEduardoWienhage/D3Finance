@@ -154,12 +154,6 @@
         <input type="text" [(ngModel)]="filters.conta" (input)="onFilterChange()"
           class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
       </div>
-    
-      <div>
-        <label class="block text-sm mb-1">Data</label>
-        <input type="date" [(ngModel)]="filters.data" (input)="onFilterChange()"
-          class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
-      </div>
     </div>    
 
     <div class="bg-[#2a2a2a] p-6 rounded-lg shadow-lg w-full max-w-5xl">
@@ -170,7 +164,6 @@
             <th>Conta de Origem</th>
             <th>Conta de Destino</th>
             <th>Valor</th>
-            <th>Data</th>
             <th>Ações</th>
           </tr>
         </ng-template>
@@ -180,10 +173,7 @@
             <td>{{ item.conta_origem_nome}}</td>
             <td>{{ item.conta_destino_nome}}</td>
             <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
-            <td>{{ item.data_transacao | date:'dd/MM/yyyy' }}</td>
             <td class="flex gap-2">
-              <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
-              ></button>
               <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
                 (click)="apagarItem(rowIndex)"></button>
             </td>

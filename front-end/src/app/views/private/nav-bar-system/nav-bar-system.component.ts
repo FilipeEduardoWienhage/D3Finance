@@ -45,6 +45,11 @@ export class NavBarSystemComponent {
             command: () => this.router.navigate(['/despesas'])
           },
           {
+            label: 'Contas e Saldo',
+            icon: 'pi pi-wallet',
+            command: () => this.router.navigate(['/contas'])
+          },
+          {
             label: 'Movimentação entre contas',
             icon: 'pi pi-arrow-right-arrow-left',
             command: () => this.router.navigate(['/movimentarcontas'])
