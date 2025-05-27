@@ -53,14 +53,14 @@ import { CardModule } from 'primeng/card';
 })
 export class PesquisarComponent implements OnInit {
   constructor(
-  private http: HttpClient,
-  private receitasService: ReceitasService,
-  private despesasService: DespesasService,
-  private confirmationService: ConfirmationService,
-  private messageService: MessageService,
-  private transacaoService: TransacaoService,
-  private contasService: ContasService
-) {}
+    private http: HttpClient,
+    private receitasService: ReceitasService,
+    private despesasService: DespesasService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+    private transacaoService: TransacaoService,
+    private contasService: ContasService
+  ) { }
 
   categoriaDaReceita = [
     { name: 'Venda de Produtos' },
@@ -81,17 +81,17 @@ export class PesquisarComponent implements OnInit {
   ];
 
   categoriaDaDespesa = [
-      { name: 'Despesas com Pessoal' },
-      { name: 'Despesas Operacionais' },
-      { name: 'Despesas com Materiais' },
-      { name: 'Despesas Administrativas' },
-      { name: 'Despesas com Marketing' },
-      { name: 'Despesas com Transporte' },
-      { name: 'Impostos e Taxas' },
-      { name: 'Despesas Financeiras' },
-      { name: 'Manutenção e Reparos' },
-      { name: 'Despesas com Terceirizados' },
-      { name: 'Outras Despesas' }
+    { name: 'Despesas com Pessoal' },
+    { name: 'Despesas Operacionais' },
+    { name: 'Despesas com Materiais' },
+    { name: 'Despesas Administrativas' },
+    { name: 'Despesas com Marketing' },
+    { name: 'Despesas com Transporte' },
+    { name: 'Impostos e Taxas' },
+    { name: 'Despesas Financeiras' },
+    { name: 'Manutenção e Reparos' },
+    { name: 'Despesas com Terceirizados' },
+    { name: 'Outras Despesas' }
   ];
 
   editDialogVisible = false;
@@ -102,18 +102,20 @@ export class PesquisarComponent implements OnInit {
   transacoes: any[] = [];
   contas: any[] = [];
 
+  
+
   filteredReceitas: any[] = [];
   filteredDespesas: any[] = [];
   filteredTransacoes: any[] = [];
 
   filters = {
-  categoria: [] as { name: string }[],
-  desc: '',
-  conta: '',
-  data: '',
-  valor: '',
-  forma_pagamento: '',
-  forma_recebimento:'',
+    categoria: [] as { name: string }[],
+    desc: '',
+    conta: '',
+    data: '',
+    valor: '',
+    forma_pagamento: '',
+    forma_recebimento: '',
   };
 
 
@@ -121,6 +123,7 @@ export class PesquisarComponent implements OnInit {
   rows = 10;
 
   tabItems: MenuItem[] = [
+    { label: 'Contas e Saldo', icon: 'pi pi-dollar' },
     { label: 'Receitas', icon: 'pi pi-dollar' },
     { label: 'Despesas', icon: 'pi pi-credit-card' },
     { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left' }
@@ -134,26 +137,26 @@ export class PesquisarComponent implements OnInit {
       next: (data) => {
         this.contas = data;
         console.log('Contas carregadas:', this.contas);
-        this.onTabChange(this.activeTab); 
+        this.onTabChange(this.activeTab);
       },
       error: (err) => console.error('Erro ao carregar contas:', err)
     });
 
   }
-  
+
   onFilterChange() {
-    
+
     const categoriasSelecionadas = this.filters.categoria.map((c: any) => c.name);
     if (this.activeTab.label === 'Receitas') {
-    this.filteredReceitas = this.receitas.filter(item => {
-      return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
-        (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
-        (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
-        (this.filters.data === '' || item.data === this.filters.data) &&
-        (this.filters.forma_recebimento === '' || item.forma_recebimento === this.filters.forma_recebimento);
-    });
-  }
-  
+      this.filteredReceitas = this.receitas.filter(item => {
+        return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
+          (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
+          (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
+          (this.filters.data === '' || item.data === this.filters.data) &&
+          (this.filters.forma_recebimento === '' || item.forma_recebimento === this.filters.forma_recebimento);
+      });
+    }
+
     if (this.activeTab.label === 'Despesas') {
       this.filteredDespesas = this.despesas.filter(item => {
         return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
@@ -163,7 +166,7 @@ export class PesquisarComponent implements OnInit {
           (this.filters.forma_pagamento === '' || item.forma_pagamento === this.filters.forma_pagamento);
       });
     }
-  
+
     if (this.activeTab.label === 'Transações') {
       this.filteredTransacoes = this.transacoes.filter(item =>
         (this.filters.conta === '' ||
@@ -173,17 +176,17 @@ export class PesquisarComponent implements OnInit {
         (this.filters.valor === '' || item.valor === +this.filters.valor)
       );
     }
-  
+
     this.first = 0;
   }
-  
-  
+
+
   pageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
   }
 
-  
+
   onTabChange(item: MenuItem) {
     this.activeTab = item;
 
@@ -213,13 +216,13 @@ export class PesquisarComponent implements OnInit {
               conta_nome: conta?.nome_conta || 'Desconhecida'
             };
           });
-    
+
           this.filteredDespesas = [...this.despesas];
         },
         error: (err) => console.error('Erro ao carregar despesas:', err)
       });
     }
-    
+
 
     if (item.label === 'Transações') {
       this.transacaoService.getTransacoes().subscribe({
@@ -228,31 +231,44 @@ export class PesquisarComponent implements OnInit {
           this.transacoes = data.map(item => {
             const origemId = Number(item.conta_origem_id);
             const destinoId = Number(item.conta_destino_id);
-      
+
             const contaOrigem = this.contas.find(c => Number(c.id) === origemId);
             const contaDestino = this.contas.find(c => Number(c.id) === destinoId);
-      
+
             return {
               ...item,
               conta_origem_nome: contaOrigem?.nome_conta || 'Desconhecida',
               conta_destino_nome: contaDestino?.nome_conta || 'Desconhecida'
             };
           });
-      
+
           console.log('Transações enriquecidas:', this.transacoes);
           this.filteredTransacoes = [...this.transacoes];
         },
         error: (err) => console.error('Erro ao carregar transações:', err)
-      });      
+      });
+    }
+
+    if (item.label === 'Contas e Saldo') {
+      this.contasService.getContas().subscribe({
+
+        next: (data) => {
+          this.contas = data;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar contas:', err);
+        }
+      });
     }
   }
-  
-  
+
+
+
   apagarItem(index: number): void {
     const isReceita = this.activeTab.label === 'Receitas';
     const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
     const tipo = isReceita ? 'receita' : 'despesa';
-  
+
     this.confirmationService.confirm({
       message: `Tem certeza que deseja apagar esta ${tipo}?`,
       header: 'Confirmação',
@@ -263,7 +279,7 @@ export class PesquisarComponent implements OnInit {
         const deleteObservable = isReceita
           ? this.receitasService.deletarReceita(item.id)
           : this.despesasService.deletarDespesa(item.id);
-  
+
         deleteObservable.subscribe({
           next: () => {
             if (isReceita) {
@@ -273,7 +289,7 @@ export class PesquisarComponent implements OnInit {
               this.despesas = this.despesas.filter(d => d.id !== item.id);
               this.filteredDespesas = this.filteredDespesas.filter(d => d.id !== item.id);
             }
-  
+
             this.messageService.add({
               severity: 'success',
               summary: 'Sucesso',
@@ -291,18 +307,18 @@ export class PesquisarComponent implements OnInit {
         });
       }
     });
-  }  
+  }
 
   abrirEdicao(receita: any) {
     this.receitaSelecionada = { ...receita }; // faz cópia
     this.editDialogVisible = true;
   }
-  
+
   fecharDialog() {
     this.editDialogVisible = false;
     this.receitaSelecionada = null;
   }
-  
+
 
   carregarReceitas() {
     this.receitasService.getReceitas().subscribe((receitas) => {
@@ -326,5 +342,5 @@ export class PesquisarComponent implements OnInit {
         });
     }
   }
-  
+
 }
