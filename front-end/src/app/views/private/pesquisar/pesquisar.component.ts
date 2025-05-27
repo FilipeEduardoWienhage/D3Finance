@@ -22,6 +22,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { TransacaoService } from '../../../service/transacao.service';
 import { ContasService } from '../../../service/contas.service';
+import { CardModule } from 'primeng/card';
 
 
 @Component({
@@ -44,6 +45,7 @@ import { ContasService } from '../../../service/contas.service';
     ConfirmDialogModule,
     ToastModule,
     FormsModule,
+    CardModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './pesquisar.component.html',
