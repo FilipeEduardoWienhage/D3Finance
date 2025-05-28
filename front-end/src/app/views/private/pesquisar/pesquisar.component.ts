@@ -126,7 +126,7 @@ export class PesquisarComponent implements OnInit {
     { label: 'Contas e Saldo', icon: 'pi pi-dollar' },
     { label: 'Receitas', icon: 'pi pi-dollar' },
     { label: 'Despesas', icon: 'pi pi-credit-card' },
-    { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left' }
+    { label: 'Transações', icon: 'pi pi-wallet' }
   ];
 
   activeTab: MenuItem = this.tabItems[0];
