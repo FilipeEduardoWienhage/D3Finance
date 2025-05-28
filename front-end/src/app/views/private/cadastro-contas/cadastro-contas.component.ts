@@ -9,7 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ContaRequestModel } from '../../../models/RequestContas';
 import { ContasService } from '../../../service/contas.service';
-import { ToastModule } from 'primeng/toast';
+import { Toast, ToastModule } from 'primeng/toast';
+import { CommonModule } from '@angular/common';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { InplaceModule } from 'primeng/inplace';
 
 
 interface tipoConta {
@@ -19,7 +24,8 @@ interface tipoConta {
 
 @Component({
   selector: 'app-cadastro-contas',
-  imports: [
+  imports: 
+  [
   SplitterModule,
   ToastModule,
   NavBarSystemComponent,
@@ -28,6 +34,13 @@ interface tipoConta {
   SelectModule,
   FormsModule,
   ButtonModule,
+  CommonModule,
+  SplitterModule,
+  TabMenuModule,
+  ToastModule,
+  DialogModule,
+  TableModule,
+  InplaceModule,
   ],
   templateUrl: './cadastro-contas.component.html',
   styleUrl: './cadastro-contas.component.css',
@@ -37,15 +50,24 @@ interface tipoConta {
 })
 export class CadastroContasComponent {
   public requestConta!: ContaRequestModel;
-
-  constructor(private contasService: ContasService,private messageService: MessageService) {}
+  constructor(
+    private contasService: ContasService,
+    private messageService: MessageService,
+  ) {}
+  mostrarTabelaContas = false;
 
   tipoConta: tipoConta[] | undefined;
   selecionarTipoConta: tipoConta | undefined;
 
+  saldo: any[] = [];
+  conta: any[] = [];
+
+
   ngOnInit(): void {
+    this.carregarContas();
     this.requestConta = new ContaRequestModel();
 
+    
     this.tipoConta = [
       { name: 'Pessoal' },
       { name: 'Empresa' },
@@ -57,6 +79,9 @@ export class CadastroContasComponent {
     console.log(this.requestConta);
     this.contasService.cadastrarConta(this.requestConta).subscribe({
       next: () => {
+        this.requestConta = { tipoConta: '', nomeConta: '' };
+        this.carregarContas();
+
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
@@ -78,5 +103,18 @@ export class CadastroContasComponent {
       }
     });
   }
+
+  carregarContas(): void {
+    this.contasService.listarContas().subscribe({
+      next: (dados) => {
+        this.conta = dados;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar contas:', err);
+      }
+    });
+  }
+
+  
 }
 

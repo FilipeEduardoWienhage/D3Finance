@@ -16,6 +16,67 @@
         class="mb-6 w-full max-w-5xl self-center">
       </p-tabMenu>
 
+
+      <!-- Contas e Saldo -->
+      <div *ngIf="activeTab.label === 'Contas e Saldo'"
+        class="flex flex-col items-center justify-center px-4 py-8 w-full">
+        <h1>Filtros</h1>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] w-full max-w-5xl mb-6">
+          <div>
+            <label class="block text-sm mb-1">Categoria</label>
+            <p-multiselect [options]="categoriaDaReceita" (onChange)="onFilterChange()" [(ngModel)]="filters.categoria"
+              optionLabel="name" placeholder="Selecione uma categoria" [maxSelectedLabels]="3"
+              class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+          </div>
+
+          <div>
+            <label class="block text-sm mb-1">Descrição</label>
+            <input type="text" [(ngModel)]="filters.desc" (input)="onFilterChange()"
+              class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+          </div>
+
+          <div>
+            <label class="block text-sm mb-1">Contas</label>
+            <input type="text" [(ngModel)]="filters.conta" (input)="onFilterChange()"
+              class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+          </div>
+
+          <div>
+            <label class="block text-sm mb-1">Data</label>
+            <input type="date" [(ngModel)]="filters.data" (input)="onFilterChange()"
+              class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6">
+            <p-table 
+              [rows]="10">
+      
+              <ng-template>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Nome</th>
+                  <th>Saldo</th>
+                  <th>Ações</th>
+                </tr>
+              </ng-template>
+      
+              <ng-template pTemplate="body" let-conta>
+                <tr>
+                  <td>{{ conta.tipo_conta }}</td>
+                  <td>{{ conta.nome_conta }}</td>
+                  <td >{{ conta.saldo | currency:'BRL':'symbol':'1.2-2'  }}</td>
+                  <td class="flex gap-2 border-b border-gray-700">
+                    <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"></button>
+                    <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"></button>
+                  </td>
+                </tr>
+              </ng-template>
+      
+            </p-table>
+          </div>
+
       <!-- RECEITAS -->
       <div *ngIf="activeTab.label === 'Receitas'" class="flex flex-col items-center justify-center px-4 py-8 w-full">
         <h1>Filtros</h1>
@@ -47,8 +108,8 @@
         </div>
 
         <div class="bg-[#2a2a2a] p-6 w-full max-w-5xl">
-          <p-table [value]="filteredReceitas" [paginator]="true" [rows]="rows" [first]="first" (onPage)="pageChange($event)"
-            class="p-datatable-sm p-datatable-gridlines">
+          <p-table [value]="filteredReceitas" [paginator]="true" [rows]="rows" [first]="first"
+            (onPage)="pageChange($event)" class="p-datatable-sm p-datatable-gridlines">
             <ng-template pTemplate="header">
               <tr>
                 <th>Categoria</th>
@@ -71,7 +132,7 @@
                 <td>{{ item.data_recebimento | date:'dd/MM/yyyy' }}</td>
                 <td class="flex gap-2">
                   <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
-                  (click)=" abrirEdicao(item)"></button>
+                    (click)=" abrirEdicao(item)"></button>
                   <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
                     (click)="apagarItem(rowIndex)"></button>
                 </td>
@@ -112,8 +173,8 @@
         </div>
 
         <div class="bg-[#2a2a2a] p-6 w-full max-w-5xl">
-          <p-table [value]="filteredDespesas" [paginator]="true" [rows]="rows" [first]="first" (onPage)="pageChange($event)"
-            class="p-datatable-sm p-datatable-gridlines">
+          <p-table [value]="filteredDespesas" [paginator]="true" [rows]="rows" [first]="first"
+            (onPage)="pageChange($event)" class="p-datatable-sm p-datatable-gridlines">
             <ng-template pTemplate="header">
               <tr>
                 <th>Categoria</th>
@@ -135,8 +196,8 @@
                 <td>{{ item.forma_pagamento}}</td>
                 <td>{{ item.data_pagamento | date:'dd/MM/yyyy' }}</td>
                 <td class="flex gap-2">
-                  <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-info"
-                  ></button>
+                  <button pButton type="button" icon="pi pi-pencil"
+                    class="p-button-sm p-button-rounded p-button-info"></button>
                   <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
                     (click)="apagarItem(rowIndex)"></button>
                 </td>
@@ -155,11 +216,11 @@
             <input type="text" [(ngModel)]="filters.conta" (input)="onFilterChange()"
               class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
           </div>
-        </div>    
+        </div>
 
         <div class="bg-[#2a2a2a] p-6 w-full max-w-5xl">
-          <p-table [value]="filteredTransacoes" [paginator]="true" [rows]="rows" [first]="first" (onPage)="pageChange($event)"
-            class="p-datatable-sm p-datatable-gridlines">
+          <p-table [value]="filteredTransacoes" [paginator]="true" [rows]="rows" [first]="first"
+            (onPage)="pageChange($event)" class="p-datatable-sm p-datatable-gridlines">
             <ng-template pTemplate="header">
               <tr>
                 <th>Conta de Origem</th>
@@ -174,7 +235,7 @@
                 <td>{{ item.conta_destino_nome}}</td>
                 <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
               </tr>
-            </ng-template>        
+            </ng-template>
           </p-table>
         </div>
       </div>
@@ -182,44 +243,21 @@
   </div>
 
   <p-confirmDialog></p-confirmDialog>
-  <p-dialog
-  header="Editar Receita"
-  [(visible)]="editDialogVisible"
-  [modal]="true"
-  [style]="{ width: '400px' }"
-  [baseZIndex]="10000"
-  (onHide)="fecharDialog()"
->
-  <div *ngIf="receitaSelecionada">
-    <label class="block text-sm mb-1">Descrição</label>
-    <input
-      type="text"
-      [(ngModel)]="receitaSelecionada.descricao"
-      class="p-inputtext w-full mb-3"
-    />
+  <p-dialog header="Editar Receita" [(visible)]="editDialogVisible" [modal]="true" [style]="{ width: '400px' }"
+    [baseZIndex]="10000" (onHide)="fecharDialog()">
+    <div *ngIf="receitaSelecionada">
+      <label class="block text-sm mb-1">Descrição</label>
+      <input type="text" [(ngModel)]="receitaSelecionada.descricao" class="p-inputtext w-full mb-3" />
 
-    <label class="block text-sm mb-1">Valor</label>
-    <input
-      type="number"
-      [(ngModel)]="receitaSelecionada.valor"
-      class="p-inputtext w-full mb-3"
-    />
+      <label class="block text-sm mb-1">Valor</label>
+      <input type="number" [(ngModel)]="receitaSelecionada.valor" class="p-inputtext w-full mb-3" />
 
-    <label class="block text-sm mb-1">Data</label>
-    <input
-      type="date"
-      [(ngModel)]="receitaSelecionada.data"
-      class="p-inputtext w-full mb-3"
-    />
+      <label class="block text-sm mb-1">Data</label>
+      <input type="date" [(ngModel)]="receitaSelecionada.data" class="p-inputtext w-full mb-3" />
 
-    <button
-      pButton
-      label="Salvar"
-      class="p-button-success w-full"
-      (click)="salvarEdicao()"
-    ></button>
-  </div>
-</p-dialog>
+      <button pButton label="Salvar" class="p-button-success w-full" (click)="salvarEdicao()"></button>
+    </div>
+  </p-dialog>
 
   <p-toast></p-toast>
   <app-footer class="mt-auto"></app-footer>
