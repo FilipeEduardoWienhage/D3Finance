@@ -1,14 +1,17 @@
+from datetime import date, datetime
 from typing import List
 from fastapi import HTTPException, Depends, status, Response
+from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
 from src.app import router
 from src.database.database import SessionLocal
 from src.database.models import Receitas, Contas
 from src.api.tags import Tag
-from src.schemas.receita_schemas import ReceitaCreate, ReceitaUpdate, ReceitaResponse
+from src.schemas.receita_schemas import ReceitaConsolidadoResponse, ReceitaCreate, ReceitaUpdate, ReceitaResponse
 
 
 LISTA_RECEITAS = "/v1/receitas"
+CONSOLIDADO_RECEITAS = "/v1/receitas/consolidado"
 CADASTRO_RECEITAS = "/v1/receitas"
 ATUALIZAR_RECEITAS = "/v1/receitas/{receitas_id}"
 APAGAR_RECEITAS = "/v1/receitas/{receitas_id}"
@@ -40,6 +43,25 @@ def get_receitas(db: Session = Depends(get_db)):
         data_alteracao=receita.data_alteracao,
     ) for receita in receitas]
 
+
+@router.get(
+    path=CONSOLIDADO_RECEITAS, response_model=List[ReceitaConsolidadoResponse], tags=[Tag.Receitas.name]
+)
+def get_receita_by_id( db: Session = Depends(get_db)):
+    ano = datetime.now().year
+    receitas_agrupadas = db.query(
+        extract("month", Receitas.data_recebimento).label("mes"),
+        func.sum(Receitas.valor_recebido)
+    ).filter(extract("year",Receitas.data_recebimento) == ano).group_by("mes").order_by("mes").all()
+    receitas_por_mes = {int(mes): float(valor) for mes, valor in receitas_agrupadas}
+
+    # Construir a lista completa com todos os 12 meses
+    resposta = [
+        ReceitaConsolidadoResponse(mes=mes, valor=receitas_por_mes.get(mes, 0.0))
+        for mes in range(1, 13)
+    ]
+
+    return resposta
 
 @router.get(
     path=OBTER_POR_ID_RECEITAS, response_model=ReceitaResponse, tags=[Tag.Receitas.name]
