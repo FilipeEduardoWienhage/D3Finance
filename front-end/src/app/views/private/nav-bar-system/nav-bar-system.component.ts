@@ -45,11 +45,6 @@ export class NavBarSystemComponent {
             command: () => this.router.navigate(['/despesas'])
           },
           {
-            label: 'Contas e Saldo',
-            icon: 'pi pi-wallet',
-            command: () => this.router.navigate(['/contas'])
-          },
-          {
             label: 'Movimentação entre contas',
             icon: 'pi pi-arrow-right-arrow-left',
             command: () => this.router.navigate(['/movimentarcontas'])
@@ -73,11 +68,6 @@ export class NavBarSystemComponent {
             label: 'Importar arquivo CSV',
             icon: 'pi pi-cloud-upload',
             command: () => this.router.navigate(['/importararquivo'])
-          },
-          {
-            label: 'Pesquisar histórico',
-            icon: 'pi pi-search',
-            command: () => this.router.navigate(['/pesquisar'])
           }
         ]
       },
