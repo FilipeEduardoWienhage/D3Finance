@@ -10,10 +10,8 @@ import { CadastroReceitasComponent } from './views/private/cadastro-receitas/cad
 import { CadastroDespesasComponent } from './views/private/cadastro-despesas/cadastro-despesas.component';
 import { ImportarArquivosComponent } from './views/private/importar-arquivos/importar-arquivos.component';
 import { ConfiguracaoPerfilComponent } from './views/private/configuracao-perfil/configuracao-perfil.component';
-import { PesquisarComponent } from './views/private/pesquisar/pesquisar.component';
 import { CadastroContasComponent } from './views/private/cadastro-contas/cadastro-contas.component';
 import { MovimentacaoEntreContasComponent } from './views/private/movimentacao-entre-contas/movimentacao-entre-contas.component';
-import { ContasComponent } from './views/private/contas/contas.component';
 
 export const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
@@ -28,9 +26,7 @@ export const routes: Routes = [
     { path: "despesas/cadastrar", component: CadastroDespesasComponent},
     { path: "importararquivo", component: ImportarArquivosComponent},
     { path: "editarperfil", component: ConfiguracaoPerfilComponent},
-    { path: "pesquisar", component: PesquisarComponent},
     { path: "contas/cadastrar", component: CadastroContasComponent},
     { path: "movimentarcontas", component: MovimentacaoEntreContasComponent},
-    { path: "contas", component: ContasComponent},
     { path: "**", redirectTo: "/home" }
 ];
