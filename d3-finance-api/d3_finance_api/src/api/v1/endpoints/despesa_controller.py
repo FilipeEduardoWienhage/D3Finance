@@ -1,13 +1,16 @@
+from datetime import datetime
 from typing import List
 from fastapi import HTTPException, Depends, status, Response
+from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
 from src.app import router
 from src.database.database import SessionLocal
 from src.database.models import Despesas, Contas
 from src.api.tags import Tag
-from src.schemas.despesa_schemas import DespesaCreate, DespesaUpdate, DespesaResponse
+from src.schemas.despesa_schemas import DespesaConsolidadoResponse, DespesaCreate, DespesaUpdate, DespesaResponse
 
 LISTA_DESPESAS = "/v1/despesas"
+CONSOLIDADO_DESPESAS = "/v1/despesas/consolidado"
 OBTER_POR_ID_DESPESAS = "/v1/despesas/{despesas_id}"
 CADASTRO_DESPESAS = "/v1/despesas"
 ATUALIZAR_DESPESAS = "/v1/despesas/{despesas_id}"
@@ -39,6 +42,28 @@ def get_despesas(db: Session = Depends(get_db)):
         )
         for despesa in despesas
     ]
+
+
+@router.get(
+    path=CONSOLIDADO_DESPESAS, response_model=List[DespesaConsolidadoResponse], tags=[Tag.Despesas.name]
+)
+def get_receita_by_id( db: Session = Depends(get_db)):
+    ano = datetime.now().year
+    receitas_agrupadas = db.query(  
+        extract("month", Despesas.data_pagamento).label("mes"),
+        func.sum(Despesas.valor_pago)
+    ).filter(extract("year",Despesas.data_pagamento) == ano).group_by("mes").order_by("mes").all()
+    despesas_por_mes = {int(mes): float(valor) for mes, valor in receitas_agrupadas}
+
+    # Construir a lista completa com todos os 12 meses
+    resposta = [
+        DespesaConsolidadoResponse(mes=mes, valor=despesas_por_mes.get(mes, 0.0))
+        for mes in range(1, 13)
+    ]
+
+    return resposta
+
+
 
 @router.get(
     path=OBTER_POR_ID_DESPESAS, response_model=DespesaResponse, tags=[Tag.Despesas.name]

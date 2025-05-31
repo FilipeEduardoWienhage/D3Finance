@@ -39,3 +39,9 @@ class DespesaResponse:
     descricao: Optional[str] = None
     data_criacao: Optional[datetime] = None
     data_alteracao: Optional[datetime] = None
+
+
+@dataclass
+class DespesaConsolidadoResponse:
+    mes: int
+    valor: float
