@@ -7,6 +7,7 @@ import { ChartModule } from 'primeng/chart';
 import { isPlatformBrowser } from '@angular/common';
 import { ReceitasService } from '../../../service/receitas.service';
 import { ReceitaConsolidada } from '../../../models/receita-consolidada';
+import { style } from '@angular/animations';
 
 @Component({
   selector: 'app-receitas',
@@ -27,21 +28,18 @@ export class ReceitasComponent {
     this.receitaService.getReceitasConsolidadas().subscribe({
       next: (dados) => {
         this.dados = dados;
-            this.initChart();
+        this.initChart();
       },
       error: (err) => {
         console.error('Erro ao carregar contas:', err);
       }
     });
-
-
   }
 
   constructor(private cd: ChangeDetectorRef, private receitaService: ReceitasService) { }
 
   initChart() {
-    console.log("asodkaoskd");
-    
+    console.log("teste");
     console.log(this.dados.map(x => x.valor))
     if (isPlatformBrowser(this.platformId)) {
       const documentStyle = getComputedStyle(document.documentElement);
@@ -66,11 +64,11 @@ export class ReceitasComponent {
         ],
         datasets: [
           {
-            label: 'My First dataset',
-            backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-            borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+            label: 'Total Receitas',
+            backgroundColor: '#22c55e',
+            borderColor: '#16a34a',
             data: this.dados.map(x => x.valor)
-          },
+          }
         ]
       };
 
@@ -81,6 +79,17 @@ export class ReceitasComponent {
           legend: {
             labels: {
               color: textColor
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const valor = context.raw;
+                return valor.toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                });
+              }
             }
           }
         },
@@ -99,12 +108,19 @@ export class ReceitasComponent {
           },
           y: {
             ticks: {
-              color: textColorSecondary
+              color: textColorSecondary,
+              callback: (value: number) => {
+                return value.toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                });
+              }
             },
             grid: {
               color: surfaceBorder,
               drawBorder: false
-            }
+            },
+            
           }
         }
       };

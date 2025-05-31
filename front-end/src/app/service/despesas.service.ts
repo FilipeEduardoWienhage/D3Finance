@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DespesaRequestModel } from '../models/RequestDespesas';
+import { DespesaConsolidada } from '../models/despesa-consolidada';
 
 @Injectable({
   providedIn: 'root'})
@@ -26,7 +27,11 @@ export class DespesasService {
   }
 
   getDespesas(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:8000/v1/despesas');
+    return this.http.get<any[]>(this.apiUrl);
+  }
+
+  getDespesasConsolidadas(): Observable<DespesaConsolidada[]> {
+    return this.http.get<any[]>(this.apiUrl + "/consolidado");
   }
 
   deletarDespesa(id: number): Observable<any> {
