@@ -42,7 +42,6 @@ def importar_transacoes_csv(
             if tipo == "receita":
                 nova = Receitas(
                     categoria=linha["categoria"],
-                    nome_receita=linha["nome"],
                     valor_recebido=float(linha["valor"]),
                     data_recebimento=datetime.strptime(linha["data"], "%Y-%m-%d").date(),
                     forma_recebimento=linha["forma"],
@@ -56,7 +55,6 @@ def importar_transacoes_csv(
             elif tipo == "despesa":
                 nova = Despesas(
                     categoria=linha["categoria"],
-                    nome_despesa=linha["nome"],
                     valor_pago=float(linha["valor"]),
                     data_pagamento=datetime.strptime(linha["data"], "%Y-%m-%d").date(),
                     forma_pagamento=linha["forma"],
