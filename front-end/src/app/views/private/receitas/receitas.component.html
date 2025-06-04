@@ -11,10 +11,16 @@
         <div class="mr-3 ml-3">
             <app-nav-bar-system></app-nav-bar-system>
         </div>
-
+        <p-card class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
+        <div class="flex-auto ml-3 mr-3">
+            <p-chart type="line" [data]="data" [options]="options" class="h-[30rem]" />
+        </div>
+        </p-card>
+        <p-card class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
         <div class="flex-auto ml-3 mr-3">
             <p-chart type="bar" [data]="data" [options]="options" class="h-[30rem]" />
         </div>
+        </p-card>
     </div>
     <app-footer class="mt-auto"></app-footer>
 </div>
