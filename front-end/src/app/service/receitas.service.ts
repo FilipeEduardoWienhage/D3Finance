@@ -38,8 +38,8 @@ export class ReceitasService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  atualizarReceita(id: number, receitaAtualizada: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, receitaAtualizada);
+  editarReceita(conta: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${conta.id}`, conta);
   }
 
 }

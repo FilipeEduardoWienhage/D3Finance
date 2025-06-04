@@ -9,13 +9,14 @@ export interface ContaResponseModel {
 }
 
 @Injectable({
-    providedIn: 'root'})
+    providedIn: 'root'
+})
 
 
 export class ContasService {
     private apiUrl = 'http://localhost:8000/v1/contas';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     cadastrarConta(conta: ContaRequestModel): Observable<any> {
         let payload = {
@@ -27,12 +28,23 @@ export class ContasService {
         return this.http.post(this.apiUrl, payload);
     }
 
+
+    deletarConta(id: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/${id}`);
+    }
+
+
     listarContas(): Observable<ContaResponseModel[]> {
         return this.http.get<ContaResponseModel[]>(this.apiUrl);
     }
 
     getContas() {
         return this.http.get<any[]>(this.apiUrl);
-      }
+    }
+
+
+    editarConta(conta: any): Observable<any> {
+        return this.http.put(`${this.apiUrl}/${conta.id}`, conta);
+    }
 }
 
