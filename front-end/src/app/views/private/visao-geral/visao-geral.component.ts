@@ -1,63 +1,64 @@
 import { Component, OnInit } from '@angular/core';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SplitterModule } from 'primeng/splitter';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { CardModule } from 'primeng/card';
+
 import { ReceitasService } from '../../../service/receitas.service';
 import { DespesasService } from '../../../service/despesas.service';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { TransacaoService } from '../../../service/transacao.service';
 import { ContasService } from '../../../service/contas.service';
-import { CardModule } from 'primeng/card';
+import { HttpErrorResponse } from '@angular/common/http';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-visao-geral',
-  imports:
-    [
-      CommonModule,
-      FormsModule,
-      TableModule,
-      InputTextModule,
-      FooterComponent,
-      NavBarSystemComponent,
-      SplitterModule,
-      TabMenuModule,
-      ButtonModule,
-      DropdownModule,
-      MultiSelectModule,
-      DialogModule,
-      CalendarModule,
-      ConfirmDialogModule,
-      ToastModule,
-      FormsModule,
-      CardModule
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TableModule,
+    InputTextModule,
+    SplitterModule,
+    TabMenuModule,
+    ButtonModule,
+    DropdownModule,
+    MultiSelectModule,
+    DialogModule,
+    CalendarModule,
+    ConfirmDialogModule,
+    ToastModule,
+    CardModule,
+    NavBarSystemComponent,
+    FooterComponent,
+    InputNumberModule,
+
+  ],
   templateUrl: './visao-geral.component.html',
-  styleUrl: './visao-geral.component.css',
+  styleUrls: ['./visao-geral.component.css'],
   providers: [MessageService, ConfirmationService]
 })
-
 export class VisaoGeralComponent implements OnInit {
+
   constructor(
     private receitasService: ReceitasService,
     private despesasService: DespesasService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private transacaoService: TransacaoService,
-    private contasService: ContasService
+    private contasService: ContasService,
   ) { }
 
   tipoContas = [
@@ -98,15 +99,23 @@ export class VisaoGeralComponent implements OnInit {
     { name: 'Outras Despesas' }
   ];
 
+  formasPags = [
+    { name: 'Dinheiro' },
+    { name: 'Débito' },
+    { name: 'Crédito' },
+    { name: 'Cheque' },
+    { name: 'Depósito' },
+    { name: 'Pix' }
+  ];
+
   editDialogVisible = false;
-  receitaSelecionada: any = null;
+  itemEmEdicao: any = null;
+  tipoItemEmEdicao: 'conta' | 'receita' | 'despesa' | '' = '';
 
   receitas: any[] = [];
   despesas: any[] = [];
   transacoes: any[] = [];
   contas: any[] = [];
-
-
 
   filteredReceitas: any[] = [];
   filteredDespesas: any[] = [];
@@ -137,9 +146,19 @@ export class VisaoGeralComponent implements OnInit {
 
   activeTab: MenuItem = this.tabItems[0];
 
+
   ngOnInit(): void {
+    this.contasService.getContas().subscribe({
+      next: (data) => {
+        this.contas = data;
+        this.filteredContas = [...data];
+        this.onTabChange(this.activeTab);  // Agora que contas estão carregadas, carregar o resto
+      },
+      error: (err) => console.error('Erro ao buscar contas:', err)
+    });
     this.onTabChange(this.activeTab);
   }
+
 
   onFilterChange() {
     const categoriasSelecionadas = this.filters.categoria.map((c: any) => c.name);
@@ -189,7 +208,6 @@ export class VisaoGeralComponent implements OnInit {
   }
 
 
-
   pageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
@@ -232,7 +250,6 @@ export class VisaoGeralComponent implements OnInit {
       });
     }
 
-
     if (item.label === 'Transações') {
       this.transacaoService.getTransacoes().subscribe({
         next: (data) => {
@@ -274,9 +291,43 @@ export class VisaoGeralComponent implements OnInit {
 
 
   apagarItem(index: number): void {
-    const isReceita = this.activeTab.label === 'Receitas';
-    const item = isReceita ? this.filteredReceitas[index] : this.filteredDespesas[index];
-    const tipo = isReceita ? 'receita' : 'despesa';
+    const abaAtiva = this.activeTab.label;
+    let item: any;
+    let tipo: string;
+    let deleteObservable;
+
+    // Identificar item, tipo e serviço de exclusão com base na aba ativa
+    switch (abaAtiva) {
+      case 'Receitas':
+        item = this.filteredReceitas[index];
+        tipo = 'receita';
+        deleteObservable = this.receitasService.deletarReceita(item.id);
+        break;
+      case 'Despesas':
+        item = this.filteredDespesas[index];
+        tipo = 'despesa';
+        deleteObservable = this.despesasService.deletarDespesa(item.id);
+        break;
+      case 'Contas e Saldo':
+        item = this.filteredContas[index];
+        tipo = 'conta';
+
+        const receitasComConta = this.receitas.filter(r => r.contaId === item.id);
+        if (receitasComConta.length > 0) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Conta vinculada',
+            detail: 'Esta conta possui receitas associadas. Exclua-as antes de apagar a conta.'
+          });
+          return;
+        }
+
+        deleteObservable = this.contasService.deletarConta(item.id);
+        break;
+      default:
+        console.error('Tipo de aba desconhecido:', abaAtiva);
+        return;
+    }
 
     this.confirmationService.confirm({
       message: `Tem certeza que deseja apagar esta ${tipo}?`,
@@ -285,24 +336,27 @@ export class VisaoGeralComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Cancelar',
       accept: () => {
-        const deleteObservable = isReceita
-          ? this.receitasService.deletarReceita(item.id)
-          : this.despesasService.deletarDespesa(item.id);
-
         deleteObservable.subscribe({
           next: () => {
-            if (isReceita) {
-              this.receitas = this.receitas.filter(r => r.id !== item.id);
-              this.filteredReceitas = this.filteredReceitas.filter(r => r.id !== item.id);
-            } else {
-              this.despesas = this.despesas.filter(d => d.id !== item.id);
-              this.filteredDespesas = this.filteredDespesas.filter(d => d.id !== item.id);
+            switch (tipo) {
+              case 'receita':
+                this.receitas = this.receitas.filter(r => r.id !== item.id);
+                this.filteredReceitas = this.filteredReceitas.filter(r => r.id !== item.id);
+                break;
+              case 'despesa':
+                this.despesas = this.despesas.filter(d => d.id !== item.id);
+                this.filteredDespesas = this.filteredDespesas.filter(d => d.id !== item.id);
+                break;
+              case 'conta':
+                this.contas = this.contas.filter(c => c.id !== item.id);
+                this.filteredContas = this.filteredContas.filter(c => c.id !== item.id);
+                break;
             }
 
             this.messageService.add({
               severity: 'success',
               summary: 'Sucesso',
-              detail: `${isReceita ? 'Receita' : 'Despesa'} apagada com sucesso`
+              detail: `${tipo.charAt(0).toUpperCase() + tipo.slice(1)} apagada com sucesso`
             });
           },
           error: (err) => {
@@ -310,7 +364,7 @@ export class VisaoGeralComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `Erro ao apagar ${tipo}.`
+              detail: `Esta ${tipo} possui receitas ou despesas associadas. Exclua-as antes de apagar a conta.`
             });
           }
         });
@@ -318,38 +372,63 @@ export class VisaoGeralComponent implements OnInit {
     });
   }
 
-  abrirEdicao(receita: any) {
-    this.receitaSelecionada = { ...receita }; // faz cópia
+
+  abrirEdicao(item: any): void {
+    const aba = this.activeTab.label;
+
+    this.itemEmEdicao = { ...item };
+    if (aba === 'Contas e Saldo') {
+      this.tipoItemEmEdicao = 'conta';
+    } else if (aba === 'Receitas') {
+      this.tipoItemEmEdicao = 'receita';
+    } else if (aba === 'Despesas') {
+      this.tipoItemEmEdicao = 'despesa';
+    } else {
+      this.tipoItemEmEdicao = '';
+    }
+
     this.editDialogVisible = true;
   }
 
-  fecharDialog() {
-    this.editDialogVisible = false;
-    this.receitaSelecionada = null;
-  }
 
+  salvarEdicao(): void {
+    if (!this.itemEmEdicao) return;
 
-  carregarReceitas() {
-    this.receitasService.getReceitas().subscribe((receitas) => {
-      this.receitas = receitas;
-    });
-  }
-
-
-  salvarEdicao() {
-    if (this.receitaSelecionada && this.receitaSelecionada.id) {
-      this.receitasService.atualizarReceita(this.receitaSelecionada.id, this.receitaSelecionada)
-        .subscribe({
+    switch (this.tipoItemEmEdicao) {
+      case 'conta':
+        this.contasService.editarConta(this.itemEmEdicao).subscribe({
           next: () => {
-            console.log('Receita atualizada com sucesso');
-            this.fecharDialog(); // ou outra forma de fechar modal
-            this.carregarReceitas();   // recarrega a lista
+            this.fecharModalEdicao();
           },
-          error: (err) => {
-            console.error('Erro ao atualizar receita:', err);
-          }
+          error: err => console.error('Erro ao editar conta:', err)
         });
+        break;
+
+      case 'receita':
+        this.receitasService.editarReceita(this.itemEmEdicao).subscribe({
+          next: () => {
+            this.fecharModalEdicao();
+          },
+          error: err => console.error('Erro ao editar receita:', err)
+        });
+        break;
+
+      case 'despesa':
+        this.despesasService.editarDespesa(this.itemEmEdicao).subscribe({
+          next: () => {
+            this.fecharModalEdicao();
+          },
+          error: err => console.error('Erro ao editar despesa:', err)
+        });
+        break;
     }
   }
 
+  fecharModalEdicao(): void {
+    this.editDialogVisible = false;
+    this.itemEmEdicao = null;
+    this.tipoItemEmEdicao = null!;
+  }
 }
+
+
