@@ -7,10 +7,16 @@ import { ChartModule } from 'primeng/chart';
 import { DespesaConsolidada } from '../../../models/despesa-consolidada';
 import { DespesasService } from '../../../service/despesas.service';
 import { isPlatformBrowser } from '@angular/common';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-despesas',
-  imports: [ChartModule, FooterComponent, NavBarSystemComponent, SplitterModule],
+  imports: [
+    ChartModule,
+    FooterComponent,
+    NavBarSystemComponent,
+    SplitterModule,
+    CardModule],
   templateUrl: './despesas.component.html',
   styleUrl: './despesas.component.css',
   providers: [MessageService]
@@ -64,7 +70,7 @@ export class DespesasComponent {
           {
             label: 'Total Despesas',
             backgroundColor: '#ef4444',
-            borderColor: '#16a34a',
+            borderColor: '#ef4444',
             data: this.dados.map(x => x.valor)
           }
         ]

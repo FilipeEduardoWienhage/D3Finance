@@ -8,10 +8,16 @@ import { isPlatformBrowser } from '@angular/common';
 import { ReceitasService } from '../../../service/receitas.service';
 import { ReceitaConsolidada } from '../../../models/receita-consolidada';
 import { style } from '@angular/animations';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-receitas',
-  imports: [ChartModule, FooterComponent, NavBarSystemComponent, SplitterModule],
+  imports: [
+    ChartModule,
+    FooterComponent,
+    NavBarSystemComponent,
+    SplitterModule,
+    CardModule],
   templateUrl: './receitas.component.html',
   styleUrl: './receitas.component.css',
   providers: [MessageService],
@@ -120,7 +126,7 @@ export class ReceitasComponent {
               color: surfaceBorder,
               drawBorder: false
             },
-            
+
           }
         }
       };
