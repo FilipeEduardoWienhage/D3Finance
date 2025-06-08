@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from fastapi import HTTPException, Depends, status, Response
 from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
@@ -28,6 +28,7 @@ def get_db():
 )
 def get_despesas(db: Session = Depends(get_db)):
     despesas = db.query(Despesas).all()
+    # O restante da função permanece o mesmo...
     return [
         DespesaResponse(
             id=despesa.id,
@@ -47,19 +48,58 @@ def get_despesas(db: Session = Depends(get_db)):
 @router.get(
     path=CONSOLIDADO_DESPESAS, response_model=List[DespesaConsolidadoResponse], tags=[Tag.Despesas.name]
 )
-def get_receita_by_id( db: Session = Depends(get_db)):
-    ano = datetime.now().year
-    receitas_agrupadas = db.query(  
-        extract("month", Despesas.data_pagamento).label("mes"),
-        func.sum(Despesas.valor_pago)
-    ).filter(extract("year",Despesas.data_pagamento) == ano).group_by("mes").order_by("mes").all()
-    despesas_por_mes = {int(mes): float(valor) for mes, valor in receitas_agrupadas}
+# --- ALTERAÇÃO AQUI ---
+# Adicionamos os parâmetros de filtro (ano, mes, categoria) que virão da URL
+def get_despesas_consolidadas(
+    db: Session = Depends(get_db),
+    ano: Optional[int] = None,
+    mes: Optional[int] = None,
+    categoria: Optional[str] = None
+):
+    # Se o ano não for fornecido, usa o ano atual como padrão
+    if not ano:
+        ano = datetime.now().year
 
-    # Construir a lista completa com todos os 12 meses
+    # Inicia a consulta base
+    query = db.query(
+        extract("month", Despesas.data_pagamento).label("mes"),
+        func.sum(Despesas.valor_pago).label("valor")
+    )
+
+    # --- ALTERAÇÃO AQUI ---
+    # Aplica os filtros na consulta de forma dinâmica
+    query = query.filter(extract("year", Despesas.data_pagamento) == ano)
+
+    if mes:
+        query = query.filter(extract("month", Despesas.data_pagamento) == mes)
+    
+    if categoria:
+        query = query.filter(Despesas.categoria == categoria)
+
+    # Agrupa e ordena os resultados
+    despesas_agrupadas = query.group_by("mes").order_by("mes").all()
+
+    despesas_por_mes = {int(m): float(v) for m, v in despesas_agrupadas}
+
+    # Se um mês específico foi filtrado, não há necessidade de preencher os outros meses
+    if mes:
+        meses_a_exibir = [mes]
+    else:
+        meses_a_exibir = range(1, 13)
+
+    # Constrói a resposta
     resposta = [
-        DespesaConsolidadoResponse(mes=mes, valor=despesas_por_mes.get(mes, 0.0))
-        for mes in range(1, 13)
+        DespesaConsolidadoResponse(mes=m, valor=despesas_por_mes.get(m, 0.0))
+        for m in meses_a_exibir
     ]
+    
+    # Se nenhum mês foi filtrado, garante que todos os 12 meses sejam retornados
+    if not mes:
+        resposta_completa = []
+        for i in range(1, 13):
+            valor = despesas_por_mes.get(i, 0.0)
+            resposta_completa.append(DespesaConsolidadoResponse(mes=i, valor=valor))
+        return resposta_completa
 
     return resposta
 

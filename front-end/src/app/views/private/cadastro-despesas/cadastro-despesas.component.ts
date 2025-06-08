@@ -82,7 +82,7 @@ export class CadastroDespesasComponent {
     this.categoriaDaDespesa = [
       { name: 'Despesas com Pessoal' },
       { name: 'Despesas Operacionais' },
-      { name: 'Despesas com Materiais' },
+      { name: 'Despesas com Materiais' }, 
       { name: 'Despesas Administrativas' },
       { name: 'Despesas com Marketing' },
       { name: 'Despesas com Transporte' },
