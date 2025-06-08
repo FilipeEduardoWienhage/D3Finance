@@ -1,26 +1,36 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
-
     <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
         <ng-template #panel>
-            <div class="flex items-center justify-center h-full">D3 Finance</div>
+            <div class="flex items-center justify-center h-full text-white">
+                D3 Finance
+            </div>
         </ng-template>
     </p-splitter>
 
-
-    <div class="flex flex-row">
-        <div class="mr-3 ml-3">
+    <div class="flex flex-row flex-grow">
+        <div class="ml-3 mr-3">
             <app-nav-bar-system></app-nav-bar-system>
         </div>
-        <p-card class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
-            <div class="flex-auto ml-3 mr-3">
-                <p-chart type="line" [data]="data" [options]="options" class="h-[30rem]" />
+
+        <div class="flex flex-col flex-grow space-y-6 ml-3 mr-3">
+            <div class="flex items-center space-x-4 mb-4 text-white">
+                <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtro.categoria"
+                    placeholder="Filtrar por categoria" (onChange)="filtrarDados()" class="w-48"></p-dropdown>
+
+                <p-calendar [(ngModel)]="filtro.dataSelecionada" dateFormat="dd/mm/yy" placeholder="Filtrar por data"
+                    (onSelect)="filtrarDados()" showIcon></p-calendar>
+
+                <button pButton type="button" label="Limpar filtros" icon="pi pi-times" class="p-button-secondary"
+                    (click)="limparFiltros()"></button>
             </div>
-        </p-card>
-        <p-card class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
-            <div class="flex-auto ml-3 mr-3">
-                <p-chart type="bar" [data]="data" [options]="options" class="h-[30rem]" />
-            </div>
-        </p-card>
+
+            <p-card class="bg-[#2c2c2c] text-white shadow-md rounded-xl">
+                <div class="h-[30rem]">
+                    <p-chart type="bar" [data]="data" [options]="options" style="height: 100%"></p-chart>
+                </div>
+            </p-card>
+        </div>
     </div>
+
     <app-footer class="mt-auto"></app-footer>
 </div>

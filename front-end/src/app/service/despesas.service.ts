@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http'; // Importe HttpParams
 import { Observable } from 'rxjs';
 import { DespesaRequestModel } from '../models/RequestDespesas';
 import { DespesaConsolidada } from '../models/despesa-consolidada';
@@ -7,9 +7,8 @@ import { DespesaConsolidada } from '../models/despesa-consolidada';
 @Injectable({
   providedIn: 'root'
 })
-
 export class DespesasService {
-  private apiUrl = 'http://localhost:8000/v1/despesas';
+  private apiUrl = 'http://localhost:8000/v1/despesas'; // URL Base para despesas
 
   constructor(private http: HttpClient) { }
 
@@ -31,8 +30,24 @@ export class DespesasService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  getDespesasConsolidadas(): Observable<DespesaConsolidada[]> {
-    return this.http.get<any[]>(this.apiUrl + "/consolidado");
+  getDespesasConsolidadas(filtros?: any): Observable<DespesaConsolidada[]> {
+    let params = new HttpParams();
+
+    if (filtros) {
+      if (filtros.ano) {
+        params = params.append('ano', filtros.ano);
+      }
+      if (filtros.mes) {
+        params = params.append('mes', filtros.mes);
+      }
+      if (filtros.categoria) {
+        params = params.append('categoria', filtros.categoria);
+      }
+    }
+
+    const urlConsolidado = `${this.apiUrl}/consolidado`; 
+    
+    return this.http.get<DespesaConsolidada[]>(urlConsolidado, { params });
   }
 
   deletarDespesa(id: number): Observable<any> {
@@ -42,5 +57,4 @@ export class DespesasService {
   editarDespesa(conta: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${conta.id}`, conta);
   }
-
 }
