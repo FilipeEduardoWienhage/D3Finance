@@ -1,3 +1,4 @@
+
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
     <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
         <ng-template #panel>
@@ -10,9 +11,10 @@
     <div class="flex flex-row flex-grow">
         <div class="ml-3 mr-3">
             <app-nav-bar-system></app-nav-bar-system>
+            <p-toast></p-toast>
         </div>
 
-        <div class="flex flex-col flex-grow space-y-6 ml-3 mr-3">
+        <div class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
             <div class="flex items-center space-x-4 mb-4 text-white">
                 <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtro.categoria"
                     placeholder="Filtrar por categoria" (onChange)="filtrarDados()" class="w-48"></p-dropdown>

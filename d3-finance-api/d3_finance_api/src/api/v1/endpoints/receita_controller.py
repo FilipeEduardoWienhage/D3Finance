@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import List
+from typing import List, Optional
 from fastapi import HTTPException, Depends, status, Response
 from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
@@ -47,21 +47,52 @@ def get_receitas(db: Session = Depends(get_db)):
 @router.get(
     path=CONSOLIDADO_RECEITAS, response_model=List[ReceitaConsolidadoResponse], tags=[Tag.Receitas.name]
 )
-def get_receita_by_id( db: Session = Depends(get_db)):
-    ano = datetime.now().year
-    receitas_agrupadas = db.query(
-        extract("month", Receitas.data_recebimento).label("mes"),
-        func.sum(Receitas.valor_recebido)
-    ).filter(extract("year",Receitas.data_recebimento) == ano).group_by("mes").order_by("mes").all()
-    receitas_por_mes = {int(mes): float(valor) for mes, valor in receitas_agrupadas}
+def get_receitas_consolidadas( 
+    db: Session = Depends(get_db),
+    ano: Optional[int] = None,
+    mes: Optional[int] = None,
+    categoria: Optional[str] = None
+    ):
+    if not ano:
+        ano = datetime.now().year
 
-    # Construir a lista completa com todos os 12 meses
+    query = db.query(
+        extract('month', Receitas.data_recebimento).label('mes'),
+        func.sum(Receitas.valor_recebido).label('valor_total')
+    )
+
+    query = query.filter(extract('year', Receitas.data_recebimento) == ano)
+
+    if mes:
+        query = query.filter(extract('month', Receitas.data_recebimento) == mes)
+
+    if categoria:
+        query = query.filter(Receitas.categoria == categoria)
+
+    receitas_agrupadas = query.group_by("mes").order_by("mes").all()
+
+    receitas_por_mes = {int(m): float(v) for m, v in receitas_agrupadas}
+
+    if mes:
+        meses_a_exibir = [mes]
+    else:
+        meses_a_exibir = range(1, 13)
+
+
     resposta = [
-        ReceitaConsolidadoResponse(mes=mes, valor=receitas_por_mes.get(mes, 0.0))
-        for mes in range(1, 13)
+        ReceitaConsolidadoResponse(mes=m, valor=receitas_por_mes.get(mes, 0.0))
+        for m in meses_a_exibir
     ]
 
+    if not mes:
+        resposta_completa = []
+        for i in range(1, 13):
+            valor = receitas_por_mes.get(i, 0.0)
+            resposta_completa.append(ReceitaConsolidadoResponse(mes=i, valor=valor))
+        return resposta_completa
     return resposta
+
+
 
 @router.get(
     path=OBTER_POR_ID_RECEITAS, response_model=ReceitaResponse, tags=[Tag.Receitas.name]
