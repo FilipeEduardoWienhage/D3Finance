@@ -7,20 +7,29 @@
     </p-splitter>
 
 
-    <div class="flex flex-row">
-        <div class="mr-3 ml-3">
+    <div class="flex flex-row flex-grow">
+        <div class="ml-3 mr-3">
             <app-nav-bar-system></app-nav-bar-system>
+            <p-toast></p-toast>
         </div>
-        <p-card class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
-        <div class="flex-auto ml-3 mr-3">
-            <p-chart type="line" [data]="data" [options]="options" class="h-[30rem]" />
+        <div class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
+            <div class="flex items-center space-x-4 mb-4 text-white">
+                <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtro.categoria"
+                    placeholder="Filtrar por categoria" (onChange)="filtrarDados()" class="w-48"></p-dropdown>
+
+                <p-calendar [(ngModel)]="filtro.dataSelecionada" dateFormat="dd/mm/yy" placeholder="Filtrar por data"
+                    (onSelect)="filtrarDados()" showIcon></p-calendar>
+
+                <button pButton type="button" label="Limpar filtros" icon="pi pi-times" class="p-button-secondary"
+                    (click)="limparFiltros()"></button>
+            </div>
+
+            <p-card class="bg-[#2c2c2c] text-white shadow-md rounded-xl">
+                <div class="h-[30rem]">
+                    <p-chart type="bar" [data]="data" [options]="options" style="height: 100%;" />
+                </div>
+            </p-card>
         </div>
-        </p-card>
-        <p-card class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
-        <div class="flex-auto ml-3 mr-3">
-            <p-chart type="bar" [data]="data" [options]="options"/>
-        </div>
-        </p-card>
     </div>
     <app-footer class="mt-auto"></app-footer>
 </div>

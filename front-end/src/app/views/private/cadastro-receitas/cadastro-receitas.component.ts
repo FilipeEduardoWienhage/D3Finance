@@ -33,20 +33,21 @@ interface contaDestino {
 
 @Component({
   selector: 'app-cadastro-receitas',
-  imports: [FooterComponent, 
-            NavBarSystemComponent, 
-            CardModule, 
-            InputTextModule, 
-            FormsModule,
-            InputNumber,
-            Fluid,
-            DatePicker,
-            TextareaModule,
-            SelectModule,
-            ButtonModule,
-            SplitterModule,
-            ToastModule
-          ],
+  imports: [
+    FooterComponent,
+    NavBarSystemComponent,
+    CardModule,
+    InputTextModule,
+    FormsModule,
+    InputNumber,
+    Fluid,
+    DatePicker,
+    TextareaModule,
+    SelectModule,
+    ButtonModule,
+    SplitterModule,
+    ToastModule
+  ],
   templateUrl: './cadastro-receitas.component.html',
   styleUrl: './cadastro-receitas.component.css',
   providers: [MessageService]
@@ -55,11 +56,11 @@ export class CadastroReceitasComponent {
   public requestReceita!: ReceitaRequestModel;
 
   constructor(
-  private receitaService: ReceitasService,
-  private contasService: ContasService,
-  private messageService: MessageService) {}
+    private receitaService: ReceitasService,
+    private contasService: ContasService,
+    private messageService: MessageService) { }
 
-  
+
   categoriaReceita: string = '';
   valorReceita: number = 0;
   dataRecebimento: Date | null = null;
@@ -69,7 +70,7 @@ export class CadastroReceitasComponent {
   selecionarCategoria: categoriaReceita | undefined;
   contaDestino: contaDestino[] | undefined;
   selecionarConta: contaDestino | undefined;
-  
+
   ngOnInit(): void {
     this.requestReceita = new ReceitaRequestModel();
 
@@ -99,7 +100,7 @@ export class CadastroReceitasComponent {
       { name: 'Outras Receitas Operacionais' },
       { name: 'Outras Receitas Não Operacionais' }
     ];
-    
+
     this.contasService.listarContas().subscribe({
       next: (contas) => {
         this.contaDestino = contas.map(conta => ({
@@ -112,7 +113,7 @@ export class CadastroReceitasComponent {
       }
     });
   }
-  
+
   public doCadastroReceitas(): void {
 
     if (this.selecionarConta) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReceitaRequestModel } from '../models/RequestReceitas';
 import { ReceitaConsolidada } from '../models/receita-consolidada';
@@ -30,8 +30,24 @@ export class ReceitasService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  getReceitasConsolidadas(): Observable<ReceitaConsolidada[]> {
-    return this.http.get<any[]>(this.apiUrl + "/consolidado");
+  getReceitasConsolidadas(filtros?: any): Observable<ReceitaConsolidada[]> {
+    let params = new HttpParams();
+    
+    if (filtros) {
+      if (filtros.ano) {
+        params = params.append('ano', filtros.ano);
+      }
+      if (filtros.mes) {
+        params = params.append('mes', filtros.mes);
+      }
+      if (filtros.categoria) {
+        params = params.append('categoria', filtros.categoria);
+      }
+    }
+
+    const urlConsolidado = `${this.apiUrl}/consolidado`;
+
+    return this.http.get<ReceitaConsolidada[]>(urlConsolidado, { params });
   }
 
   deletarReceita(id: number): Observable<any> {

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, PLATFORM_ID } from '@angular/core
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
 import { MessageService } from 'primeng/api';
-import { SplitterModule } from 'primeng/splitter'; // Removed Splitter as it's not directly used here
+import { SplitterModule } from 'primeng/splitter';
 import { ChartModule } from 'primeng/chart';
 import { DespesaConsolidada } from '../../../models/despesa-consolidada';
 import { DespesasService } from '../../../service/despesas.service';
@@ -11,7 +11,8 @@ import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button'; // Adicionar import do ButtonModule
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-despesas',
@@ -24,7 +25,8 @@ import { ButtonModule } from 'primeng/button'; // Adicionar import do ButtonModu
     DropdownModule,
     CalendarModule,
     FormsModule,
-    ButtonModule // Adicionar ButtonModule aqui
+    ButtonModule,
+    ToastModule,
   ],
   templateUrl: './despesas.component.html',
   styleUrl: './despesas.component.css',
@@ -32,7 +34,6 @@ import { ButtonModule } from 'primeng/button'; // Adicionar import do ButtonModu
 })
 export class DespesasComponent {
   dadosGrafico: DespesaConsolidada[] = [];
-
   data: any;
   options: any;
 
@@ -40,7 +41,9 @@ export class DespesasComponent {
     categoria: null as string | null,
     dataSelecionada: null as Date | null
   };
-
+  
+  platformId = inject(PLATFORM_ID);
+  
   categoriasOpcoes = [
     { label: 'Todas', value: null },
     { label: 'Despesas com Pessoal', value: 'Despesas com Pessoal' },
@@ -56,11 +59,11 @@ export class DespesasComponent {
     { label: 'Outras Despesas', value: 'Outras Despesas' }
   ];
 
-  platformId = inject(PLATFORM_ID);
 
   constructor(
     private cd: ChangeDetectorRef,
-    private despesaService: DespesasService
+    private despesaService: DespesasService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -68,41 +71,56 @@ export class DespesasComponent {
   }
 
   carregarDadosDoGrafico() {
-    let params: any = {};
+    const filtrosParaApi: any = {};
 
-    params.ano = this.filtro.dataSelecionada
+    filtrosParaApi.ano = this.filtro.dataSelecionada
       ? this.filtro.dataSelecionada.getFullYear()
       : new Date().getFullYear();
 
     if (this.filtro.dataSelecionada) {
-      params.mes = this.filtro.dataSelecionada.getMonth() + 1; 
+      filtrosParaApi.mes = this.filtro.dataSelecionada.getMonth() + 1;
     }
 
     if (this.filtro.categoria) {
-      params.categoria = this.filtro.categoria;
+      filtrosParaApi.categoria = this.filtro.categoria;
     }
 
-    this.despesaService.getDespesasConsolidadas(params).subscribe({
+    this.despesaService.getDespesasConsolidadas(filtrosParaApi).subscribe({
       next: (dados) => {
-        this.dadosGrafico = dados;
-        this.initChart();
+        const isDataEmpty = dados.every(d => d.valor === 0);
+
+        if (this.filtro.categoria && isDataEmpty) {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Informativo',
+            detail: 'Nenhuma despesa encontrada para a categoria selecionada.'
+          });
+
+        } else {
+          this.dadosGrafico = dados;
+          this.initChart();
+        }
       },
       error: (err) => {
         console.error('Erro ao carregar despesas consolidadas:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Não foi possível carregar os dados das despesas.'
+        });
       }
     });
   }
+
 
   initChart() {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     const valoresPorMes = Array(12).fill(0);
 
-    // Mapeia os dados recebidos para o array de 12 meses
     this.dadosGrafico.forEach(d => {
-      // 'mes' vem do backend como 1-12
       const mesIndex = d.mes - 1;
       if (mesIndex >= 0 && mesIndex < 12) {
         valoresPorMes[mesIndex] = d.valor;
@@ -178,14 +196,15 @@ export class DespesasComponent {
       }
     };
     this.options = {
-      ...this.options,}
+      ...this.options,
+    }
     this.cd.markForCheck();
   }
   filtrarDados() {
     this.carregarDadosDoGrafico();
   }
 
- 
+
   limparFiltros() {
     this.filtro = { categoria: null, dataSelecionada: null };
     this.carregarDadosDoGrafico();
