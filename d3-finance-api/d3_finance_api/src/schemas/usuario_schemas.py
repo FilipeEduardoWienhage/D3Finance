@@ -52,3 +52,9 @@ class UsuarioResponse(UsuarioBase):
     id: int
     data_criacao: Optional[datetime] = None
     data_alteracao: Optional[datetime] = None
+
+
+@dataclass
+class UserLogin:
+    usuario: str
+    senha: str
