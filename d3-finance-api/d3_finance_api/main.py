@@ -26,11 +26,5 @@ app.include_router(importacao_controller.router)
 app.include_router(transacoes_controller.router)
 
 
-# Aqui você pode adicionar outros controladores (routers) de maneira semelhante:
-# Se tivesse outro controlador, por exemplo, de "produtos", você faria assim:
-# from app.controllers import another_controller
-# app.include_router(another_controller.router)
-
-
 if __name__ == "__main__":
     uvicorn.run("main:app")
