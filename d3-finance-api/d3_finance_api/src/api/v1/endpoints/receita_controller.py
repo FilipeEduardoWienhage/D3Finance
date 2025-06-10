@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import List, Optional
+from typing import Annotated, List, Optional
 from fastapi import HTTPException, Depends, status, Response
 from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
@@ -8,7 +8,8 @@ from src.database.database import SessionLocal
 from src.database.models import Receitas, Contas
 from src.api.tags import Tag
 from src.schemas.receita_schemas import ReceitaConsolidadoResponse, ReceitaCreate, ReceitaUpdate, ReceitaResponse
-
+from src.services.autenticacao_service import get_current_user
+from src.schemas.autenticacao_schemas import TokenData
 
 LISTA_RECEITAS = "/v1/receitas"
 CONSOLIDADO_RECEITAS = "/v1/receitas/consolidado"
@@ -29,7 +30,10 @@ def get_db():
 @router.get(
     path=LISTA_RECEITAS, response_model=List[ReceitaResponse], tags=[Tag.Receitas.name]
 )
-def get_receitas(db: Session = Depends(get_db)):
+def get_receitas(
+    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
+    db: Session = Depends(get_db)):
+    # receitas = db.query(Receitas).filter(Receitas.id_usuario == usuario_logado.id).all()
     receitas = db.query(Receitas).all()
     return [ReceitaResponse(
         id=receita.id,
