@@ -1,5 +1,6 @@
 from typing import Optional
 from datetime import date, datetime
+from pydantic import BaseModel
 from pydantic.dataclasses import dataclass
 
 
@@ -42,7 +43,17 @@ class ReceitaResponse:
 
 
 
-@dataclass
-class ReceitaConsolidadoResponse:
+class ReceitaCategoriaResponse(BaseModel):
+    categoria: str
+    valor: float
+
+    class Config:
+        from_attributes = True 
+
+
+class ReceitaMensalResponse(BaseModel):
     mes: int
     valor: float
+
+    class Config:
+        from_attributes = True
