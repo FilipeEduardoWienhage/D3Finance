@@ -7,12 +7,13 @@ from src.app import router
 from src.database.database import SessionLocal
 from src.database.models import Receitas, Contas
 from src.api.tags import Tag
-from src.schemas.receita_schemas import ReceitaConsolidadoResponse, ReceitaCreate, ReceitaUpdate, ReceitaResponse
+from src.schemas.receita_schemas import ReceitaCategoriaResponse, ReceitaCreate, ReceitaMensalResponse, ReceitaUpdate, ReceitaResponse
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
 
 LISTA_RECEITAS = "/v1/receitas"
-CONSOLIDADO_RECEITAS = "/v1/receitas/consolidado"
+CONSOLIDADO_CATEGORIA_RECEITAS = "/v1/receitas/consolidado"
+CONSOLIDADO_MENSAL_RECEITAS = "/v1/receitas/consolidado-mensal"
 CADASTRO_RECEITAS = "/v1/receitas"
 ATUALIZAR_RECEITAS = "/v1/receitas/{receitas_id}"
 APAGAR_RECEITAS = "/v1/receitas/{receitas_id}"
@@ -49,52 +50,57 @@ def get_receitas(
 
 
 @router.get(
-    path=CONSOLIDADO_RECEITAS, response_model=List[ReceitaConsolidadoResponse], tags=[Tag.Receitas.name]
+    path=CONSOLIDADO_CATEGORIA_RECEITAS, response_model=List[ReceitaCategoriaResponse], tags=[Tag.Receitas.name]
 )
-def get_receitas_consolidadas( 
+def get_receitas_por_categoria(
     db: Session = Depends(get_db),
     ano: Optional[int] = None,
-    mes: Optional[int] = None,
+    mes: Optional[int] = None
+):
+    query = db.query(
+        Receitas.categoria.label('categoria'),
+        func.sum(Receitas.valor_recebido).label('valor')
+    )
+    if ano:
+        query = query.filter(extract("year", Receitas.data_recebimento) == ano)
+    if mes:
+        query = query.filter(extract("month", Receitas.data_recebimento) == mes)
+
+    receitas_agrupadas = query.group_by(Receitas.categoria).order_by(Receitas.categoria).all()
+    return [
+        ReceitaCategoriaResponse(categoria=cat, valor=float(val))
+        for cat, val in receitas_agrupadas
+    ]
+
+# --- Endpoint para o Gráfico 2 (por Mês) ---
+@router.get(
+    path=CONSOLIDADO_MENSAL_RECEITAS, response_model=List[ReceitaMensalResponse], tags=[Tag.Receitas.name]
+)
+def get_receitas_por_mes(
+    db: Session = Depends(get_db),
+    ano: Optional[int] = None,
     categoria: Optional[str] = None
-    ):
+):
     if not ano:
         ano = datetime.now().year
 
     query = db.query(
         extract('month', Receitas.data_recebimento).label('mes'),
-        func.sum(Receitas.valor_recebido).label('valor_total')
+        func.sum(Receitas.valor_recebido).label('valor')
     )
-
     query = query.filter(extract('year', Receitas.data_recebimento) == ano)
-
-    if mes:
-        query = query.filter(extract('month', Receitas.data_recebimento) == mes)
-
     if categoria:
         query = query.filter(Receitas.categoria == categoria)
 
-    receitas_agrupadas = query.group_by("mes").order_by("mes").all()
-
-    receitas_por_mes = {int(m): float(v) for m, v in receitas_agrupadas}
-
-    if mes:
-        meses_a_exibir = [mes]
-    else:
-        meses_a_exibir = range(1, 13)
-
-
-    resposta = [
-        ReceitaConsolidadoResponse(mes=m, valor=receitas_por_mes.get(mes, 0.0))
-        for m in meses_a_exibir
-    ]
-
-    if not mes:
-        resposta_completa = []
-        for i in range(1, 13):
-            valor = receitas_por_mes.get(i, 0.0)
-            resposta_completa.append(ReceitaConsolidadoResponse(mes=i, valor=valor))
-        return resposta_completa
-    return resposta
+    receitas_agrupadas = query.group_by(extract('month', Receitas.data_recebimento)).all()
+    receitas_por_mes_dict = {int(m): float(v) for m, v in receitas_agrupadas}
+    
+    resposta_final = []
+    for i in range(1, 13):
+        valor = receitas_por_mes_dict.get(i, 0.0)
+        resposta_final.append(ReceitaMensalResponse(mes=i, valor=valor))
+        
+    return resposta_final
 
 
 

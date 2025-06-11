@@ -1,5 +1,6 @@
 from typing import Optional
 from datetime import date, datetime
+from pydantic import BaseModel
 from pydantic.dataclasses import dataclass
 
 
@@ -41,7 +42,10 @@ class DespesaResponse:
     data_alteracao: Optional[datetime] = None
 
 
-@dataclass
-class DespesaConsolidadoResponse:
-    mes: int
+
+class DespesaCategoriaResponse(BaseModel):
+    categoria: str
     valor: float
+
+    class Config:
+        from_attributes = True

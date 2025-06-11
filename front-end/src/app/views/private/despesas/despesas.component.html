@@ -1,4 +1,3 @@
-
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
     <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
         <ng-template #panel>
@@ -14,15 +13,13 @@
             <p-toast></p-toast>
         </div>
 
-        <div class="flex-auto ml-3 mr-3 bg-[#2c2c2c]">
-            <div class="flex items-center space-x-4 mb-4 text-white">
-                <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtro.categoria"
-                    placeholder="Filtrar por categoria" (onChange)="filtrarDados()" class="w-48"></p-dropdown>
 
-                <p-calendar [(ngModel)]="filtro.dataSelecionada" dateFormat="dd/mm/yy" placeholder="Filtrar por data"
-                    (onSelect)="filtrarDados()" showIcon></p-calendar>
+        <div class="flex flex-col flex-grow p-4 space-y-6">
+            <div class="flex items-center space-x-4 text-white">
+                <p-calendar [(ngModel)]="filtro.dataSelecionada" view="month" dateFormat="mm/yy" [readonlyInput]="true"
+                    placeholder="Filtrar por Mês/Ano" (onSelect)="filtrarDados()"></p-calendar>
 
-                <button pButton type="button" label="Limpar filtros" icon="pi pi-times" class="p-button-secondary"
+                <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary"
                     (click)="limparFiltros()"></button>
             </div>
 

@@ -1,3 +1,7 @@
 export class ReceitaConsolidada {
-    constructor(public mes: number, public valor: number) { }
+    constructor(
+        public mes: number,
+        public valor: number,
+        public categoria: string,
+    ) { }
 }

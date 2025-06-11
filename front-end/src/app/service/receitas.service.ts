@@ -1,7 +1,9 @@
+// /src/site/d3-finance/src/app/service/receitas.service.ts (Versão final limpa)
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ReceitaRequestModel } from '../models/RequestReceitas';
+import { ReceitaRequestModel } from '../models/RequestReceitas'; // <- Modelo de requisição para receitas
 import { ReceitaConsolidada } from '../models/receita-consolidada';
 
 @Injectable({
@@ -12,6 +14,24 @@ export class ReceitasService {
 
   constructor(private http: HttpClient) { }
 
+  getReceitasPorCategoria(filtros?: any): Observable<ReceitaConsolidada[]> {
+    let params = new HttpParams();
+    if (filtros) {
+      if (filtros.ano) params = params.append('ano', filtros.ano);
+      if (filtros.mes) params = params.append('mes', filtros.mes);
+    }
+    return this.http.get<ReceitaConsolidada[]>(`${this.apiUrl}/consolidado-categoria`, { params });
+  }
+
+  getReceitasPorMes(filtros?: any): Observable<ReceitaConsolidada[]> {
+    let params = new HttpParams();
+    if (filtros) {
+      if (filtros.ano) params = params.append('ano', filtros.ano);
+      if (filtros.categoria) params = params.append('categoria', filtros.categoria);
+    }
+    return this.http.get<ReceitaConsolidada[]>(`${this.apiUrl}/consolidado-mensal`, { params });
+  }
+
   cadastrarReceita(receita: ReceitaRequestModel): Observable<any> {
     let payload = {
       categoria: receita.categoria,
@@ -21,41 +41,18 @@ export class ReceitasService {
       conta_id: receita.conta_id,
       descricao: receita.descricao
     };
-    console.log(payload);
-
-    return this.http.post(this.apiUrl, payload);
+    return this.http.post<any>(this.apiUrl, payload);
   }
 
   getReceitas(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  getReceitasConsolidadas(filtros?: any): Observable<ReceitaConsolidada[]> {
-    let params = new HttpParams();
-    
-    if (filtros) {
-      if (filtros.ano) {
-        params = params.append('ano', filtros.ano);
-      }
-      if (filtros.mes) {
-        params = params.append('mes', filtros.mes);
-      }
-      if (filtros.categoria) {
-        params = params.append('categoria', filtros.categoria);
-      }
-    }
-
-    const urlConsolidado = `${this.apiUrl}/consolidado`;
-
-    return this.http.get<ReceitaConsolidada[]>(urlConsolidado, { params });
-  }
-
   deletarReceita(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  editarReceita(conta: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${conta.id}`, conta);
+  editarReceita(receita: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${receita.id}`, receita);
   }
-
 }

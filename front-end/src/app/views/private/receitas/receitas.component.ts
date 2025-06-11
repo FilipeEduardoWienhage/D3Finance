@@ -1,21 +1,23 @@
-import { Component, OnInit, PLATFORM_ID, ChangeDetectorRef, inject, effect } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
 import { MessageService } from 'primeng/api';
 import { SplitterModule } from 'primeng/splitter';
 import { ChartModule } from 'primeng/chart';
 import { isPlatformBrowser } from '@angular/common';
-import { ReceitasService } from '../../../service/receitas.service';
-import { ReceitaConsolidada } from '../../../models/receita-consolidada';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { ReceitaConsolidada } from '../../../models/receita-consolidada';
+import { ReceitasService } from '../../../service/receitas.service';
+import { ReceitaMensal } from '../../../models/receita-mensal';
 
 @Component({
   selector: 'app-receitas',
+  standalone: true,
   imports: [
     ChartModule,
     FooterComponent,
@@ -26,26 +28,30 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     CalendarModule,
     ButtonModule,
-    ToastModule,
+    ToastModule
   ],
   templateUrl: './receitas.component.html',
-  styleUrl: './receitas.component.css',
-  providers: [MessageService, ReceitasService],
+  styleUrls: ['./receitas.component.css'],
+  providers: [MessageService, ReceitasService]
 })
-export class ReceitasComponent {
-  dados: ReceitaConsolidada[] = [];
-  data: any;
-  options: any;
+export class ReceitasComponent implements OnInit {
+  // --- Propriedades Gráfico 1 (Categorias) ---
+  dadosCategorias: ReceitaConsolidada[] = [];
+  dataCategorias: any;
+  optionsCategorias: any;
 
+  dadosMensal: ReceitaMensal[] = [];
+  dataMensal: any;
+  optionsMensal: any;
+
+  // --- Filtros Compartilhados ---
   filtro = {
-    categoria: null as string | null,
-    dataSelecionada: null as Date | null
+    dataSelecionada: null as Date | null,
+    categoria: null as string | null
   };
 
-  platformId = inject(PLATFORM_ID);
-
   categoriasOpcoes = [
-    {label: 'Todas', value: null },
+    { label: 'Todas', value: null },
     { label: 'Venda de Produtos', value: 'Venda de Produtos' },
     { label: 'Prestação de Serviços', value: 'Prestação de Serviços' },
     { label: 'Receitas de Assinaturas / Mensalidades', value: 'Receitas de Assinaturas / Mensalidades' },
@@ -63,6 +69,9 @@ export class ReceitasComponent {
     { label: 'Outras Receitas Não Operacionais', value: 'Outras Receitas Não Operacionais' }
   ];
 
+
+  platformId = inject(PLATFORM_ID);
+
   constructor(
     private cd: ChangeDetectorRef,
     private receitaService: ReceitasService,
@@ -70,84 +79,52 @@ export class ReceitasComponent {
   ) { }
 
   ngOnInit() {
-    this.carregarDadosDoGrafico();
+    this.carregarAmbosGraficos();
   }
 
-  carregarDadosDoGrafico() {
-    const filtrosParaApi: any = {};
+  filtrarDados() {
+    this.carregarAmbosGraficos();
+  }
 
-    filtrosParaApi.ano = this.filtro.dataSelecionada
-      ? this.filtro.dataSelecionada.getFullYear()
-      : new Date().getFullYear();
+  limparFiltros() {
+    this.filtro = { dataSelecionada: null, categoria: null };
+    this.carregarAmbosGraficos();
+  }
 
+  private carregarAmbosGraficos() {
+    this.carregarGraficoCategorias();
+    this.carregarGraficoMensal();
+  }
 
+  private carregarGraficoCategorias() {
+    const filtros: any = {};
     if (this.filtro.dataSelecionada) {
-      filtrosParaApi.mes = this.filtro.dataSelecionada.getMonth() + 1;
+      filtros.ano = this.filtro.dataSelecionada.getFullYear();
+      filtros.mes = this.filtro.dataSelecionada.getMonth() + 1;
     }
-
-    if (this.filtro.categoria) {
-      filtrosParaApi.categoria = this.filtro.categoria;
-    }
-
-    this.receitaService.getReceitasConsolidadas(filtrosParaApi).subscribe({
-      next: (dados) => {
-        const isDataEmpty = dados.every(d => d.valor === 0);
-        if (this.filtro.categoria && isDataEmpty) {
-          this.messageService.add({
-            severity: 'info',
-            summary: 'Informação',
-            detail: 'Não há dados para a categoria selecionada.'
-          });
-        } else {
-          this.dados = dados;
-          this.initChart();
-        }
-      },
-      error: (error) => {
-        console.error('Erro ao carregar dados do gráfico:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Não foi possível carregar os dados do gráfico.'
-        });
-      }
+    this.receitaService.getReceitasPorCategoria(filtros).subscribe(dados => {
+      this.dadosCategorias = dados; 
+      this.initChartCategorias();
     });
   }
 
-
-  initChart() {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    const valoresPorMes = Array(12).fill(0);
-
-    this.dados.forEach(dado => {
-      const mesIndex = dado.mes - 1;
-      if (mesIndex >= 0 && mesIndex < 12) {
-        valoresPorMes[mesIndex] += dado.valor;
-      }
-    }
-    );
-
+  private initChartCategorias() {
+    const labels = this.dadosCategorias.map(d => d.mes);
+    const valores = this.dadosCategorias.map(d => d.valor);
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--p-text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
-    this.data = {
-      labels: meses,
-      datasets: [
-        {
-          label: 'Total Receitas',
-          backgroundColor: '#22c55e',
-          borderColor: '#16a34a',
-          data: valoresPorMes
-        }
-      ]
+    this.dataCategorias = {
+      labels: labels,
+      datasets: [{
+        label: 'Total por Categoria',
+        backgroundColor: '#22c55e',
+        data: valores
+      }]
     };
-
-    this.options = {
+    this.optionsCategorias = {
       maintainAspectRatio: false,
       aspectRatio: 0.8,
       plugins: {
@@ -160,10 +137,7 @@ export class ReceitasComponent {
           callbacks: {
             label: (context: any) => {
               const valor = context.raw;
-              return valor.toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-              });
+              return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
           }
         }
@@ -185,10 +159,7 @@ export class ReceitasComponent {
           ticks: {
             color: textColorSecondary,
             callback: (value: number) => {
-              return value.toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-              });
+              return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
           },
           grid: {
@@ -198,15 +169,91 @@ export class ReceitasComponent {
         }
       }
     };
-    this.cd.markForCheck()
-  }
-  filtrarDados() {
-    this.carregarDadosDoGrafico();
+
   }
 
-  limparFiltros() {
-    this.filtro = { categoria: null, dataSelecionada: null };
-    this.carregarDadosDoGrafico();
+  private carregarGraficoMensal() {
+    const filtros: any = {};
+    if (this.filtro.dataSelecionada) {
+      filtros.ano = this.filtro.dataSelecionada.getFullYear();
+    }
+    if (this.filtro.categoria) {
+      filtros.categoria = this.filtro.categoria;
+    }
+    this.receitaService.getReceitasPorMes(filtros).subscribe(dados => {
+      if (this.filtro.categoria && dados.every(d => d.valor === 0)) {
+        this.messageService.add({ severity: 'info', summary: 'Aviso', detail: 'Nenhuma receita para esta categoria no ano selecionado.' });
+      } else {
+        this.dadosCategorias = dados;
+        this.initChartMensal();
+      }
+    });
+  }
+
+  private initChartMensal() {
+
+
+    const labels = [
+      'Todas',
+      'Venda de Produtos',
+      'Prestação de Serviços',
+      'Receitas de Assinaturas / Mensalidades',
+      'Receitas de Consultoria',
+      'Receitas de Licenciamento',
+      'Receitas de Aluguel de Bens',
+      'Receita com Publicidade / Parcerias',
+      'Recebimento de Contratos',
+      'Royalties Recebidos',
+      'Rendimentos de Investimentos',
+      'Reembolso de Custos Operacionais',
+      'Multas Contratuais Recebidas',
+      'Recuperação de Crédito / Cobrança',
+      'Outras Receitas Operacionais',
+      'Outras Receitas Não Operacionais',
+    ];
+    const valores = this.dadosCategorias.map(d => d.valor);
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--p-text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+
+    this.dataCategorias = {
+      labels: labels,
+      datasets: [{
+        label: 'Total por Mês',
+        backgroundColor: '#6366f1',
+        data: valores
+      }]
+    };
+    this.optionsCategorias = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: { labels: { color: textColor } },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const valor = context.raw;
+              return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: textColorSecondary, font: { weight: 500 } },
+          grid: { color: surfaceBorder, drawBorder: false }
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+            callback: (value: number) => {
+              return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          },
+          grid: { color: surfaceBorder, drawBorder: false }
+        }
+      }
+    };
   }
 }
-

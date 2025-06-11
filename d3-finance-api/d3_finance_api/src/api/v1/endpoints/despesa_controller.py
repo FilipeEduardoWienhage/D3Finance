@@ -7,7 +7,8 @@ from src.app import router
 from src.database.database import SessionLocal
 from src.database.models import Despesas, Contas
 from src.api.tags import Tag
-from src.schemas.despesa_schemas import DespesaConsolidadoResponse, DespesaCreate, DespesaUpdate, DespesaResponse
+from src.schemas.despesa_schemas import DespesaCategoriaResponse, DespesaCreate, DespesaUpdate, DespesaResponse
+
 
 LISTA_DESPESAS = "/v1/despesas"
 CONSOLIDADO_DESPESAS = "/v1/despesas/consolidado"
@@ -16,12 +17,14 @@ CADASTRO_DESPESAS = "/v1/despesas"
 ATUALIZAR_DESPESAS = "/v1/despesas/{despesas_id}"
 APAGAR_DESPESAS = "/v1/despesas/{despesas_id}"
 
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 @router.get(
     path=LISTA_DESPESAS, response_model=List[DespesaResponse], tags=[Tag.Despesas.name]
@@ -45,54 +48,28 @@ def get_despesas(db: Session = Depends(get_db)):
 
 
 @router.get(
-    path=CONSOLIDADO_DESPESAS, response_model=List[DespesaConsolidadoResponse], tags=[Tag.Despesas.name]
+    path=CONSOLIDADO_DESPESAS, response_model=List[DespesaCategoriaResponse], tags=[Tag.Despesas.name]
 )
-
 def get_despesas_consolidadas(
     db: Session = Depends(get_db),
     ano: Optional[int] = None,
-    mes: Optional[int] = None,
-    categoria: Optional[str] = None
+    mes: Optional[int] = None
 ):
-    if not ano:
-        ano = datetime.now().year
-
     query = db.query(
-        extract("month", Despesas.data_pagamento).label("mes"),
-        func.sum(Despesas.valor_pago).label("valor")
+        Despesas.categoria.label('categoria'),
+        func.sum(Despesas.valor_pago).label('valor')
     )
-
-    query = query.filter(extract("year", Despesas.data_pagamento) == ano)
-
+    if ano:
+        query = query.filter(extract("year", Despesas.data_pagamento) == ano)
     if mes:
         query = query.filter(extract("month", Despesas.data_pagamento) == mes)
-    
-    if categoria:
-        query = query.filter(Despesas.categoria == categoria)
 
-    despesas_agrupadas = query.group_by("mes").order_by("mes").all()
-
-    despesas_por_mes = {int(m): float(v) for m, v in despesas_agrupadas}
-
-    if mes:
-        meses_a_exibir = [mes]
-    else:
-        meses_a_exibir = range(1, 13)
-
+    despesas_agrupadas = query.group_by(Despesas.categoria).order_by(Despesas.categoria).all()
     resposta = [
-        DespesaConsolidadoResponse(mes=m, valor=despesas_por_mes.get(m, 0.0))
-        for m in meses_a_exibir
+        DespesaCategoriaResponse(categoria=categoria, valor=float(valor))
+        for categoria, valor in despesas_agrupadas
     ]
-    
-    if not mes:
-        resposta_completa = []
-        for i in range(1, 13):
-            valor = despesas_por_mes.get(i, 0.0)
-            resposta_completa.append(DespesaConsolidadoResponse(mes=i, valor=valor))
-        return resposta_completa
-
     return resposta
-
 
 
 @router.get(
