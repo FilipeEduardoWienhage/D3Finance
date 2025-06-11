@@ -15,7 +15,7 @@
   <div class="flex-grow flex items-center justify-center mt-16">
     <div class="card w-full max-w-lg p-8">
       <p-toast></p-toast>
-      <p-fileupload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)"
+      <p-fileupload name="arquivo" url="http://localhost:8000/v1/importar-transacoes" (onUpload)="onUpload($event)"
         [multiple]="true" accept=".xml, .csv" maxFileSize="1000000000" mode="advanced"
         chooseLabel="Selecionar Arquivos" uploadLabel="Enviar" cancelLabel="Cancelar">
         <ng-template #empty>
