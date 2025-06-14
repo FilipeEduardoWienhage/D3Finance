@@ -1,23 +1,23 @@
 from datetime import date, datetime
 from typing import Annotated, List, Optional
-from fastapi import HTTPException, Depends, status, Response
+from fastapi import HTTPException, Depends, status, Response, Query
 from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
 from src.app import router
 from src.database.database import SessionLocal
 from src.database.models import Receitas, Contas
 from src.api.tags import Tag
-from src.schemas.receita_schemas import ReceitaCategoriaResponse, ReceitaCreate, ReceitaMensalResponse, ReceitaUpdate, ReceitaResponse
+from src.schemas.receita_schemas import ReceitaCategoriaResponse, ReceitaCreate, ReceitaUpdate, ReceitaResponse, ReceitaMensalResponse
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
 
+CONSOLIDADO_MENSAL_RECEITAS = "/v1/receitas/consolidado/mensal"
 LISTA_RECEITAS = "/v1/receitas"
-CONSOLIDADO_CATEGORIA_RECEITAS = "/v1/receitas/consolidado"
-CONSOLIDADO_MENSAL_RECEITAS = "/v1/receitas/consolidado-mensal"
+CONSOLIDADO_RECEITAS = "/v1/receitas/consolidado"
+OBTER_POR_ID_RECEITAS = "/v1/receitas/{receitas_id}"
 CADASTRO_RECEITAS = "/v1/receitas"
 ATUALIZAR_RECEITAS = "/v1/receitas/{receitas_id}"
 APAGAR_RECEITAS = "/v1/receitas/{receitas_id}"
-OBTER_POR_ID_RECEITAS = "/v1/receitas/{receitas_id}"
 
 
 def get_db():
@@ -26,6 +26,39 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@router.get(
+    path=CONSOLIDADO_MENSAL_RECEITAS,
+    response_model=List[ReceitaMensalResponse],
+    tags=[Tag.Receitas.name]
+)
+def get_receitas_consolidadas_mensal(
+    db: Session = Depends(get_db),
+     ano: Optional[int] = Query(None, description="Filtra as receitas pelo ano. Se não for fornecido, usa o ano atual."),
+    categoria: Optional[str] = Query(None, description="Filtra as receitas por uma categoria específica.")
+):
+    if not ano:
+        ano = datetime.now().year
+
+    query = db.query(
+        extract('month', Receitas.data_recebimento).label('mes'),
+        func.sum(Receitas.valor_recebido).label('valor') 
+    )
+    query = query.filter(extract('year', Receitas.data_recebimento) == ano)
+
+    if categoria:
+        query = query.filter(Receitas.categoria == categoria)
+
+    receitas_agrupadas = query.group_by(extract('month', Receitas.data_recebimento)).all()
+    
+    receitas_por_mes_dict = {int(m): float(v) for m, v in receitas_agrupadas}
+    resposta_final = []
+    for i in range(1, 13):
+        valor = receitas_por_mes_dict.get(i, 0.0)
+        resposta_final.append(ReceitaMensalResponse(mes=i, valor=valor))
+        
+    return resposta_final
 
 
 @router.get(
@@ -50,7 +83,7 @@ def get_receitas(
 
 
 @router.get(
-    path=CONSOLIDADO_CATEGORIA_RECEITAS, response_model=List[ReceitaCategoriaResponse], tags=[Tag.Receitas.name]
+    path=CONSOLIDADO_RECEITAS, response_model=List[ReceitaCategoriaResponse], tags=[Tag.Receitas.name]
 )
 def get_receitas_por_categoria(
     db: Session = Depends(get_db),
@@ -71,37 +104,6 @@ def get_receitas_por_categoria(
         ReceitaCategoriaResponse(categoria=cat, valor=float(val))
         for cat, val in receitas_agrupadas
     ]
-
-# --- Endpoint para o Gráfico 2 (por Mês) ---
-@router.get(
-    path=CONSOLIDADO_MENSAL_RECEITAS, response_model=List[ReceitaMensalResponse], tags=[Tag.Receitas.name]
-)
-def get_receitas_por_mes(
-    db: Session = Depends(get_db),
-    ano: Optional[int] = None,
-    categoria: Optional[str] = None
-):
-    if not ano:
-        ano = datetime.now().year
-
-    query = db.query(
-        extract('month', Receitas.data_recebimento).label('mes'),
-        func.sum(Receitas.valor_recebido).label('valor')
-    )
-    query = query.filter(extract('year', Receitas.data_recebimento) == ano)
-    if categoria:
-        query = query.filter(Receitas.categoria == categoria)
-
-    receitas_agrupadas = query.group_by(extract('month', Receitas.data_recebimento)).all()
-    receitas_por_mes_dict = {int(m): float(v) for m, v in receitas_agrupadas}
-    
-    resposta_final = []
-    for i in range(1, 13):
-        valor = receitas_por_mes_dict.get(i, 0.0)
-        resposta_final.append(ReceitaMensalResponse(mes=i, valor=valor))
-        
-    return resposta_final
-
 
 
 @router.get(

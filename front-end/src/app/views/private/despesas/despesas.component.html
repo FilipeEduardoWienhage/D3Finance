@@ -13,22 +13,29 @@
             <p-toast></p-toast>
         </div>
 
-
-        <div class="flex flex-col flex-grow p-4 space-y-6">
-            <div class="flex items-center space-x-4 text-white">
-                <p-calendar [(ngModel)]="filtro.dataSelecionada" view="month" dateFormat="mm/yy" [readonlyInput]="true"
-                    placeholder="Filtrar por Mês/Ano" (onSelect)="filtrarDados()"></p-calendar>
-
-                <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary"
-                    (click)="limparFiltros()"></button>
-            </div>
-
-            <p-card class="bg-[#2c2c2c] text-white shadow-md rounded-xl">
-                <div class="h-[30rem]">
-                    <p-chart type="bar" [data]="data" [options]="options" style="height: 100%"></p-chart>
+        <p-card class="w-96 flex-grow">
+            <div class="flex flex-col flex-grow p-4 space-y-6">
+                <div class="flex flex-wrap items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
+                    <div class="flex flex-col">
+                        <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
+                        <p-calendar [(ngModel)]="filtro.dataSelecionada" view="month" dateFormat="mm/yy"
+                            [readonlyInput]="true" placeholder="Selecione o período"
+                            (onSelect)="filtrarDados()"></p-calendar>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="invisible">.</h1>
+                        <button pButton type="button" label="Limpar filtro" icon="pi pi-times"
+                            class="p-button-secondary" (click)="limparFiltros()"></button>
+                    </div>
                 </div>
-            </p-card>
-        </div>
+
+                <p-card class="bg-[#2c2c2c] text-white rounded-xl">
+                    <div class="h-[30rem]">
+                        <p-chart type="bar" [data]="data" [options]="options" style="height: 100%"></p-chart>
+                    </div>
+                </p-card>
+            </div>
+        </p-card>
     </div>
 
     <app-footer class="mt-auto"></app-footer>

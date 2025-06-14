@@ -3,8 +3,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ReceitaRequestModel } from '../models/RequestReceitas'; // <- Modelo de requisição para receitas
+import { ReceitaRequestModel } from '../models/RequestReceitas';
 import { ReceitaConsolidada } from '../models/receita-consolidada';
+import { ReceitaMensal } from '../models/receita-mensal';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +15,31 @@ export class ReceitasService {
 
   constructor(private http: HttpClient) { }
 
-  getReceitasPorCategoria(filtros?: any): Observable<ReceitaConsolidada[]> {
+  getReceitasConsolidadas(filtros?: any): Observable<ReceitaConsolidada[]> {
     let params = new HttpParams();
     if (filtros) {
-      if (filtros.ano) params = params.append('ano', filtros.ano);
-      if (filtros.mes) params = params.append('mes', filtros.mes);
+      if (filtros.ano) {
+        params = params.append('ano', filtros.ano);
+      }
+      if (filtros.mes) {
+        params = params.append('mes', filtros.mes);
+      }
     }
-    return this.http.get<ReceitaConsolidada[]>(`${this.apiUrl}/consolidado-categoria`, { params });
+    const url = `${this.apiUrl}/consolidado`;
+    return this.http.get<ReceitaConsolidada[]>(url, { params });
   }
 
-  getReceitasPorMes(filtros?: any): Observable<ReceitaConsolidada[]> {
+
+  getReceitasConsolidadasMensal(filtros?: any): Observable<ReceitaMensal[]> {
     let params = new HttpParams();
     if (filtros) {
       if (filtros.ano) params = params.append('ano', filtros.ano);
       if (filtros.categoria) params = params.append('categoria', filtros.categoria);
     }
-    return this.http.get<ReceitaConsolidada[]>(`${this.apiUrl}/consolidado-mensal`, { params });
+    const url = `${this.apiUrl}/consolidado/mensal`;
+    return this.http.get<ReceitaMensal[]>(url, { params });
   }
+
 
   cadastrarReceita(receita: ReceitaRequestModel): Observable<any> {
     let payload = {

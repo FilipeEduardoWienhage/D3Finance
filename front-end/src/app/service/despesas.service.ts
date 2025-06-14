@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DespesaRequestModel } from '../models/RequestDespesas';
 import { DespesaConsolidada } from '../models/despesa-consolidada';
+import { DespesaMensal } from '../models/despesa-mensal';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +14,6 @@ export class DespesasService {
 
   constructor(private http: HttpClient) { }
 
-  // Função principal para buscar dados do gráfico
   getDespesasConsolidadas(filtros?: any): Observable<DespesaConsolidada[]> {
     let params = new HttpParams();
     if (filtros) {
@@ -24,15 +24,22 @@ export class DespesasService {
         params = params.append('mes', filtros.mes);
       }
     }
-    // A URL agora é a rota principal /consolidado
     const url = `${this.apiUrl}/consolidado`;
     return this.http.get<DespesaConsolidada[]>(url, { params });
   }
 
-  // --- O método antigo getDespesasConsolidadasPorCategoria foi removido/renomeado ---
+  getDespesaConsolidadasMensal(filtros?: any): Observable<DespesaMensal[]> {
+      let params = new HttpParams();
+      if (filtros) {
+        if (filtros.ano) params = params.append('ano', filtros.ano);
+        if (filtros.categoria) params = params.append('categoria', filtros.categoria);
+      }
+      const url = `${this.apiUrl}/consolidado/mensal`;
+      return this.http.get<DespesaMensal[]>(url, { params });
+    }
+
 
   cadastrarDespesa(despesa: DespesaRequestModel): Observable<any> {
-    // ... código sem alterações ...
     let payload = {
       categoria: despesa.categoria,
       valor_pago: despesa.valor_pago,
