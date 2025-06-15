@@ -19,7 +19,7 @@ export class AuthService {
   constructor(private httpClient: HttpClient) {}
 
   autenticar(login: string, senha: string): Observable<LoginResponse> {
-    return this.httpClient.post<LoginResponse>(`${apiUrl}/v1/autenticacao/`, { username: login, password: senha });
+    return this.httpClient.post<LoginResponse>(`${apiUrl}/autenticacao/`, { usuario: login, senha: senha });
   }
 
   salvarToken(access: string, refresh: string): void {
