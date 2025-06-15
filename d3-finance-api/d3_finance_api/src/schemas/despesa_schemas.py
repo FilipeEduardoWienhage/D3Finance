@@ -49,3 +49,11 @@ class DespesaCategoriaResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class DespesaMensalResponse(BaseModel):
+    mes: int
+    valor: float
+
+    class Config:
+        from_attributes = True

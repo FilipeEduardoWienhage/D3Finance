@@ -18,17 +18,17 @@
         <p-card header="Receitas por Categoria" class="bg-[#2c2c2c] text-white rounded-xl">
           <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
             <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
-              <p-calendar [(ngModel)]="filtro1.dataSelecionada" view="month" dateFormat="mm/yy" [readonlyInput]="true"
+              <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
+              <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy" [readonlyInput]="true"
                 placeholder="Selecione o período" (onSelect)="filtrarDados()"></p-calendar>
             </div>
             <div class="flex flex-col justify-end">
               <label class="text-sm mb-1 invisible">.</label>
-              <button pButton type="button" label="Limpar filtro" (click)="limparFiltros()"></button>
+              <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary" (click)="limparFiltros()"></button>
             </div>
           </div>
           <div class="h-[30rem]">
-            <p-chart type="bar" [data]="data1" [options]="options1" style="height: 100%"></p-chart>
+            <p-chart type="bar" [data]="dataConsolidado" [options]="optionsConsolidado" style="height: 100%"></p-chart>
           </div>
         </p-card>
       </div>
@@ -37,17 +37,17 @@
         <p-card header="Receitas por Mês" class="bg-[#2c2c2c] text-white rounded-xl">
           <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
             <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
-              <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtro2.categoria" placeholder="Todas as categorias"
+              <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/ano</label>
+              <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria" placeholder="Todas as categorias"
                 (onChange)="filtrarDadosMensais()" [style]="{ 'width': '250px' }"></p-dropdown>
             </div>
             <div class="flex flex-col justify-end">
               <label class="text-sm mb-1 invisible">.</label>
-              <button pButton type="button" label="Limpar filtro" (click)="limparFiltrosMensais()"></button>
+              <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary" (click)="limparFiltrosMensais()"></button>
             </div>
           </div>
           <div class="h-[30rem]">
-            <p-chart type="bar" [data]="data2" [options]="options2" style="height: 100%"></p-chart>
+            <p-chart type="bar" [data]="dataMensal" [options]="optionsMensal" style="height: 100%"></p-chart>
           </div>
         </p-card>
       </div>

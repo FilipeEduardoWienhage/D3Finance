@@ -1,17 +1,18 @@
 from datetime import datetime
 from typing import List, Optional
-from fastapi import HTTPException, Depends, status, Response
+from fastapi import HTTPException, Depends, Query, status, Response
 from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
 from src.app import router
 from src.database.database import SessionLocal
 from src.database.models import Despesas, Contas
 from src.api.tags import Tag
-from src.schemas.despesa_schemas import DespesaCategoriaResponse, DespesaCreate, DespesaUpdate, DespesaResponse
+from src.schemas.despesa_schemas import DespesaCategoriaResponse, DespesaCreate, DespesaUpdate, DespesaResponse, DespesaMensalResponse
 
 
 LISTA_DESPESAS = "/v1/despesas"
 CONSOLIDADO_DESPESAS = "/v1/despesas/consolidado"
+CONSOLIDADO_MENSAL_DESPESAS = "/v1/despesas/consolidado/mensal"
 OBTER_POR_ID_DESPESAS = "/v1/despesas/{despesas_id}"
 CADASTRO_DESPESAS = "/v1/despesas"
 ATUALIZAR_DESPESAS = "/v1/despesas/{despesas_id}"
@@ -24,6 +25,39 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@router.get(
+    path=CONSOLIDADO_MENSAL_DESPESAS,
+    response_model=List[DespesaMensalResponse],
+    tags=[Tag.Despesas.name]
+)
+def get_despesas_consolidadas_mensal(
+    db: Session = Depends(get_db),
+     ano: Optional[int] = Query(None, description="Filtra as despesas pelo ano. Se não for fornecido, usa o ano atual."),
+    categoria: Optional[str] = Query(None, description="Filtra as despesas por uma categoria específica.")
+):
+    if not ano:
+        ano = datetime.now().year
+
+    query = db.query(
+        extract('month', Despesas.data_pagamento).label('mes'),
+        func.sum(Despesas.valor_pago).label('valor') 
+    )
+    query = query.filter(extract('year', Despesas.data_pagamento) == ano)
+
+    if categoria:
+        query = query.filter(Despesas.categoria == categoria)
+
+    despesas_agrupadas = query.group_by(extract('month', Despesas.data_pagamento)).all()
+
+    despesas_por_mes_dict = {int(m): float(v) for m, v in despesas_agrupadas}
+    resposta_final = []
+    for i in range(1, 13):
+        valor = despesas_por_mes_dict.get(i, 0.0)
+        resposta_final.append(DespesaMensalResponse(mes=i, valor=valor))
+
+    return resposta_final
 
 
 @router.get(

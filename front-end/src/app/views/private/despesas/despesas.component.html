@@ -1,41 +1,66 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
     <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
-        <ng-template #panel>
+        <ng-template pTemplate="1">
             <div class="flex items-center justify-center h-full text-white">
                 D3 Finance
             </div>
         </ng-template>
     </p-splitter>
 
-    <div class="flex flex-row flex-grow">
-        <div class="ml-3 mr-3">
+    <div class="flex flex-row flex-grow px-4 gap-4">
+        <div class="flex-shrink-0">
             <app-nav-bar-system></app-nav-bar-system>
             <p-toast></p-toast>
         </div>
 
-        <p-card class="w-96 flex-grow">
-            <div class="flex flex-col flex-grow p-4 space-y-6">
-                <div class="flex flex-wrap items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
-                    <div class="flex flex-col">
-                        <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
-                        <p-calendar [(ngModel)]="filtro.dataSelecionada" view="month" dateFormat="mm/yy"
-                            [readonlyInput]="true" placeholder="Selecione o período"
-                            (onSelect)="filtrarDados()"></p-calendar>
-                    </div>
-                    <div class="flex flex-col">
-                        <h1 class="invisible">.</h1>
-                        <button pButton type="button" label="Limpar filtro" icon="pi pi-times"
-                            class="p-button-secondary" (click)="limparFiltros()"></button>
-                    </div>
-                </div>
+        <div class="flex flex-col flex-grow space-y-6">
 
-                <p-card class="bg-[#2c2c2c] text-white rounded-xl">
-                    <div class="h-[30rem]">
-                        <p-chart type="bar" [data]="data" [options]="options" style="height: 100%"></p-chart>
+            <div class="flex flex-col space-y-4">
+                <p-card header="Receitas por Categoria "
+                    class="bg-[#2c2c2c] text-white rounded-xl flex flex-col flex-grow">
+                    <div class="flex items-center gap-4 p-4 rounded-lg">
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
+                            <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy"
+                                [readonlyInput]="true" placeholder="Selecione o período"
+                                (onSelect)="filtrarDados()"></p-calendar>
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="text-sm mb-1 invisible">.</label>
+                            <button pButton type="button" label="Limpar filtro" icon="pi pi-times"
+                                class="p-button-secondary" (click)="limparFiltros()"></button>
+                        </div>
+                    </div>
+                    <div class="h-[30rem] flex-grow">
+                        <p-chart type="bar" [data]="dataConsolidado" [options]="optionsConsolidado"
+                            style="height: 100%"></p-chart>
                     </div>
                 </p-card>
             </div>
-        </p-card>
+
+            <div class="flex flex-col space-y-4">
+                <p-card header="Receitas por Mês" class="bg-[#2c2c2c] text-white rounded-xl flex flex-col flex-grow">
+                    <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
+                            <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria"
+                                placeholder="Todas as categorias" (onChange)="filtrarDadosMensais()"
+                                [style]="{ 'width': '250px' }"></p-dropdown>
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="text-sm mb-1 invisible">.</label>
+                            <button pButton type="button" label="Limpar filtro" icon="pi pi-times"
+                                class="p-button-secondary" (click)="limparFiltrosMensais()"></button>
+                        </div>
+                    </div>
+                    <div class="h-[30rem] flex-grow">
+                        <p-chart type="bar" [data]="dataMensal" [options]="optionsMensal"
+                            style="height: 100%"></p-chart>
+                    </div>
+                </p-card>
+            </div>
+
+        </div>
     </div>
 
     <app-footer class="mt-auto"></app-footer>

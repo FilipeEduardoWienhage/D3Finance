@@ -35,19 +35,19 @@ import { DropdownModule } from 'primeng/dropdown';
   providers: [MessageService, ReceitasService]
 })
 export class ReceitasComponent implements OnInit {
-  dadosGrafico1: ReceitaConsolidada[] = [];
-  data1: any;
-  options1: any;
+  dadosConsolidado: ReceitaConsolidada[] = [];
+  dataConsolidado: any;
+  optionsConsolidado: any;
 
-  dadosGrafico2: ReceitaMensal[] = [];
-  data2: any;
-  options2: any;
+  dadosMensal: ReceitaMensal[] = [];
+  dataMensal: any;
+  optionsMensal: any;
 
-  filtro1 = {
+  filtroConsolidado = {
     dataSelecionada: null as Date | null
   };
 
-  filtro2 = {
+  filtroMensal = {
     categoria: null as string | null,
     ano: new Date().getFullYear()
   };
@@ -71,7 +71,6 @@ export class ReceitasComponent implements OnInit {
     { label: 'Outras Receitas Não Operacionais', value: 'Outras Receitas Não Operacionais' }
   ];
 
-
   platformId = inject(PLATFORM_ID);
 
   constructor(
@@ -88,19 +87,19 @@ export class ReceitasComponent implements OnInit {
 
   carregarDadosMensais() {
     const filtrosParaApi = {
-      ano: this.filtro2.ano,
-      categoria: this.filtro2.categoria
+      ano: this.filtroMensal.ano,
+      categoria: this.filtroMensal.categoria
     };
     this.receitaService.getReceitasConsolidadasMensal(filtrosParaApi).subscribe({
       next: (dados) => {
-        if (this.filtro2.categoria && dados.every(d => d.valor === 0)) {
+        if (this.filtroMensal.categoria && dados.every(d => d.valor === 0)) {
           this.messageService.add({
             severity: 'info',
             summary: 'Aviso',
             detail: 'Não há receitas para esta categoria no ano selecionado.'
           });
         } else {
-          this.dadosGrafico2 = dados;
+          this.dadosMensal = dados;
           this.initChartMensal();
         }
       },
@@ -114,13 +113,13 @@ export class ReceitasComponent implements OnInit {
     }
 
     const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    const valores = this.dadosGrafico2.map(d => d.valor);
+    const valores = this.dadosMensal.map(d => d.valor);
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--p-text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
-    this.data2 = {
+    this.dataMensal = {
       labels: labels,
       datasets: [{
         label: 'Total de Receitas por Mês',
@@ -128,7 +127,7 @@ export class ReceitasComponent implements OnInit {
         data: valores
       }]
     };
-    this.options2 = {
+    this.optionsMensal = {
       maintainAspectRatio: false,
       aspectRatio: 0.8,
       plugins: {
@@ -166,8 +165,8 @@ export class ReceitasComponent implements OnInit {
     this.carregarDadosMensais();
   }
   limparFiltrosMensais() {
-    this.filtro2.categoria = null;
-    this.filtro2.ano = new Date().getFullYear();
+    this.filtroMensal.categoria = null;
+    this.filtroMensal.ano = new Date().getFullYear();
     this.carregarDadosMensais();
   }
 
@@ -175,9 +174,9 @@ export class ReceitasComponent implements OnInit {
 
   carregarDadosDoGrafico() {
     const filtros: any = {};
-    if (this.filtro1.dataSelecionada) {
-      filtros.ano = this.filtro1.dataSelecionada.getFullYear();
-      filtros.mes = this.filtro1.dataSelecionada.getMonth() + 1;
+    if (this.filtroConsolidado.dataSelecionada) {
+      filtros.ano = this.filtroConsolidado.dataSelecionada.getFullYear();
+      filtros.mes = this.filtroConsolidado.dataSelecionada.getMonth() + 1;
     }
 
     this.receitaService.getReceitasConsolidadas(filtros).subscribe({
@@ -189,7 +188,7 @@ export class ReceitasComponent implements OnInit {
             detail: 'Não há receitas para o período selecionado.'
           });
         } else {
-          this.dadosGrafico1 = dados;
+          this.dadosConsolidado = dados;
           this.initChartCategorias();
         }
       },
@@ -210,15 +209,15 @@ export class ReceitasComponent implements OnInit {
     }
 
     // 4. CORREÇÃO PRINCIPAL: Usa 'd.categoria' para os rótulos
-    const labels = this.dadosGrafico1.map(d => d.categoria);
-    const valores = this.dadosGrafico1.map(d => d.valor);
+    const labels = this.dadosConsolidado.map(d => d.categoria);
+    const valores = this.dadosConsolidado.map(d => d.valor);
 
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--p-text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
-    this.data1 = {
+    this.dataConsolidado = {
       labels: labels, // <- Agora funciona
       datasets: [{
         label: 'Total por Categoria',
@@ -227,7 +226,7 @@ export class ReceitasComponent implements OnInit {
       }]
     };
 
-    this.options1 = {
+    this.optionsConsolidado = {
       maintainAspectRatio: false,
       aspectRatio: 0.8,
       plugins: {
@@ -267,7 +266,7 @@ export class ReceitasComponent implements OnInit {
   }
 
   limparFiltros() {
-    this.filtro1.dataSelecionada = null;
+    this.filtroConsolidado.dataSelecionada = null;
     this.carregarDadosDoGrafico();
   }
 }

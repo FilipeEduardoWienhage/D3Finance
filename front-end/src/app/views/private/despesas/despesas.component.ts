@@ -12,10 +12,12 @@ import { ToastModule } from 'primeng/toast';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { DespesasService } from '../../../service/despesas.service';
 import { DespesaConsolidada } from '../../../models/despesa-consolidada';
+import { DespesaMensal } from '../../../models/despesa-mensal';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-despesas',
-  standalone: true, 
+  standalone: true,
   imports: [
     ChartModule,
     FooterComponent,
@@ -26,22 +28,46 @@ import { DespesaConsolidada } from '../../../models/despesa-consolidada';
     FormsModule,
     ButtonModule,
     ToastModule,
+    DropdownModule
   ],
   templateUrl: './despesas.component.html',
   styleUrls: ['./despesas.component.css'],
   providers: [MessageService, DespesasService]
 })
 export class DespesasComponent implements OnInit {
-  dadosGrafico: DespesaConsolidada[] = [];
-  data: any;
-  options: any;
+  dadosConsolidado: DespesaConsolidada[] = [];
+  dataConsolidado: any;
+  optionsConsolidado: any;
 
-  filtro = {
+  dadosMensal: DespesaMensal[] = [];
+  dataMensal: any;
+  optionsMensal: any;
+
+  filtroConsolidado = {
     dataSelecionada: null as Date | null
   };
 
-  platformId = inject(PLATFORM_ID);
+  filtroMensal = {
+    categoria: null as string | null,
+    ano: new Date().getFullYear()
+  };
 
+  categoriasOpcoes = [
+    { label: 'Todas as Categorias', value: null },
+    { label: 'Despesas com Pessoal', value: 'Despesas com Pessoal' },
+    { label: 'Despesas Operacionais', value: 'Despesas Operacionais' },
+    { label: 'Despesas com Materiais', value: 'Despesas com Materiais' },
+    { label: 'Despesas Administrativas', value: 'Despesas Administrativas' },
+    { label: 'Despesas com Marketing', value: 'Despesas com Marketing' },
+    { label: 'Despesas com Transporte', value: 'Despesas com Transporte' },
+    { label: 'Impostos e Taxas', value: 'Impostos e Taxas' },
+    { label: 'Despesas Financeiras', value: 'Despesas Financeiras' },
+    { label: 'Manutenção e Reparos', value: 'Manutenção e Reparos' },
+    { label: 'Despesas com Terceirizados', value: 'Despesas com Terceirizados' },
+    { label: 'Outras Despesas', value: 'Outras Despesas' }
+  ]
+
+  platformId = inject(PLATFORM_ID);
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -50,29 +76,124 @@ export class DespesasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.carregarDadosDoGrafico();
+    this.carregarDadosConsolidado();
+    this.carregarDadosMensal();
   }
 
-  carregarDadosDoGrafico() {
+
+  carregarDadosMensal() {
+    const filtrosParaApi: any = {
+      ano: this.filtroMensal.ano,
+      categoria: this.filtroMensal.categoria
+  };
+  this.despesaService.getDespesaConsolidadasMensal(filtrosParaApi).subscribe({
+      next: (dados) => {
+        if (this.filtroMensal.categoria && dados.every(d => d.valor === 0)) {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Aviso',
+            detail: 'Não há despesas para a categoria selecionada.'
+          });
+        } else {
+          this.dadosMensal = dados;
+          this.initChartMensal();
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar despesas mensais:', err);
+        this.messageService.add({
+          severity: 'error', summary: 'Erro', detail: 'Não foi possível carregar os dados.'
+        });
+      }
+    });
+  }
+
+
+  private initChartMensal() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const valores = this.dadosMensal.map(d => d.valor);
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--p-text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+
+    this.dataMensal = {
+      labels: labels,
+      datasets: [{
+        label: 'Total de Receitas por Mês',
+        backgroundColor: '#ef4444',
+        borderColor: '#b91c1c',
+        data: valores
+      }]
+    };
+    this.optionsMensal = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: {
+          labels: { color: textColor }
+        },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const valor = context.raw;
+              return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: textColorSecondary, font: { weight: 500 } },
+          grid: { color: surfaceBorder, drawBorder: false }
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+            callback: (value: number) => {
+              return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          },
+          grid: { color: surfaceBorder, drawBorder: false }
+        }
+      }
+    };
+    this.cd.markForCheck();
+  }
+  filtrarDadosMensais() {
+    this.carregarDadosMensal();
+  }
+  limparFiltrosMensais() {
+    this.filtroMensal.categoria = null;
+    this.filtroMensal.ano = new Date().getFullYear();
+    this.carregarDadosMensal();
+  }
+
+
+  carregarDadosConsolidado() {
     const filtrosParaApi: any = {};
 
-    if (this.filtro.dataSelecionada) {
-      filtrosParaApi.ano = this.filtro.dataSelecionada.getFullYear();
-      filtrosParaApi.mes = this.filtro.dataSelecionada.getMonth() + 1;
+    if (this.filtroConsolidado.dataSelecionada) {
+      filtrosParaApi.ano = this.filtroConsolidado.dataSelecionada.getFullYear();
+      filtrosParaApi.mes = this.filtroConsolidado.dataSelecionada.getMonth() + 1;
     }
-    
+
     this.despesaService.getDespesasConsolidadas(filtrosParaApi).subscribe({
       next: (dados) => {
         if (dados.length === 0) {
-            this.messageService.add({
-                severity: 'info',
-                summary: 'Aviso',
-                detail: 'Não há despesas para o período selecionado.'
-            });
-            this.dadosGrafico = [];
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Aviso',
+            detail: 'Não há despesas para o período selecionado.'
+          });
+          this.dadosConsolidado = [];
         } else {
-            this.dadosGrafico = dados;
-            this.initChart(); 
+          this.dadosConsolidado = dados;
+          this.initChart();
         }
       },
       error: (err) => {
@@ -89,16 +210,15 @@ export class DespesasComponent implements OnInit {
       return;
     }
 
-    
-    const labels = this.dadosGrafico.map(d => d.categoria);
-    const valores = this.dadosGrafico.map(d => d.valor);
+    const labels = this.dadosConsolidado.map(d => d.categoria);
+    const valores = this.dadosConsolidado.map(d => d.valor);
 
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--p-text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
-    this.data = {
+    this.dataConsolidado = {
       labels: labels,
       datasets: [
         {
@@ -110,45 +230,45 @@ export class DespesasComponent implements OnInit {
       ]
     };
 
-    this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            legend: { labels: { color: textColor } },
-            tooltip: {
-                callbacks: {
-                    label: (context: any) => {
-                        const valor = context.raw;
-                        return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    }
-                }
+    this.optionsConsolidado = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: { labels: { color: textColor } },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const valor = context.raw;
+              return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
-        },
-        scales: {
-            x: {
-                ticks: { color: textColorSecondary, font: { weight: 500 } },
-                grid: { color: surfaceBorder, drawBorder: false }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary,
-                    callback: (value: number) => {
-                        return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    }
-                },
-                grid: { color: surfaceBorder, drawBorder: false }
-            }
+          }
         }
+      },
+      scales: {
+        x: {
+          ticks: { color: textColorSecondary, font: { weight: 500 } },
+          grid: { color: surfaceBorder, drawBorder: false }
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+            callback: (value: number) => {
+              return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          },
+          grid: { color: surfaceBorder, drawBorder: false }
+        }
+      }
     };
     this.cd.markForCheck();
   }
 
   filtrarDados() {
-    this.carregarDadosDoGrafico();
+    this.carregarDadosConsolidado();
   }
 
   limparFiltros() {
-    this.filtro.dataSelecionada = null;
-    this.carregarDadosDoGrafico();
+    this.filtroConsolidado.dataSelecionada = null;
+    this.carregarDadosConsolidado();
   }
 }
