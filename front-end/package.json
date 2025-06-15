@@ -22,6 +22,7 @@
     "angularx-qrcode": "^19.0.0",
     "boxicons": "^2.1.4",
     "chart.js": "^4.4.9",
+    "jwt-decode": "^4.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^19.0.10",
     "rxjs": "~7.8.0",

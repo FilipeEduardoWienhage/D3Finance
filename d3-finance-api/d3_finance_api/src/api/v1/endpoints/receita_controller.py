@@ -32,7 +32,7 @@ def get_db():
     path=LISTA_RECEITAS, response_model=List[ReceitaResponse], tags=[Tag.Receitas.name]
 )
 def get_receitas(
-    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
+    #usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db)):
     # receitas = db.query(Receitas).filter(Receitas.id_usuario == usuario_logado.id).all()
     receitas = db.query(Receitas).all()
