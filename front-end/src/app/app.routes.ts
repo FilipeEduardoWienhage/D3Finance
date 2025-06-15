@@ -14,39 +14,22 @@ import { CadastroContasComponent } from './views/private/cadastro-contas/cadastr
 import { MovimentacaoEntreContasComponent } from './views/private/movimentacao-entre-contas/movimentacao-entre-contas.component';
 import { authGuard } from './guards/auth.guards';
 
-// Rotas com a autenticação ativada
-// export const routes: Routes = [
-//     { path: "", redirectTo: "/home", pathMatch: "full" },
-//     { path: "home", component: HomeComponent },
-//     { path: "login", component: LoginComponent},
-//     { path: "cadastro", component: CadastroComponent},
-//     { path: "contato", component: ContatoComponent},
-//     { path: "visaogeral", component: VisaoGeralComponent, canActivate: [authGuard] },
-//     { path: "receitas", component: ReceitasComponent, canActivate: [authGuard]},
-//     { path: "despesas", component: DespesasComponent, canActivate: [authGuard]},
-//     { path: "receitas/cadastrar", component: CadastroReceitasComponent, canActivate: [authGuard]},
-//     { path: "despesas/cadastrar", component: CadastroDespesasComponent, canActivate: [authGuard]},
-//     { path: "importararquivo", component: ImportarArquivosComponent, canActivate: [authGuard]},
-//     { path: "editarperfil", component: ConfiguracaoPerfilComponent, canActivate: [authGuard]},
-//     { path: "contas/cadastrar", component: CadastroContasComponent, canActivate: [authGuard]},
-//     { path: "movimentarcontas", component: MovimentacaoEntreContasComponent, canActivate: [authGuard]},
-//     { path: "**", redirectTo: "/home" }
-// ];
-
+//Rotas com a autenticação ativada
 export const routes: Routes = [
     { path: "", redirectTo: "/home", pathMatch: "full" },
     { path: "home", component: HomeComponent },
     { path: "login", component: LoginComponent},
     { path: "cadastro", component: CadastroComponent},
     { path: "contato", component: ContatoComponent},
-    { path: "visaogeral", component: VisaoGeralComponent },
-    { path: "receitas", component: ReceitasComponent},
-    { path: "despesas", component: DespesasComponent},
-    { path: "receitas/cadastrar", component: CadastroReceitasComponent},
-    { path: "despesas/cadastrar", component: CadastroDespesasComponent},
-    { path: "importararquivo", component: ImportarArquivosComponent},
-    { path: "editarperfil", component: ConfiguracaoPerfilComponent},
-    { path: "contas/cadastrar", component: CadastroContasComponent},
-    { path: "movimentarcontas", component: MovimentacaoEntreContasComponent},
+    { path: "visaogeral", component: VisaoGeralComponent, canActivate: [authGuard] },
+    { path: "receitas", component: ReceitasComponent, canActivate: [authGuard]},
+    { path: "despesas", component: DespesasComponent, canActivate: [authGuard]},
+    { path: "receitas/cadastrar", component: CadastroReceitasComponent, canActivate: [authGuard]},
+    { path: "despesas/cadastrar", component: CadastroDespesasComponent, canActivate: [authGuard]},
+    { path: "importararquivo", component: ImportarArquivosComponent, canActivate: [authGuard]},
+    { path: "editarperfil", component: ConfiguracaoPerfilComponent, canActivate: [authGuard]},
+    { path: "contas/cadastrar", component: CadastroContasComponent, canActivate: [authGuard]},
+    { path: "movimentarcontas", component: MovimentacaoEntreContasComponent, canActivate: [authGuard]},
     { path: "**", redirectTo: "/home" }
 ];
+
