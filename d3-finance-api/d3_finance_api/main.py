@@ -12,9 +12,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Cria as tabelas no banco de dados. Este comando verifica todos os modelos definidos em Base e cria as
-# tabelas correspondentes no banco de dados.
-# Em um projeto real, você pode querer usar Alembic para gerenciar migrações do banco de dados.
+
 Base.metadata.create_all(bind=engine)
 
 # Inclui o controlador de usuários na aplicação. Isso registra as rotas definidas no `user_controller`.
@@ -25,12 +23,6 @@ app.include_router(contas_controller.router)
 app.include_router(importacao_controller.router)
 app.include_router(transacoes_controller.router)
 app.include_router(autenticacao_controller.router)
-
-
-# Aqui você pode adicionar outros controladores (routers) de maneira semelhante:
-# Se tivesse outro controlador, por exemplo, de "produtos", você faria assim:
-# from app.controllers import another_controller
-# app.include_router(another_controller.router)
 
 
 if __name__ == "__main__":

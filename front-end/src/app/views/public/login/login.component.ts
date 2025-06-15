@@ -14,7 +14,8 @@ import { InputOtpModule } from 'primeng/inputotp';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { Router } from '@angular/router';  
+import { Router, ActivatedRoute } from '@angular/router';  
+import { AuthService } from '../../../service/auth.service';
 
 
 @Component({
@@ -52,7 +53,61 @@ export class LoginComponent {
   login: string = ''; 
   password: string = '';
 
-  constructor(private messageService: MessageService, private router: Router ) {}
+  returnUrl: string | null = null;  // ✅ ajuste de tipagem aqui
+
+  constructor(
+    private messageService: MessageService, 
+    private router: Router, 
+    private authService: AuthService, 
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
+
+    if (this.authService.isAuthenticated()) {  // ✅ mudou para isAuthenticated()
+      this.router.navigateByUrl(this.returnUrl!);
+    }
+  }
+
+  onLoginSubmit(): void {
+    this.carregando = true;
+
+    this.authService.autenticar(this.login, this.password).subscribe(
+      response => {
+        this.carregando = false;
+
+        // ✅ chama salvarToken com access e refresh
+        this.authService.salvarToken(response.access, response.refresh);
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Login realizado com sucesso!',
+        });
+
+        setTimeout(() => {
+          this.router.navigateByUrl(this.returnUrl!);
+        }, 1000);
+      },
+      error => {
+        this.carregando = false;
+
+        let errorMessage = 'Ocorreu um erro no login. Verifique suas credenciais.';
+        if (error.status === 400 && error.error && error.error.detail) {
+          errorMessage = error.error.detail;
+        } else if (error.status === 0) {
+          errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão ou a URL da API.';
+        }
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro no Login',
+          detail: errorMessage,
+        });
+      }
+    );
+  }
 
   abrirModal() {
     this.visible = true;
