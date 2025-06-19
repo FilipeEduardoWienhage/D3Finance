@@ -257,7 +257,7 @@
                 <div class="p-field">
                     <label for="tipoConta">Tipo: </label>
                     <p-dropdown id="tipoConta" [(ngModel)]="itemEmEdicao.tipo_conta" [options]="tipoContas"
-                        optionLabel="name" placeholder="Selecione um tipo"></p-dropdown>
+                        optionLabel="name" optionValue="name" [appendTo]="'body'" placeholder="Selecione um tipo"></p-dropdown>
                 </div>
                 <div class="p-field">
                     <label for="nomeConta">Nome: </label>
