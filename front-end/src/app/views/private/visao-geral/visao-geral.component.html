@@ -269,8 +269,8 @@
                 <div class="p-field">
                     <label for="categoriaReceita">Categoria: </label>
                     <p-dropdown id="categoriaReceita" [(ngModel)]="itemEmEdicao.categoria"
-                        [options]="categoriaDaReceita" optionLabel="name"
-                        placeholder="Selecione uma categoria"></p-dropdown>
+                        [options]="categoriaDaReceita" optionLabel="name" optionValue="name"
+                        [appendTo]="'body'" placeholder="Selecione uma categoria"></p-dropdown>
                 </div>
                 <div class="p-field">
                     <label for="descricaoReceita">Descrição: </label>
@@ -290,7 +290,7 @@
                     <label for="formaRecebimento">Forma de Recebimento: </label>
                     <p-dropdown id="formaRecebimento" type="text" pInputText
                         [(ngModel)]="itemEmEdicao.forma_recebimento" [options]="formasPags" optionLabel="name"
-                        placeholder="Selecione uma forma" />
+                        [appendTo]="'body'" optionValue="name" placeholder="Selecione uma forma" />
                 </div>
                 <div class="p-field">
                     <label for="dataRecebimento">Data de Recebimento: </label>
@@ -302,8 +302,8 @@
                 <div class="p-field">
                     <label for="categoriaDespesa">Categoria: </label>
                     <p-dropdown id="categoriaDespesa" [(ngModel)]="itemEmEdicao.categoria"
-                        [options]="categoriaDaDespesa" optionLabel="name"
-                        placeholder="Selecione uma categoria"></p-dropdown>
+                        [options]="categoriaDaDespesa" optionLabel="name" optionValue="name"
+                        [appendTo]="'body'" placeholder="Selecione uma categoria"></p-dropdown>
                 </div>
                 <div class="p-field">
                     <label for="descricaoDespesa">Descrição: </label>
@@ -322,7 +322,8 @@
                 <div class="p-field">
                     <label for="formaPagamento">Forma de Pagamento: </label>
                     <p-dropdown id="formaRecebimento" type="text" pInputText [(ngModel)]="itemEmEdicao.forma_pagamento"
-                        [options]="formasPags" optionLabel="name" placeholder="Selecione uma forma" />
+                        [options]="formasPags" optionLabel="name" optionValue="name"
+                        [appendTo]="'body'" placeholder="Selecione uma forma" />
                 </div>
                 <div class="p-field">
                     <label for="dataPagamento">Data de Pagamento: </label>
