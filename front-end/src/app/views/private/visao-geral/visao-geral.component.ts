@@ -392,37 +392,44 @@ export class VisaoGeralComponent implements OnInit {
 
 
   salvarEdicao(): void {
-    if (!this.itemEmEdicao) return;
+  if (!this.itemEmEdicao) return;
 
-    switch (this.tipoItemEmEdicao) {
-      case 'conta':
-        this.contasService.editarConta(this.itemEmEdicao).subscribe({
-          next: () => {
-            this.fecharModalEdicao();
-          },
-          error: err => console.error('Erro ao editar conta:', err)
-        });
-        break;
+  let saveObservable;
 
-      case 'receita':
-        this.receitasService.editarReceita(this.itemEmEdicao).subscribe({
-          next: () => {
-            this.fecharModalEdicao();
-          },
-          error: err => console.error('Erro ao editar receita:', err)
-        });
-        break;
-
-      case 'despesa':
-        this.despesasService.editarDespesa(this.itemEmEdicao).subscribe({
-          next: () => {
-            this.fecharModalEdicao();
-          },
-          error: err => console.error('Erro ao editar despesa:', err)
-        });
-        break;
-    }
+  switch (this.tipoItemEmEdicao) {
+    case 'conta':
+      saveObservable = this.contasService.editarConta(this.itemEmEdicao);
+      break;
+    case 'receita':
+      saveObservable = this.receitasService.editarReceita(this.itemEmEdicao);
+      break;
+    case 'despesa':
+      saveObservable = this.despesasService.editarDespesa(this.itemEmEdicao);
+      break;
+    default:
+      return;
   }
+
+  saveObservable.subscribe({
+    next: () => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: 'Item atualizado com sucesso!'
+      });
+      this.onTabChange(this.activeTab);
+      this.fecharModalEdicao();
+    },
+    error: err => {
+      console.error('Erro ao editar item:', err);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Não foi possível atualizar o item.'
+      });
+    }
+  });
+}
 
   fecharModalEdicao(): void {
     this.editDialogVisible = false;
