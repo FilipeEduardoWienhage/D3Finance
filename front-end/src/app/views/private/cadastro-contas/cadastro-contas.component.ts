@@ -1,105 +1,90 @@
-import { Component } from '@angular/core';
-import { SplitterModule } from 'primeng/splitter';
-import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
-import { MessageService } from 'primeng/api';
-import { CardModule } from 'primeng/card';
-import { SelectModule } from 'primeng/select';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { SplitterModule } from 'primeng/splitter';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 import { ContaRequestModel } from '../../../models/RequestContas';
 import { ContasService } from '../../../service/contas.service';
-import { Toast, ToastModule } from 'primeng/toast';
-import { CommonModule } from '@angular/common';
-import { TabMenuModule } from 'primeng/tabmenu';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
-import { InplaceModule } from 'primeng/inplace';
+import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 
 
-interface tipoConta {
+interface TipoContaOption {
   name: string;
 }
 
-
 @Component({
   selector: 'app-cadastro-contas',
-  imports: 
-  [
-  SplitterModule,
-  ToastModule,
-  NavBarSystemComponent,
-  FooterComponent,
-  CardModule,
-  SelectModule,
-  FormsModule,
-  ButtonModule,
-  CommonModule,
-  SplitterModule,
-  TabMenuModule,
-  ToastModule,
-  DialogModule,
-  TableModule,
-  InplaceModule,
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    SplitterModule,
+    ToastModule,
+    NavBarSystemComponent,
+    FooterComponent,
+    CardModule,
+    ButtonModule,
+    TableModule,
+    DialogModule,
+    ConfirmDialogModule,
+    DropdownModule,
+    InputTextModule,
   ],
   templateUrl: './cadastro-contas.component.html',
-  styleUrl: './cadastro-contas.component.css',
-  providers: [
-    MessageService,
-  ]
+  styleUrls: ['./cadastro-contas.component.css'],
+  providers: [MessageService, ConfirmationService]
 })
-export class CadastroContasComponent {
-  public requestConta!: ContaRequestModel;
+export class CadastroContasComponent implements OnInit {
+
+  requestConta!: ContaRequestModel;
+  contas: any[] = [];
+  tipoContaOptions: TipoContaOption[] = [];
+  mostrarTabelaContas = false;
+
+  editDialogVisible = false;
+  itemEmEdicao: any = {};
+
   constructor(
     private contasService: ContasService,
     private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
-  mostrarTabelaContas = false;
-
-  tipoConta: tipoConta[] | undefined;
-  selecionarTipoConta: tipoConta | undefined;
-
-  saldo: any[] = [];
-  conta: any[] = [];
-
 
   ngOnInit(): void {
-    this.carregarContas();
     this.requestConta = new ContaRequestModel();
+    this.carregarContas();
 
-    
-    this.tipoConta = [
+    this.tipoContaOptions = [
       { name: 'Pessoal' },
       { name: 'Empresa' },
-      { name: 'Despesas' },
+      { name: 'Investimento' },
     ];
   }
 
-  public doCadastroContas(): void {
-    console.log(this.requestConta);
+  doCadastroContas(): void {
+    if (!this.requestConta.tipoConta || !this.requestConta.nomeConta) {
+      this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Preencha todos os campos obrigatórios.' });
+      return;
+    }
+
     this.contasService.cadastrarConta(this.requestConta).subscribe({
       next: () => {
-        this.requestConta = { tipoConta: '', nomeConta: '' };
-        this.carregarContas();
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'Conta cadastrada com sucesso!',
-        });
-
-        this.requestConta = {
-          tipoConta: '',
-          nomeConta: ''
-        };
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Conta cadastrada com sucesso!' });
+        this.requestConta = new ContaRequestModel(); 
+        this.carregarContas(); 
       },
       error: (err) => {
         const msg = err.error?.detail || 'Erro ao cadastrar conta';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: msg,
-        });
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: msg });
       }
     });
   }
@@ -107,7 +92,7 @@ export class CadastroContasComponent {
   carregarContas(): void {
     this.contasService.listarContas().subscribe({
       next: (dados) => {
-        this.conta = dados;
+        this.contas = dados;
       },
       error: (err) => {
         console.error('Erro ao carregar contas:', err);
@@ -115,6 +100,50 @@ export class CadastroContasComponent {
     });
   }
 
-  
-}
+  abrirEdicao(conta: any): void {
+    this.itemEmEdicao = { ...conta };
+    this.editDialogVisible = true;
+  }
 
+  salvarEdicao(): void {
+    if (!this.itemEmEdicao || !this.itemEmEdicao.id) return;
+
+    this.contasService.editarConta(this.itemEmEdicao).subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Conta atualizada com sucesso!' });
+        this.carregarContas();
+        this.editDialogVisible = false;
+      },
+      error: (err) => {
+        console.error('Erro ao editar conta:', err);
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível atualizar a conta.' });
+      }
+    });
+  }
+
+  apagarItem(conta: any): void {
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja apagar a conta "${conta.nome_conta}"?`,
+      header: 'Confirmar Exclusão',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
+      accept: () => {
+        this.contasService.deletarConta(conta.id).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Conta apagada com sucesso!' });
+            this.carregarContas();
+          },
+          error: (err) => {
+            console.error('Erro ao apagar conta:', err);
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível apagar a conta.' });
+          }
+        });
+      }
+    });
+  }
+
+  toggleTabelaContas(): void {
+    this.mostrarTabelaContas = !this.mostrarTabelaContas;
+  }
+}

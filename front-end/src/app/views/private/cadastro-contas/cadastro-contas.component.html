@@ -1,5 +1,6 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
     <p-toast></p-toast>
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog> 
     <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
         <app-nav-bar-system></app-nav-bar-system>
     </div>
@@ -18,8 +19,8 @@
             <div class="card flex justify-center">
                 <div class="flex flex-col gap-2">
                     <label for="tipoConta">Tipo da Conta<span class="asterisco">*</span></label>
-                    <p-select [options]="tipoConta" [(ngModel)]="requestConta.tipoConta" optionLabel="name"
-                        optionValue="name" placeholder="Tipo da Conta" class="w-full md:w-64" />
+                    <p-dropdown [options]="tipoContaOptions" [(ngModel)]="requestConta.tipoConta" optionLabel="name"
+                        optionValue="name" placeholder="Tipo da Conta" class="w-full md:w-64" [appendTo]="'body'" />
                 </div>
             </div>
 
@@ -46,10 +47,9 @@
 
     <div class="flex justify-center my-4">
         <button pButton label="{{ mostrarTabelaContas ? 'Esconder Contas' : 'Ver Contas' }}" icon="pi pi-eye"
-            (click)="mostrarTabelaContas = !mostrarTabelaContas"></button>
+            (click)="toggleTabelaContas()"></button> 
     </div>
 
-    <!-- Tabela com *ngIf -->
     <div *ngIf="mostrarTabelaContas" class="flex-1 flex items-center justify-center">
         <p-card class="w-full max-w-4xl">
             <ng-template pTemplate="header">
@@ -57,7 +57,8 @@
             </ng-template>
 
             <div class="p-6">
-                <p-table [value]="conta" [paginator]="true" [rows]="10"
+                
+                <p-table [value]="contas" [paginator]="true" [rows]="10"
                     class="p-datatable-sm p-datatable-gridlines w-full">
                     <ng-template pTemplate="header">
                         <tr>
@@ -72,12 +73,14 @@
                             <td>{{ conta.tipo_conta }}</td>
                             <td>{{ conta.nome_conta }}</td>
                             <td class="flex gap-2 border-b border-gray-700">
+                                
                                 <button pButton type="button" icon="pi pi-pencil"
-                                    class="p-button-sm p-button-rounded p-button-info">
-                                </button>
+                                    class="p-button-sm p-button-rounded p-button-info"
+                                    (click)="abrirEdicao(conta)"></button>
+                                
                                 <button pButton type="button" icon="pi pi-trash"
-                                    class="p-button-sm p-button-rounded p-button-danger">
-                                </button>
+                                    class="p-button-sm p-button-rounded p-button-danger"
+                                    (click)="apagarItem(conta)"></button>
                             </td>
                         </tr>
                     </ng-template>
@@ -85,5 +88,29 @@
             </div>
         </p-card>
     </div>
+
+    <p-dialog header="Editar Item" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
+        [style]="{ width: '450px' }" (onHide)="editDialogVisible = false" [baseZIndex]="10000">
+        <ng-template pTemplate="content">
+            <div *ngIf="itemEmEdicao">
+                <div class="p-field">
+                    <label for="tipoContaEdit">Tipo: </label>
+                    <p-dropdown id="tipoContaEdit" [(ngModel)]="itemEmEdicao.tipo_conta" [options]="tipoContaOptions"
+                        optionLabel="name" optionValue="name" [appendTo]="'body'"
+                        placeholder="Selecione um tipo"></p-dropdown>
+                </div>
+                <div class="p-field">
+                    <label for="nomeContaEdit">Nome: </label>
+                    <input id="nomeContaEdit" type="text" pInputText [(ngModel)]="itemEmEdicao.nome_conta" />
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <button pButton label="Salvar" icon="pi pi-check" (click)="salvarEdicao()">
+            </button>
+        </ng-template>
+    </p-dialog>
+
     <app-footer class="mt-auto"></app-footer>
 </div>
