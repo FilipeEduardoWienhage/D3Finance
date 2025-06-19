@@ -9,7 +9,6 @@ import { DespesasComponent } from './views/private/despesas/despesas.component';
 import { CadastroReceitasComponent } from './views/private/cadastro-receitas/cadastro-receitas.component';
 import { CadastroDespesasComponent } from './views/private/cadastro-despesas/cadastro-despesas.component';
 import { ImportarArquivosComponent } from './views/private/importar-arquivos/importar-arquivos.component';
-import { ConfiguracaoPerfilComponent } from './views/private/configuracao-perfil/configuracao-perfil.component';
 import { CadastroContasComponent } from './views/private/cadastro-contas/cadastro-contas.component';
 import { MovimentacaoEntreContasComponent } from './views/private/movimentacao-entre-contas/movimentacao-entre-contas.component';
 import { authGuard } from './guards/auth.guards';
@@ -27,7 +26,6 @@ export const routes: Routes = [
     { path: "receitas/cadastrar", component: CadastroReceitasComponent, canActivate: [authGuard]},
     { path: "despesas/cadastrar", component: CadastroDespesasComponent, canActivate: [authGuard]},
     { path: "importararquivo", component: ImportarArquivosComponent, canActivate: [authGuard]},
-    { path: "editarperfil", component: ConfiguracaoPerfilComponent, canActivate: [authGuard]},
     { path: "contas/cadastrar", component: CadastroContasComponent, canActivate: [authGuard]},
     { path: "movimentarcontas", component: MovimentacaoEntreContasComponent, canActivate: [authGuard]},
     { path: "**", redirectTo: "/home" }

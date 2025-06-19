@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../service/auth.service';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class NavBarSystemComponent {
 
   constructor(
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -68,16 +70,6 @@ export class NavBarSystemComponent {
             label: 'Importar arquivo CSV',
             icon: 'pi pi-cloud-upload',
             command: () => this.router.navigate(['/importararquivo'])
-          }
-        ]
-      },
-      {
-        label: 'Perfil',
-        items: [
-          {
-            label: 'Editar Perfil',
-            icon: 'pi pi-cog',
-            command: () => this.router.navigate(['/editarperfil'])
           },
           {
             label: 'Logout',
@@ -102,7 +94,7 @@ export class NavBarSystemComponent {
   }
 
   logout() {
-    localStorage.removeItem('authToken');
+    this.authService.logout();
     this.router.navigate(['/home']);
   }
 }

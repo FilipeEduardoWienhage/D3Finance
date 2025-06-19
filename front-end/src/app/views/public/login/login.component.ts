@@ -83,11 +83,6 @@ export class LoginComponent {
     })
   }
 
-  onLogout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
   abrirModal() {
     this.visible = true;
   }
