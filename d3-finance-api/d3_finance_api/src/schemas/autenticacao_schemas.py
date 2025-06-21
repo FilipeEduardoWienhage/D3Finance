@@ -3,7 +3,6 @@ from datetime import date, datetime
 from pydantic.dataclasses import dataclass
 
 
-# Base comum para criação e resposta de usuários
 @dataclass
 class AutenticacaoLogin:
     usuario: str
@@ -11,7 +10,7 @@ class AutenticacaoLogin:
 
 @dataclass
 class Token:
-    access_token: str
+    access: str
     token_type: str
 
 

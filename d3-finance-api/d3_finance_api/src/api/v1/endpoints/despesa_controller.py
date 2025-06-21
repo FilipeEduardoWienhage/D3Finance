@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Annotated
 from fastapi import HTTPException, Depends, Query, status, Response
 from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
@@ -8,6 +8,8 @@ from src.database.database import SessionLocal
 from src.database.models import Despesas, Contas
 from src.api.tags import Tag
 from src.schemas.despesa_schemas import DespesaCategoriaResponse, DespesaCreate, DespesaUpdate, DespesaResponse, DespesaMensalResponse
+from src.services.autenticacao_service import get_current_user
+from src.schemas.autenticacao_schemas import TokenData
 
 
 LISTA_DESPESAS = "/v1/despesas"
@@ -33,8 +35,9 @@ def get_db():
     tags=[Tag.Despesas.name]
 )
 def get_despesas_consolidadas_mensal(
+    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
-     ano: Optional[int] = Query(None, description="Filtra as despesas pelo ano. Se não for fornecido, usa o ano atual."),
+    ano: Optional[int] = Query(None, description="Filtra as despesas pelo ano. Se não for fornecido, usa o ano atual."),
     categoria: Optional[str] = Query(None, description="Filtra as despesas por uma categoria específica.")
 ):
     if not ano:
@@ -45,7 +48,7 @@ def get_despesas_consolidadas_mensal(
         func.sum(Despesas.valor_pago).label('valor') 
     )
     query = query.filter(extract('year', Despesas.data_pagamento) == ano)
-
+    query = query.filter(Despesas.usuario_id == usuario_logado.id)
     if categoria:
         query = query.filter(Despesas.categoria == categoria)
 
@@ -63,8 +66,8 @@ def get_despesas_consolidadas_mensal(
 @router.get(
     path=LISTA_DESPESAS, response_model=List[DespesaResponse], tags=[Tag.Despesas.name]
 )
-def get_despesas(db: Session = Depends(get_db)):
-    despesas = db.query(Despesas).all()
+def get_despesas(usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    despesas = db.query(Despesas).filter(Despesas.usuario_id == usuario_logado.id).all()
     return [
         DespesaResponse(
             id=despesa.id,
@@ -85,6 +88,7 @@ def get_despesas(db: Session = Depends(get_db)):
     path=CONSOLIDADO_DESPESAS, response_model=List[DespesaCategoriaResponse], tags=[Tag.Despesas.name]
 )
 def get_despesas_consolidadas(
+    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
     ano: Optional[int] = None,
     mes: Optional[int] = None
@@ -93,6 +97,7 @@ def get_despesas_consolidadas(
         Despesas.categoria.label('categoria'),
         func.sum(Despesas.valor_pago).label('valor')
     )
+    query = query.filter(Despesas.usuario_id == usuario_logado.id)
     if ano:
         query = query.filter(extract("year", Despesas.data_pagamento) == ano)
     if mes:
@@ -109,8 +114,8 @@ def get_despesas_consolidadas(
 @router.get(
     path=OBTER_POR_ID_DESPESAS, response_model=DespesaResponse, tags=[Tag.Despesas.name]
 )
-def get_despesa_by_id(despesas_id: int, db: Session = Depends(get_db)):
-    despesa = db.query(Despesas).filter(Despesas.id == despesas_id).first()
+def get_despesa_by_id(despesas_id: int, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    despesa = db.query(Despesas).filter(Despesas.id == despesas_id, Despesas.usuario_id == usuario_logado.id).first()
     if not despesa:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -131,10 +136,10 @@ def get_despesa_by_id(despesas_id: int, db: Session = Depends(get_db)):
 @router.post(
     path=CADASTRO_DESPESAS, response_model=DespesaResponse, tags=[Tag.Despesas.name]
 )
-def create_despesa(despesa: DespesaCreate, db: Session = Depends(get_db)):
-    conta = db.query(Contas).filter(Contas.id == despesa.conta_id).first()
+def create_despesa(despesa: DespesaCreate, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    conta = db.query(Contas).filter(Contas.id == despesa.conta_id, Contas.usuario_id == usuario_logado.id).first()
     if not conta:
-        raise HTTPException(status_code=404, detail="Conta não encontrada")
+        raise HTTPException(status_code=404, detail="Conta não encontrada ou não pertence ao usuário")
 
     db_despesa = Despesas(
         categoria=despesa.categoria,
@@ -143,6 +148,7 @@ def create_despesa(despesa: DespesaCreate, db: Session = Depends(get_db)):
         descricao=despesa.descricao,
         forma_pagamento=despesa.forma_pagamento,
         conta_id=despesa.conta_id,
+        usuario_id=usuario_logado.id
     )
 
     db.add(db_despesa)
@@ -168,14 +174,14 @@ def create_despesa(despesa: DespesaCreate, db: Session = Depends(get_db)):
 @router.put(
     path=ATUALIZAR_DESPESAS, response_model=DespesaResponse, tags=[Tag.Despesas.name]
 )
-def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, db: Session = Depends(get_db)):
-    despesa = db.query(Despesas).filter(Despesas.id == despesas_id).first()
+def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    despesa = db.query(Despesas).filter(Despesas.id == despesas_id, Despesas.usuario_id == usuario_logado.id).first()
     if not despesa:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Despesa não encontrada")
 
-    conta = db.query(Contas).filter(Contas.id == despesa.conta_id).first()
+    conta = db.query(Contas).filter(Contas.id == despesa.conta_id, Contas.usuario_id == usuario_logado.id).first()
     if not conta:
-        raise HTTPException(status_code=404, detail="Conta não encontrada")
+        raise HTTPException(status_code=404, detail="Conta não encontrada ou não pertence ao usuário")
 
     # Ajusta o saldo: soma o valor antigo (pois vai ser removido) e depois subtrai o novo valor
     conta.saldo += despesa.valor_pago
@@ -204,14 +210,14 @@ def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, db: Session 
 @router.delete(
     path=APAGAR_DESPESAS, tags=[Tag.Despesas.name]
 )
-def delete_despesa(despesas_id: int, db: Session = Depends(get_db)):
-    despesa = db.query(Despesas).filter(Despesas.id == despesas_id).first()
+def delete_despesa(despesas_id: int, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    despesa = db.query(Despesas).filter(Despesas.id == despesas_id, Despesas.usuario_id == usuario_logado.id).first()
     if not despesa:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Despesa não encontrada")
 
-    conta = db.query(Contas).filter(Contas.id == despesa.conta_id).first()
+    conta = db.query(Contas).filter(Contas.id == despesa.conta_id, Contas.usuario_id == usuario_logado.id).first()
     if not conta:
-        raise HTTPException(status_code=404, detail="Conta não encontrada")
+        raise HTTPException(status_code=404, detail="Conta não encontrada ou não pertence ao usuário")
 
     # Ao deletar despesa, soma o valor pago de volta no saldo da conta
     conta.saldo += despesa.valor_pago

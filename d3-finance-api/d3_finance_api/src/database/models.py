@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, String, Date, ForeignKey, Float, func
+from sqlalchemy import Column, DateTime, Integer, String, Date, ForeignKey, Float, func, UniqueConstraint
 from src.database.database import Base
 from sqlalchemy.orm import relationship
 
@@ -22,6 +22,10 @@ class Usuario(Base):
     usuario = Column(String(30), unique=True, nullable=False)
     senha = Column(String(250), nullable=False)
 
+    contas = relationship("Contas", back_populates="usuario", cascade="all, delete-orphan")
+    receitas = relationship("Receitas", back_populates="usuario", cascade="all, delete-orphan")
+    despesas = relationship("Despesas", back_populates="usuario", cascade="all, delete-orphan")
+
 
 class Receitas(Base):
     __tablename__ = "receitas"
@@ -33,9 +37,12 @@ class Receitas(Base):
     descricao = Column(String(250))
     forma_recebimento = Column(String(50), nullable=False)
     conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
-
+    
+    
+    usuario = relationship("Usuario", back_populates="receitas")
     conta = relationship("Contas", back_populates="receitas", foreign_keys=[conta_id])
 
 
@@ -49,9 +56,11 @@ class Despesas(Base):
     descricao = Column(String(250))
     forma_pagamento = Column(String(50), nullable=False)
     conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 
+    usuario = relationship("Usuario", back_populates="despesas")
     conta = relationship("Contas", back_populates="despesas", foreign_keys=[conta_id])
 
 
@@ -60,11 +69,18 @@ class Contas(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tipo_conta = Column(String(50), nullable=False)
-    nome_conta = Column(String(50), unique=True, nullable=False)
+    nome_conta = Column(String(50), nullable=False)
     saldo = Column(Float, default=0.0, nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 
+    # Constraint composta: nome_conta deve ser único por usuário
+    __table_args__ = (
+        UniqueConstraint('nome_conta', 'usuario_id', name='uq_nome_conta_usuario'),
+    )
+
+    usuario = relationship("Usuario", back_populates="contas")
     despesas = relationship("Despesas", back_populates="conta", foreign_keys="[Despesas.conta_id]")
     receitas = relationship("Receitas", back_populates="conta", foreign_keys="[Receitas.conta_id]")
     transacoes_origem = relationship("Transacoes", foreign_keys="[Transacoes.conta_origem_id]", back_populates="conta_origem")
@@ -80,6 +96,8 @@ class Transacoes(Base):
     valor = Column(Float, nullable=False)
     data_transacao = Column(DateTime, default=func.now(), nullable=False)
     descricao = Column(String(250))
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
 
+    usuario = relationship("Usuario")
     conta_origem = relationship("Contas", foreign_keys=[conta_origem_id], back_populates="transacoes_origem")
     conta_destino = relationship("Contas", foreign_keys=[conta_destino_id], back_populates="transacoes_destino")
