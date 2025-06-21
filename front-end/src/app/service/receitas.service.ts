@@ -24,6 +24,12 @@ export class ReceitasService {
       if (filtros.mes) {
         params = params.append('mes', filtros.mes);
       }
+      if (filtros.conta_id) {
+        params = params.append('conta_id', filtros.conta_id);
+      }
+      if (filtros.forma_recebimento) {
+        params = params.append('forma_recebimento', filtros.forma_recebimento);
+      }
     }
     const url = `${this.apiUrl}/consolidado`;
     return this.http.get<ReceitaConsolidada[]>(url, { params });
@@ -35,6 +41,8 @@ export class ReceitasService {
     if (filtros) {
       if (filtros.ano) params = params.append('ano', filtros.ano);
       if (filtros.categoria) params = params.append('categoria', filtros.categoria);
+      if (filtros.conta_id) params = params.append('conta_id', filtros.conta_id);
+      if (filtros.forma_recebimento) params = params.append('forma_recebimento', filtros.forma_recebimento);
     }
     const url = `${this.apiUrl}/consolidado/mensal`;
     return this.http.get<ReceitaMensal[]>(url, { params });

@@ -14,6 +14,7 @@ import { ReceitasService } from '../../../service/receitas.service';
 import { ReceitaConsolidada } from '../../../models/receita-consolidada';
 import { ReceitaMensal } from '../../../models/receita-mensal';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-receitas',
@@ -28,7 +29,8 @@ import { DropdownModule } from 'primeng/dropdown';
     CalendarModule,
     ButtonModule,
     ToastModule,
-    DropdownModule
+    DropdownModule,
+    InputTextModule
   ],
   templateUrl: './receitas.component.html',
   styleUrls: ['./receitas.component.css'],
@@ -44,12 +46,16 @@ export class ReceitasComponent implements OnInit {
   optionsMensal: any;
 
   filtroConsolidado = {
-    dataSelecionada: null as Date | null
+    dataSelecionada: null as Date | null,
+    conta_id: null as number | null,
+    forma_recebimento: null as string | null
   };
 
   filtroMensal = {
     categoria: null as string | null,
-    ano: new Date().getFullYear()
+    ano: new Date().getFullYear(),
+    conta_id: null as number | null,
+    forma_recebimento: null as string | null
   };
 
   categoriasOpcoes = [
@@ -71,6 +77,29 @@ export class ReceitasComponent implements OnInit {
     { label: 'Outras Receitas Não Operacionais', value: 'Outras Receitas Não Operacionais' }
   ];
 
+  // NOVOS FILTROS
+  contasOpcoes = [
+    { label: 'Todas as Contas', value: null }
+  ];
+
+  formasRecebimentoOpcoes = [
+    { label: 'Todas as Formas', value: null },
+    { label: 'Dinheiro', value: 'dinheiro' },
+    { label: 'PIX', value: 'pix' },
+    { label: 'Cartão de Crédito', value: 'cartao_credito' },
+    { label: 'Cartão de Débito', value: 'cartao_debito' },
+    { label: 'Transferência Bancária', value: 'transferencia' },
+    { label: 'Boleto', value: 'boleto' },
+    { label: 'Cheque', value: 'cheque' }
+  ];
+
+  statusReceitaOpcoes = [
+    { label: 'Todos os Status', value: null },
+    { label: 'Recebido', value: 'recebido' },
+    { label: 'Pendente', value: 'pendente' },
+    { label: 'Atrasado', value: 'atrasado' }
+  ];
+
   platformId = inject(PLATFORM_ID);
 
   constructor(
@@ -88,7 +117,9 @@ export class ReceitasComponent implements OnInit {
   carregarDadosMensais() {
     const filtrosParaApi = {
       ano: this.filtroMensal.ano,
-      categoria: this.filtroMensal.categoria
+      categoria: this.filtroMensal.categoria,
+      conta_id: this.filtroMensal.conta_id,
+      forma_recebimento: this.filtroMensal.forma_recebimento
     };
     this.receitaService.getReceitasConsolidadasMensal(filtrosParaApi).subscribe({
       next: (dados) => {
@@ -167,6 +198,8 @@ export class ReceitasComponent implements OnInit {
   limparFiltrosMensais() {
     this.filtroMensal.categoria = null;
     this.filtroMensal.ano = new Date().getFullYear();
+    this.filtroMensal.conta_id = null;
+    this.filtroMensal.forma_recebimento = null;
     this.carregarDadosMensais();
   }
 
@@ -177,6 +210,12 @@ export class ReceitasComponent implements OnInit {
     if (this.filtroConsolidado.dataSelecionada) {
       filtros.ano = this.filtroConsolidado.dataSelecionada.getFullYear();
       filtros.mes = this.filtroConsolidado.dataSelecionada.getMonth() + 1;
+    }
+    if (this.filtroConsolidado.conta_id) {
+      filtros.conta_id = this.filtroConsolidado.conta_id;
+    }
+    if (this.filtroConsolidado.forma_recebimento) {
+      filtros.forma_recebimento = this.filtroConsolidado.forma_recebimento;
     }
 
     this.receitaService.getReceitasConsolidadas(filtros).subscribe({
@@ -267,6 +306,8 @@ export class ReceitasComponent implements OnInit {
 
   limparFiltros() {
     this.filtroConsolidado.dataSelecionada = null;
+    this.filtroConsolidado.conta_id = null;
+    this.filtroConsolidado.forma_recebimento = null;
     this.carregarDadosDoGrafico();
   }
 }
