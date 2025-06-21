@@ -15,6 +15,8 @@ import { DespesaConsolidada } from '../../../models/despesa-consolidada';
 import { DespesaMensal } from '../../../models/despesa-mensal';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { ContasService } from '../../../service/contas.service';
+
 
 @Component({
   selector: 'app-despesas',
@@ -34,7 +36,7 @@ import { InputTextModule } from 'primeng/inputtext';
   ],
   templateUrl: './despesas.component.html',
   styleUrls: ['./despesas.component.css'],
-  providers: [MessageService, DespesasService]
+  providers: [MessageService, DespesasService, ContasService]
 })
 export class DespesasComponent implements OnInit {
   dadosConsolidado: DespesaConsolidada[] = [];
@@ -101,14 +103,39 @@ export class DespesasComponent implements OnInit {
   constructor(
     private cd: ChangeDetectorRef,
     private despesaService: DespesasService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private contasService: ContasService
   ) { }
 
   ngOnInit() {
+    this.carregarContas();
     this.carregarDadosConsolidado();
     this.carregarDadosMensal();
   }
 
+  carregarContas() {
+    this.contasService.getContas().subscribe({
+      next: (contas) => {
+        console.log('Contas carregadas (despesas):', contas);
+        this.contasOpcoes = [
+          { label: 'Todas as Contas', value: null },
+          ...contas.map(conta => ({
+            label: conta.nome_conta,
+            value: conta.id
+          }))
+        ];
+        console.log('Opções de contas (despesas):', this.contasOpcoes);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar contas:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Falha ao carregar as contas.'
+        });
+      }
+    });
+  }
 
   carregarDadosMensal() {
     const filtrosParaApi: any = {

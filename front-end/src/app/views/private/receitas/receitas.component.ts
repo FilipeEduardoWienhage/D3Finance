@@ -15,6 +15,8 @@ import { ReceitaConsolidada } from '../../../models/receita-consolidada';
 import { ReceitaMensal } from '../../../models/receita-mensal';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { ContasService } from '../../../service/contas.service';
+
 
 @Component({
   selector: 'app-receitas',
@@ -34,7 +36,7 @@ import { InputTextModule } from 'primeng/inputtext';
   ],
   templateUrl: './receitas.component.html',
   styleUrls: ['./receitas.component.css'],
-  providers: [MessageService, ReceitasService]
+  providers: [MessageService, ReceitasService, ContasService]
 })
 export class ReceitasComponent implements OnInit {
   dadosConsolidado: ReceitaConsolidada[] = [];
@@ -105,14 +107,39 @@ export class ReceitasComponent implements OnInit {
   constructor(
     private cd: ChangeDetectorRef,
     private receitaService: ReceitasService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private contasService: ContasService
   ) { }
 
   ngOnInit() {
+    this.carregarContas();
     this.carregarDadosDoGrafico();
     this.carregarDadosMensais();
   }
 
+  carregarContas() {
+    this.contasService.getContas().subscribe({
+      next: (contas) => {
+        console.log('Contas carregadas:', contas);
+        this.contasOpcoes = [
+          { label: 'Todas as Contas', value: null },
+          ...contas.map(conta => ({
+            label: conta.nome_conta,
+            value: conta.id
+          }))
+        ];
+        console.log('Opções de contas:', this.contasOpcoes);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar contas:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Falha ao carregar as contas.'
+        });
+      }
+    });
+  }
 
   carregarDadosMensais() {
     const filtrosParaApi = {
