@@ -16,6 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Router, ActivatedRoute } from '@angular/router';  
 import { AuthService } from '../../../service/auth.service';
+import { RecuperacaoService } from '../../../service/recuperacao.service';
 
 
 @Component({
@@ -36,7 +37,7 @@ import { AuthService } from '../../../service/auth.service';
     ProgressSpinnerModule,
     ToastModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, RecuperacaoService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -59,7 +60,8 @@ export class LoginComponent {
     private messageService: MessageService, 
     private router: Router, 
     private authService: AuthService, 
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private recuperacaoService: RecuperacaoService
   ) {}
 
   ngOnInit(): void {
@@ -85,64 +87,158 @@ export class LoginComponent {
 
   abrirModal() {
     this.visible = true;
+    this.resetarModal();
   }
 
+  resetarModal() {
+    this.email = '';
+    this.codigoOTP = '';
+    this.novaSenhaInput = '';
+    this.confirmarSenhaInput = '';
+    this.codigoEnviado = false;
+    this.novaSenha = false;
+    this.codigoInvalido = false;
+    this.carregando = false;
+  }
+
+
   enviarCodigo() {
-    this.carregando = true;
-    setTimeout(() => {
-      this.carregando = false;
-      this.codigoEnviado = true;
+    if (!this.email || !this.validarEmail(this.email)) {
       this.messageService.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: 'Código enviado para o seu e-mail!',
+        severity: 'error',
+        summary: 'Email inválido',
+        detail: 'Por favor, insira um email válido.'
       });
-    }, 2000);
+      return;
+    }
+
+    this.carregando = true;
+    
+    this.recuperacaoService.enviarCodigo({ email: this.email }).subscribe({
+      next: (response) => {
+        this.carregando = false;
+        this.codigoEnviado = true;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: response.message
+        });
+      },
+      error: (error) => {
+        this.carregando = false;
+        console.error('Erro ao enviar código:', error);
+        const mensagem = error.error?.detail || 'Erro ao enviar código. Tente novamente.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: mensagem
+        });
+      }
+    });
   }
 
   validarCodigo() {
+    if (!this.codigoOTP || this.codigoOTP.length !== 4) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Código inválido',
+        detail: 'Por favor, insira o código de 4 dígitos.'
+      });
+      return;
+    }
+
     this.carregando = true;
   
-    setTimeout(() => {
-      this.carregando = false;
-  
-      if (this.codigoOTP === '1234') {
+    this.recuperacaoService.validarCodigo({ 
+      email: this.email, 
+      codigo: this.codigoOTP 
+    }).subscribe({
+      next: (response) => {
+        this.carregando = false;
         this.novaSenha = true;
         this.codigoInvalido = false;
         this.messageService.add({
           severity: 'success',
           summary: 'Código válido',
-          detail: 'Código verificado com sucesso. Crie sua nova senha.',
+          detail: response.message
         });
-      } else {
+      },
+      error: (error) => {
+        this.carregando = false;
         this.codigoInvalido = true;
+        console.error('Erro ao validar código:', error);
+        const mensagem = error.error?.detail || 'Código inválido. Tente novamente.';
         this.messageService.add({
           severity: 'error',
           summary: 'Código inválido',
-          detail: 'O código inserido está incorreto. Tente novamente.',
+          detail: mensagem
         });
       }
-    }, 2000);
+    });
   }
   
 
   salvarNovaSenha() {
-    if (this.novaSenhaInput === this.confirmarSenhaInput) {
+    if (!this.novaSenhaInput || this.novaSenhaInput.length < 8) {
       this.messageService.add({
-        severity: 'success',
-        summary: 'Senha alterada',
-        detail: 'Sua senha foi alterada com sucesso!',
+        severity: 'error',
+        summary: 'Senha fraca',
+        detail: 'A senha deve ter pelo menos 8 caracteres.'
       });
-      setTimeout(() => {
-        this.router.navigate(['/visaogeral']);
-      }, 1500);
-    } else {
+      return;
+    }
+
+    if (this.novaSenhaInput !== this.confirmarSenhaInput) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
-        detail: 'As senhas não coincidem!',
+        detail: 'As senhas não coincidem!'
       });
+      return;
     }
+
+    this.carregando = true;
+
+    this.recuperacaoService.alterarSenha({
+      email: this.email,
+      codigo: this.codigoOTP,
+      nova_senha: this.novaSenhaInput
+    }).subscribe({
+      next: (response) => {
+        this.carregando = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Senha alterada',
+          detail: response.message
+        });
+        
+        // Fechar modal e redirecionar
+        setTimeout(() => {
+          this.visible = false;
+          this.resetarModal();
+        }, 2000);
+      },
+      error: (error) => {
+        this.carregando = false;
+        console.error('Erro ao alterar senha:', error);
+        const mensagem = error.error?.detail || 'Erro ao alterar senha. Tente novamente.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: mensagem
+        });
+      }
+    });
+  }
+
+  validarEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  fecharModal() {
+    this.visible = false;
+    this.resetarModal();
   }
 }
 
