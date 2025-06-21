@@ -166,10 +166,13 @@ export class VisaoGeralComponent implements OnInit {
 
     if (this.activeTab.label === 'Receitas') {
       this.filteredReceitas = this.receitas.filter(item => {
+        // Formatar a data do item para comparação
+        const itemData = item.data_recebimento ? new Date(item.data_recebimento).toISOString().split('T')[0] : '';
+        
         return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
           (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
           (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
-          (this.filters.data === '' || item.data === this.filters.data) &&
+          (this.filters.data === '' || itemData === this.filters.data) &&
           (this.filters.forma_recebimento === '' || item.forma_recebimento === this.filters.forma_recebimento);
       });
     }
@@ -185,24 +188,29 @@ export class VisaoGeralComponent implements OnInit {
 
     if (this.activeTab.label === 'Despesas') {
       this.filteredDespesas = this.despesas.filter(item => {
+        // Formatar a data do item para comparação
+        const itemData = item.data_pagamento ? new Date(item.data_pagamento).toISOString().split('T')[0] : '';
+        
         return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
           (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
           (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
-          (this.filters.data === '' || item.data === this.filters.data) &&
+          (this.filters.data === '' || itemData === this.filters.data) &&
           (this.filters.forma_pagamento === '' || item.forma_pagamento === this.filters.forma_pagamento);
       });
     }
 
     if (this.activeTab.label === 'Transações') {
-      this.filteredTransacoes = this.transacoes.filter(item =>
-        (this.filters.conta === '' ||
+      this.filteredTransacoes = this.transacoes.filter(item => {
+        // Formatar a data do item para comparação
+        const itemData = item.data_transacao ? new Date(item.data_transacao).toISOString().split('T')[0] : '';
+        
+        return (this.filters.conta === '' ||
           item.conta_origem_nome?.toLowerCase().includes(this.filters.conta.toLowerCase()) ||
           item.conta_destino_nome?.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
-        (this.filters.data === '' || item.data_transacao === this.filters.data) &&
-        (this.filters.valor === '' || item.valor === +this.filters.valor)
-      );
+        (this.filters.data === '' || itemData === this.filters.data) &&
+        (this.filters.valor === '' || item.valor === +this.filters.valor);
+      });
     }
-
 
     this.first = 0;
   }
