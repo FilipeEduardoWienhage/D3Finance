@@ -23,6 +23,12 @@ export class DespesasService {
       if (filtros.mes) {
         params = params.append('mes', filtros.mes);
       }
+      if (filtros.conta_id) {
+        params = params.append('conta_id', filtros.conta_id);
+      }
+      if (filtros.forma_pagamento) {
+        params = params.append('forma_pagamento', filtros.forma_pagamento);
+      }
     }
     const url = `${this.apiUrl}/consolidado`;
     return this.http.get<DespesaConsolidada[]>(url, { params });
@@ -33,6 +39,8 @@ export class DespesasService {
       if (filtros) {
         if (filtros.ano) params = params.append('ano', filtros.ano);
         if (filtros.categoria) params = params.append('categoria', filtros.categoria);
+        if (filtros.conta_id) params = params.append('conta_id', filtros.conta_id);
+        if (filtros.forma_pagamento) params = params.append('forma_pagamento', filtros.forma_pagamento);
       }
       const url = `${this.apiUrl}/consolidado/mensal`;
       return this.http.get<DespesaMensal[]>(url, { params });

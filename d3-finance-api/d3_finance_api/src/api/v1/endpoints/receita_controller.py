@@ -37,7 +37,9 @@ def get_receitas_consolidadas_mensal(
     usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
     ano: Optional[int] = Query(None, description="Filtra as receitas pelo ano. Se não for fornecido, usa o ano atual."),
-    categoria: Optional[str] = Query(None, description="Filtra as receitas por uma categoria específica.")
+    categoria: Optional[str] = Query(None, description="Filtra as receitas por uma categoria específica."),
+    conta_id: Optional[int] = Query(None, description="Filtra as receitas por uma conta específica."),
+    forma_recebimento: Optional[str] = Query(None, description="Filtra as receitas por forma de recebimento.")
 ):
     if not ano:
         ano = datetime.now().year
@@ -51,6 +53,10 @@ def get_receitas_consolidadas_mensal(
 
     if categoria:
         query = query.filter(Receitas.categoria == categoria)
+    if conta_id:
+        query = query.filter(Receitas.conta_id == conta_id)
+    if forma_recebimento:
+        query = query.filter(Receitas.forma_recebimento == forma_recebimento)
 
     receitas_agrupadas = query.group_by(extract('month', Receitas.data_recebimento)).all()
 
@@ -90,7 +96,9 @@ def get_receitas_por_categoria(
     usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
     ano: Optional[int] = None,
-    mes: Optional[int] = None
+    mes: Optional[int] = None,
+    conta_id: Optional[int] = None,
+    forma_recebimento: Optional[str] = None
 ):
     query = db.query(
         Receitas.categoria.label('categoria'),
@@ -100,6 +108,10 @@ def get_receitas_por_categoria(
         query = query.filter(extract("year", Receitas.data_recebimento) == ano)
     if mes:
         query = query.filter(extract("month", Receitas.data_recebimento) == mes)
+    if conta_id:
+        query = query.filter(Receitas.conta_id == conta_id)
+    if forma_recebimento:
+        query = query.filter(Receitas.forma_recebimento == forma_recebimento)
 
     receitas_agrupadas = query.group_by(Receitas.categoria).order_by(Receitas.categoria).all()
     return [

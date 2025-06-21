@@ -38,7 +38,9 @@ def get_despesas_consolidadas_mensal(
     usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
     ano: Optional[int] = Query(None, description="Filtra as despesas pelo ano. Se não for fornecido, usa o ano atual."),
-    categoria: Optional[str] = Query(None, description="Filtra as despesas por uma categoria específica.")
+    categoria: Optional[str] = Query(None, description="Filtra as despesas por uma categoria específica."),
+    conta_id: Optional[int] = Query(None, description="Filtra as despesas por uma conta específica."),
+    forma_pagamento: Optional[str] = Query(None, description="Filtra as despesas por forma de pagamento.")
 ):
     if not ano:
         ano = datetime.now().year
@@ -51,6 +53,10 @@ def get_despesas_consolidadas_mensal(
     query = query.filter(Despesas.usuario_id == usuario_logado.id)
     if categoria:
         query = query.filter(Despesas.categoria == categoria)
+    if conta_id:
+        query = query.filter(Despesas.conta_id == conta_id)
+    if forma_pagamento:
+        query = query.filter(Despesas.forma_pagamento == forma_pagamento)
 
     despesas_agrupadas = query.group_by(extract('month', Despesas.data_pagamento)).all()
 
@@ -91,7 +97,9 @@ def get_despesas_consolidadas(
     usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
     ano: Optional[int] = None,
-    mes: Optional[int] = None
+    mes: Optional[int] = None,
+    conta_id: Optional[int] = None,
+    forma_pagamento: Optional[str] = None
 ):
     query = db.query(
         Despesas.categoria.label('categoria'),
@@ -102,6 +110,10 @@ def get_despesas_consolidadas(
         query = query.filter(extract("year", Despesas.data_pagamento) == ano)
     if mes:
         query = query.filter(extract("month", Despesas.data_pagamento) == mes)
+    if conta_id:
+        query = query.filter(Despesas.conta_id == conta_id)
+    if forma_pagamento:
+        query = query.filter(Despesas.forma_pagamento == forma_pagamento)
 
     despesas_agrupadas = query.group_by(Despesas.categoria).order_by(Despesas.categoria).all()
     resposta = [
