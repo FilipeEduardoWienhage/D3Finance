@@ -5,7 +5,7 @@ from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
 from src.app import router
 from src.database.database import SessionLocal
-from src.database.models import Receitas, Contas
+from src.database.models import Receitas, Contas, Usuario
 from src.api.tags import Tag
 from src.schemas.receita_schemas import ReceitaCategoriaResponse, ReceitaCreate, ReceitaUpdate, ReceitaResponse, ReceitaMensalResponse
 from src.services.autenticacao_service import get_current_user
@@ -14,10 +14,10 @@ from src.schemas.autenticacao_schemas import TokenData
 CONSOLIDADO_MENSAL_RECEITAS = "/v1/receitas/consolidado/mensal"
 LISTA_RECEITAS = "/v1/receitas"
 CONSOLIDADO_RECEITAS = "/v1/receitas/consolidado"
-OBTER_POR_ID_RECEITAS = "/v1/receitas/{receitas_id}"
+OBTER_POR_ID_RECEITAS = "/v1/receitas/{receita_id}"
 CADASTRO_RECEITAS = "/v1/receitas"
-ATUALIZAR_RECEITAS = "/v1/receitas/{receitas_id}"
-APAGAR_RECEITAS = "/v1/receitas/{receitas_id}"
+ATUALIZAR_RECEITAS = "/v1/receitas/{receita_id}"
+APAGAR_RECEITAS = "/v1/receitas/{receita_id}"
 
 
 def get_db():
@@ -34,8 +34,9 @@ def get_db():
     tags=[Tag.Receitas.name]
 )
 def get_receitas_consolidadas_mensal(
+    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
-     ano: Optional[int] = Query(None, description="Filtra as receitas pelo ano. Se não for fornecido, usa o ano atual."),
+    ano: Optional[int] = Query(None, description="Filtra as receitas pelo ano. Se não for fornecido, usa o ano atual."),
     categoria: Optional[str] = Query(None, description="Filtra as receitas por uma categoria específica.")
 ):
     if not ano:
@@ -43,21 +44,22 @@ def get_receitas_consolidadas_mensal(
 
     query = db.query(
         extract('month', Receitas.data_recebimento).label('mes'),
-        func.sum(Receitas.valor_recebido).label('valor') 
-    )
+        func.sum(Receitas.valor_recebido).label('valor')
+    ).filter(Receitas.usuario_id == usuario_logado.id)
+
     query = query.filter(extract('year', Receitas.data_recebimento) == ano)
 
     if categoria:
         query = query.filter(Receitas.categoria == categoria)
 
     receitas_agrupadas = query.group_by(extract('month', Receitas.data_recebimento)).all()
-    
+
     receitas_por_mes_dict = {int(m): float(v) for m, v in receitas_agrupadas}
     resposta_final = []
     for i in range(1, 13):
         valor = receitas_por_mes_dict.get(i, 0.0)
         resposta_final.append(ReceitaMensalResponse(mes=i, valor=valor))
-        
+
     return resposta_final
 
 
@@ -65,10 +67,9 @@ def get_receitas_consolidadas_mensal(
     path=LISTA_RECEITAS, response_model=List[ReceitaResponse], tags=[Tag.Receitas.name]
 )
 def get_receitas(
-    #usuario_logado: Annotated[TokenData, Depends(get_current_user)],
+    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db)):
-    # receitas = db.query(Receitas).filter(Receitas.id_usuario == usuario_logado.id).all()
-    receitas = db.query(Receitas).all()
+    receitas = db.query(Receitas).filter(Receitas.usuario_id == usuario_logado.id).all()
     return [ReceitaResponse(
         id=receita.id,
         categoria=receita.categoria,
@@ -86,6 +87,7 @@ def get_receitas(
     path=CONSOLIDADO_RECEITAS, response_model=List[ReceitaCategoriaResponse], tags=[Tag.Receitas.name]
 )
 def get_receitas_por_categoria(
+    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db),
     ano: Optional[int] = None,
     mes: Optional[int] = None
@@ -93,7 +95,7 @@ def get_receitas_por_categoria(
     query = db.query(
         Receitas.categoria.label('categoria'),
         func.sum(Receitas.valor_recebido).label('valor')
-    )
+    ).filter(Receitas.usuario_id == usuario_logado.id)
     if ano:
         query = query.filter(extract("year", Receitas.data_recebimento) == ano)
     if mes:
@@ -109,12 +111,12 @@ def get_receitas_por_categoria(
 @router.get(
     path=OBTER_POR_ID_RECEITAS, response_model=ReceitaResponse, tags=[Tag.Receitas.name]
 )
-def get_receita_by_id(receitas_id: int, db: Session = Depends(get_db)):
-    receita = db.query(Receitas).filter(Receitas.id == receitas_id).first()
+def get_receita_by_id(receita_id: int, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    receita = db.query(Receitas).filter(Receitas.id == receita_id, Receitas.usuario_id == usuario_logado.id).first()
     if not receita:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Receita não encontrada",
+            detail="Receita não encontrada ou não pertence ao usuário",
         )
     return ReceitaResponse(
         id=receita.id,
@@ -132,12 +134,11 @@ def get_receita_by_id(receitas_id: int, db: Session = Depends(get_db)):
 @router.post(
     path=CADASTRO_RECEITAS, response_model=ReceitaResponse, tags=[Tag.Receitas.name]
 )
-def create_receita(receita: ReceitaCreate, db: Session = Depends(get_db)):  
-    # Verifica se conta existe
-    conta = db.query(Contas).filter(Contas.id == receita.conta_id).first()
+def create_receita(receita: ReceitaCreate, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    conta = db.query(Contas).filter(Contas.id == receita.conta_id, Contas.usuario_id == usuario_logado.id).first()
     if not conta:
-        raise HTTPException(status_code=404, detail="Conta não encontrada")
-    
+        raise HTTPException(status_code=404, detail="Conta não encontrada ou não pertence ao usuário")
+
     db_receita = Receitas(
         categoria=receita.categoria,
         valor_recebido=receita.valor_recebido,
@@ -145,6 +146,7 @@ def create_receita(receita: ReceitaCreate, db: Session = Depends(get_db)):
         forma_recebimento=receita.forma_recebimento,
         descricao=receita.descricao,
         conta_id=receita.conta_id,
+        usuario_id=usuario_logado.id
     )
 
     db.add(db_receita)
@@ -171,24 +173,23 @@ def create_receita(receita: ReceitaCreate, db: Session = Depends(get_db)):
 @router.put(
     path=ATUALIZAR_RECEITAS, response_model=ReceitaResponse, tags=[Tag.Receitas.name]
 )
-def update_receita(receitas_id: int, receita_update: ReceitaUpdate, db: Session = Depends(get_db)):
-    receita = db.query(Receitas).filter(Receitas.id == receitas_id).first()
-    
+def update_receita(receita_id: int, receita_update: ReceitaUpdate, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    receita = db.query(Receitas).filter(Receitas.id == receita_id, Receitas.usuario_id == usuario_logado.id).first()
+
     if not receita:
-        raise HTTPException(status_code=404, detail="Receita não encontrada")
+        raise HTTPException(status_code=404, detail="Receita não encontrada ou não pertence ao usuário")
 
     conta = db.query(Contas).filter(Contas.id == receita.conta_id).first()
     if not conta:
-        raise HTTPException(status_code=404, detail="Conta não encontrada")
+        raise HTTPException(status_code=404, detail="Conta associada à receita não encontrada")
 
     # Ajusta o saldo da conta:
     # Subtrai o valor antigo da receita do saldo da conta
     conta.saldo -= receita.valor_recebido
 
     # Atualiza os campos da receita
-    for field, value in receita_update.__dict__.items():
-        if value is not None:
-            setattr(receita, field, value)
+    for field, value in receita_update.model_dump(exclude_unset=True).items():
+        setattr(receita, field, value)
 
     # Soma o novo valor da receita no saldo da conta
     conta.saldo += receita.valor_recebido
@@ -196,31 +197,21 @@ def update_receita(receitas_id: int, receita_update: ReceitaUpdate, db: Session 
     db.commit()
     db.refresh(receita)
 
-    return ReceitaResponse(
-        id=receita.id,
-        categoria=receita.categoria,
-        valor_recebido=receita.valor_recebido,
-        data_recebimento=receita.data_recebimento,
-        descricao=receita.descricao,
-        forma_recebimento=receita.forma_recebimento,
-        conta_id=receita.conta_id,
-        data_criacao=receita.data_criacao,
-        data_alteracao=receita.data_alteracao,
-    )
+    return ReceitaResponse.model_validate(receita)
 
 
 @router.delete(
     path=APAGAR_RECEITAS, tags=[Tag.Receitas.name]
 )
-def delete_receita(receitas_id: int, db: Session = Depends(get_db)):
-    receita = db.query(Receitas).filter(Receitas.id == receitas_id).first()
+def delete_receita(receita_id: int, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    receita = db.query(Receitas).filter(Receitas.id == receita_id, Receitas.usuario_id == usuario_logado.id).first()
 
     if not receita:
-        raise HTTPException(status_code=404, detail="Receita não encontrada")
+        raise HTTPException(status_code=404, detail="Receita não encontrada ou não pertence ao usuário")
 
     conta = db.query(Contas).filter(Contas.id == receita.conta_id).first()
     if not conta:
-        raise HTTPException(status_code=404, detail="Conta não encontrada")
+        raise HTTPException(status_code=404, detail="Conta associada à receita não encontrada")
 
     # Subtrai o valor da receita do saldo da conta
     conta.saldo -= receita.valor_recebido

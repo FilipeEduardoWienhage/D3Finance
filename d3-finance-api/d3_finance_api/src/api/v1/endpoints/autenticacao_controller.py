@@ -41,4 +41,4 @@ def create_user(form: AutenticacaoLogin, db: Session = Depends(get_db)):
             detail="Login ou senha inválidos",
         )
     access_token, access_token_expires = generate_token(usuario)
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(access=access_token, token_type="bearer")
