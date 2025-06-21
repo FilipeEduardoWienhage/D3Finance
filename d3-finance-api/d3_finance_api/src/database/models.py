@@ -1,6 +1,7 @@
-from sqlalchemy import Column, DateTime, Integer, String, Date, ForeignKey, Float, func, UniqueConstraint
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, Date, ForeignKey, Float, func, UniqueConstraint
 from src.database.database import Base
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 
 class Usuario(Base):
@@ -101,3 +102,18 @@ class Transacoes(Base):
     usuario = relationship("Usuario")
     conta_origem = relationship("Contas", foreign_keys=[conta_origem_id], back_populates="transacoes_origem")
     conta_destino = relationship("Contas", foreign_keys=[conta_destino_id], back_populates="transacoes_destino")
+
+class CodigoRecuperacao(Base):
+    __tablename__ = "codigos_recuperacao"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(100), nullable=False, index=True)
+    codigo = Column(String(4), nullable=False)
+    expiracao = Column(DateTime, nullable=False)
+    usado = Column(Boolean, default=False)
+    data_criacao = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    def __repr__(self):
+        return f"<CodigoRecuperacao(id={self.id}, email={self.email}, usado={self.usado})>"
+
+    

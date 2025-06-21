@@ -26,7 +26,7 @@ def get_db():
 
 
 @router.post(
-    path=AUTENTICACAO_LOGIN, response_model=Token, tags=[Tag.Autenticao.name]
+    path=AUTENTICACAO_LOGIN, response_model=Token, tags=[Tag.Autenticacao.name]
 )
 def create_user(form: AutenticacaoLogin, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.usuario == form.usuario).first()
