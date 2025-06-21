@@ -16,40 +16,7 @@
         <div class="flex flex-col flex-grow space-y-6">
 
             <div class="flex flex-col space-y-4">
-                <p-card header="Receitas por Categoria "
-                    class="bg-[#2c2c2c] text-white rounded-xl flex flex-col flex-grow">
-                    <div class="flex items-center gap-4 p-4 rounded-lg">
-                        <div class="flex flex-col">
-                            <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
-                            <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy"
-                                [readonlyInput]="true" placeholder="Selecione o período"
-                                (onSelect)="filtrarDados()"></p-calendar>
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
-                            <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id" placeholder="Todas as contas"
-                                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
-                            <p-dropdown [options]="formasPagamentoOpcoes" [(ngModel)]="filtroConsolidado.forma_pagamento" placeholder="Todas as formas"
-                                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
-                        </div>
-                        <div class="flex flex-col justify-end">
-                            <label class="text-sm mb-1 invisible">.</label>
-                            <button pButton type="button" label="Limpar filtro" icon="pi pi-times"
-                                class="p-button-secondary" (click)="limparFiltros()"></button>
-                        </div>
-                    </div>
-                    <div class="h-[30rem] flex-grow">
-                        <p-chart type="bar" [data]="dataConsolidado" [options]="optionsConsolidado"
-                            style="height: 100%"></p-chart>
-                    </div>
-                </p-card>
-            </div>
-
-            <div class="flex flex-col space-y-4">
-                <p-card header="Receitas por Mês" class="bg-[#2c2c2c] text-white rounded-xl flex flex-col flex-grow">
+                <p-card header="Despesas por Mês" class="bg-[#2c2c2c] text-white rounded-xl flex flex-col flex-grow">
                     <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
@@ -80,6 +47,38 @@
                 </p-card>
             </div>
 
+            <div class="flex flex-col space-y-4">
+                <p-card header="Despesas por Categoria "
+                    class="bg-[#2c2c2c] text-white rounded-xl flex flex-col flex-grow">
+                    <div class="flex items-center gap-4 p-4 rounded-lg">
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
+                            <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy"
+                                [readonlyInput]="true" placeholder="Selecione o período"
+                                (onSelect)="filtrarDados()"></p-calendar>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
+                            <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id" placeholder="Todas as contas"
+                                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
+                            <p-dropdown [options]="formasPagamentoOpcoes" [(ngModel)]="filtroConsolidado.forma_pagamento" placeholder="Todas as formas"
+                                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <label class="text-sm mb-1 invisible">.</label>
+                            <button pButton type="button" label="Limpar filtro" icon="pi pi-times"
+                                class="p-button-secondary" (click)="limparFiltros()"></button>
+                        </div>
+                    </div>
+                    <div class="h-[30rem] flex-grow">
+                        <p-chart type="bar" [data]="dataConsolidado" [options]="optionsConsolidado"
+                            style="height: 100%"></p-chart>
+                    </div>
+                </p-card>
+            </div>    
         </div>
     </div>
 

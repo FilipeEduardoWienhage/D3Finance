@@ -15,41 +15,13 @@
     <div class="flex flex-col flex-grow gap-y-6">
 
       <div class="flex flex-col space-y-4">
-        <p-card header="Receitas por Categoria" class="bg-[#2c2c2c] text-white rounded-xl">
-          <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
-            <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
-              <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy" [readonlyInput]="true"
-                placeholder="Selecione o período" (onSelect)="filtrarDados()"></p-calendar>
-            </div>
-            <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
-              <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id" placeholder="Todas as contas"
-                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
-            </div>
-            <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Forma de Recebimento</label>
-              <p-dropdown [options]="formasRecebimentoOpcoes" [(ngModel)]="filtroConsolidado.forma_recebimento" placeholder="Todas as formas"
-                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
-            </div>
-            <div class="flex flex-col justify-end">
-              <label class="text-sm mb-1 invisible">.</label>
-              <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary" (click)="limparFiltros()"></button>
-            </div>
-          </div>
-          <div class="h-[30rem]">
-            <p-chart type="bar" [data]="dataConsolidado" [options]="optionsConsolidado" style="height: 100%"></p-chart>
-          </div>
-        </p-card>
-      </div>
-
-      <div class="flex flex-col space-y-4">
         <p-card header="Receitas por Mês" class="bg-[#2c2c2c] text-white rounded-xl">
           <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/ano</label>
-              <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria" placeholder="Todas as categorias"
-                (onChange)="filtrarDadosMensais()" [style]="{ 'width': '250px' }"></p-dropdown>
+              <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria"
+                placeholder="Todas as categorias" (onChange)="filtrarDadosMensais()"
+                [style]="{ 'width': '250px' }"></p-dropdown>
             </div>
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
@@ -58,16 +30,48 @@
             </div>
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Forma de Recebimento</label>
-              <p-dropdown [options]="formasRecebimentoOpcoes" [(ngModel)]="filtroMensal.forma_recebimento" placeholder="Todas as formas"
-                (onChange)="filtrarDadosMensais()" [style]="{ 'width': '200px' }"></p-dropdown>
+              <p-dropdown [options]="formasRecebimentoOpcoes" [(ngModel)]="filtroMensal.forma_recebimento"
+                placeholder="Todas as formas" (onChange)="filtrarDadosMensais()"
+                [style]="{ 'width': '200px' }"></p-dropdown>
             </div>
             <div class="flex flex-col justify-end">
               <label class="text-sm mb-1 invisible">.</label>
-              <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary" (click)="limparFiltrosMensais()"></button>
+              <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary"
+                (click)="limparFiltrosMensais()"></button>
             </div>
           </div>
           <div class="h-[30rem]">
             <p-chart type="bar" [data]="dataMensal" [options]="optionsMensal" style="height: 100%"></p-chart>
+          </div>
+        </p-card>
+      </div>
+
+      <div class="flex flex-col space-y-4">
+        <p-card header="Receitas por Categoria" class="bg-[#2c2c2c] text-white rounded-xl">
+          <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
+              <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy"
+                [readonlyInput]="true" placeholder="Selecione o período" (onSelect)="filtrarDados()"></p-calendar>
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
+              <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id"
+                placeholder="Todas as contas" (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-400 mb-1">Forma de Recebimento</label>
+              <p-dropdown [options]="formasRecebimentoOpcoes" [(ngModel)]="filtroConsolidado.forma_recebimento"
+                placeholder="Todas as formas" (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
+            </div>
+            <div class="flex flex-col justify-end">
+              <label class="text-sm mb-1 invisible">.</label>
+              <button pButton type="button" label="Limpar filtro" icon="pi pi-times" class="p-button-secondary"
+                (click)="limparFiltros()"></button>
+            </div>
+          </div>
+          <div class="h-[30rem]">
+            <p-chart type="bar" [data]="dataConsolidado" [options]="optionsConsolidado" style="height: 100%"></p-chart>
           </div>
         </p-card>
       </div>
