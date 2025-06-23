@@ -7,14 +7,14 @@
         </ng-template>
     </p-splitter>
 
-    <div class="relative flex-grow">
-        <div class="absolute top-0 left-4">
+    <div class="flex flex-row flex-grow px-4 gap-4">
+        <div class="flex-shrink-0">
             <app-nav-bar-system></app-nav-bar-system>
             <p-toast></p-toast>
         </div>
 
-        <div class="h-full w-full flex items-center justify-center">
-            <div class="p-8 rounded-lg shadow-lg">
+        <div class="flex flex-col flex-grow space-y-6 items-center">
+            <div class="flex flex-col space-y-4">
                 <p-card class="w-full max-w-7xl">
                     <p-tabMenu [model]="tabItems" [(activeItem)]="activeTab" (activeItemChange)="onTabChange($event)"
                         class="mb-6 w-full max-w-5xl self-center">
