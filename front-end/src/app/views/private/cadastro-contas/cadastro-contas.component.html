@@ -1,116 +1,114 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
-    <p-toast></p-toast>
-    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog> 
-    <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
-        <app-nav-bar-system></app-nav-bar-system>
-    </div>
+    <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+        <ng-template pTemplate="1">
+            <div class="flex items-center justify-center h-full text-white">
+             D3 Finance
+            </div>
+        </ng-template>
+    </p-splitter>
 
-    <div class="card">
-        <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
-            <ng-template #panel>
-                <div class="flex items-center justify-center h-full">D3 Finance</div>
-            </ng-template>
-        </p-splitter>
-    </div>
+    <div class="relative flex-grow">
 
-    <div class="flex-1 flex items-center justify-center">
-        <p-card header="Cadastrar Contas" class="w-96">
+        <div class="absolute top-0 left-4 z-10">
+            <app-nav-bar-system></app-nav-bar-system>
+            <p-toast></p-toast>
+        </div>
 
-            <div class="card flex justify-center">
-                <div class="flex flex-col gap-2">
-                    <label for="tipoConta">Tipo da Conta<span class="asterisco">*</span></label>
-                    <p-dropdown [options]="tipoContaOptions" [(ngModel)]="requestConta.tipoConta" optionLabel="name"
-                        optionValue="name" placeholder="Tipo da Conta" class="w-full md:w-64" [appendTo]="'body'" />
+        <div class="absolute inset-0 flex flex-col items-center justify-start pt-8 space-y-8">
+
+            <p-card header="Cadastrar Contas" class="w-96">
+                <div class="card flex justify-center">
+                    <div class="flex flex-col gap-2">
+                        <label for="tipoConta">Tipo da Conta<span class="asterisco">*</span></label>
+                        <p-dropdown [options]="tipoContaOptions" [(ngModel)]="requestConta.tipoConta" optionLabel="name"
+                            optionValue="name" placeholder="Tipo da Conta" class="w-full md:w-64" [appendTo]="'body'" />
+                    </div>
                 </div>
+                <div class="card flex justify-center">
+                    <div class="flex flex-col gap-2 w-full md:w-64">
+                        <label for="nomeConta">Nome da Conta<span class="asterisco">*</span></label>
+                        <input pInputText id="nomeConta" aria-describedby="nomeContas"
+                            [(ngModel)]="requestConta.nomeConta"
+                            class="w-full p-2 rounded-md bg-black text-white border border-gray-700" />
+                    </div>
+                </div>
+                <div class="card flex justify-center">
+                    <div class="flex flex-col gap-2">
+                        <a href="#">
+                            <div class="flex gap-4 mt-1">
+                                <p-button (click)="doCadastroContas()" label="Cadastrar" class="w-full md:w-64"
+                                    styleClass="w-full" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </p-card>
+
+            <div class="flex justify-center">
+                <button pButton label="{{ mostrarTabelaContas ? 'Esconder Contas' : 'Ver Contas' }}" icon="pi pi-eye"
+                    (click)="toggleTabelaContas()"></button>
             </div>
 
-            <div class="card flex justify-center">
-                <div class="flex flex-col gap-2 w-full md:w-64">
-                    <label for="nomeConta">Nome da Conta<span class="asterisco">*</span></label>
-                    <input pInputText id="nomeConta" aria-describedby="nomeContas" [(ngModel)]="requestConta.nomeConta"
-                        class="w-full p-2 rounded-md bg-black text-white border border-gray-700" />
-                </div>
-            </div>
-
-            <div class="card flex justify-center">
-                <div class="flex flex-col gap-2">
-                    <a href="#">
-                        <div class="flex gap-4 mt-1">
-                            <p-button (click)="doCadastroContas()" label="Cadastrar" class="w-full md:w-64"
-                                styleClass="w-full" />
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </p-card>
-    </div>
-
-    <div class="flex justify-center my-4">
-        <button pButton label="{{ mostrarTabelaContas ? 'Esconder Contas' : 'Ver Contas' }}" icon="pi pi-eye"
-            (click)="toggleTabelaContas()"></button> 
-    </div>
-
-    <div *ngIf="mostrarTabelaContas" class="flex-1 flex items-center justify-center">
-        <p-card class="w-full max-w-4xl">
-            <ng-template pTemplate="header">
-                <div class="w-full text-center text-xl font-semibold">Contas</div>
-            </ng-template>
-
-            <div class="p-6">
-                
-                <p-table [value]="contas" [paginator]="true" [rows]="10"
-                    class="p-datatable-sm p-datatable-gridlines w-full">
+            <div *ngIf="mostrarTabelaContas" class="w-full max-w-4xl">
+                <p-card>
                     <ng-template pTemplate="header">
-                        <tr>
-                            <th>Tipo</th>
-                            <th>Nome</th>
-                            <th>Ações</th>
-                        </tr>
+                        <div class="w-full text-center text-xl font-semibold">Contas</div>
                     </ng-template>
-
-                    <ng-template pTemplate="body" let-conta>
-                        <tr>
-                            <td>{{ conta.tipo_conta }}</td>
-                            <td>{{ conta.nome_conta }}</td>
-                            <td class="flex gap-2 border-b border-gray-700">
-                                
-                                <button pButton type="button" icon="pi pi-pencil"
-                                    class="p-button-sm p-button-rounded p-button-info"
-                                    (click)="abrirEdicao(conta)"></button>
-                                
-                                <button pButton type="button" icon="pi pi-trash"
-                                    class="p-button-sm p-button-rounded p-button-danger"
-                                    (click)="apagarItem(conta)"></button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+                    <div class="p-6">
+                        <p-table [value]="contas" [paginator]="true" [rows]="10"
+                            class="p-datatable-sm p-datatable-gridlines w-full">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Nome</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-conta>
+                                <tr>
+                                    <td>{{ conta.tipo_conta }}</td>
+                                    <td>{{ conta.nome_conta }}</td>
+                                    <td class="flex gap-2 border-b border-gray-700">
+                                        <button pButton type="button" icon="pi pi-pencil"
+                                            class="p-button-sm p-button-rounded p-button-info"
+                                            (click)="abrirEdicao(conta)">
+                                        </button>
+                                        <button pButton type="button" icon="pi pi-trash"
+                                            class="p-button-sm p-button-rounded p-button-danger"
+                                            (click)="apagarItem(conta)">
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </p-card>
             </div>
-        </p-card>
+
+            <p-dialog header="Editar Item" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
+                [style]="{ width: '450px' }" (onHide)="editDialogVisible = false" [baseZIndex]="10000">
+                <ng-template pTemplate="content">
+                    <div *ngIf="itemEmEdicao">
+                        <div class="p-field">
+                            <label for="tipoContaEdit">Tipo: </label>
+                            <p-dropdown id="tipoContaEdit" [(ngModel)]="itemEmEdicao.tipo_conta"
+                                [options]="tipoContaOptions" optionLabel="name" optionValue="name" [appendTo]="'body'"
+                                placeholder="Selecione um tipo"></p-dropdown>
+                        </div>
+                        <div class="p-field">
+                            <label for="nomeContaEdit">Nome: </label>
+                            <input id="nomeContaEdit" type="text" pInputText [(ngModel)]="itemEmEdicao.nome_conta" />
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button pButton label="Salvar" icon="pi pi-check" (click)="salvarEdicao()">
+                    </button>
+                </ng-template>
+            </p-dialog>
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+        </div>
     </div>
-
-    <p-dialog header="Editar Item" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
-        [style]="{ width: '450px' }" (onHide)="editDialogVisible = false" [baseZIndex]="10000">
-        <ng-template pTemplate="content">
-            <div *ngIf="itemEmEdicao">
-                <div class="p-field">
-                    <label for="tipoContaEdit">Tipo: </label>
-                    <p-dropdown id="tipoContaEdit" [(ngModel)]="itemEmEdicao.tipo_conta" [options]="tipoContaOptions"
-                        optionLabel="name" optionValue="name" [appendTo]="'body'"
-                        placeholder="Selecione um tipo"></p-dropdown>
-                </div>
-                <div class="p-field">
-                    <label for="nomeContaEdit">Nome: </label>
-                    <input id="nomeContaEdit" type="text" pInputText [(ngModel)]="itemEmEdicao.nome_conta" />
-                </div>
-            </div>
-        </ng-template>
-
-        <ng-template pTemplate="footer">
-            <button pButton label="Salvar" icon="pi pi-check" (click)="salvarEdicao()">
-            </button>
-        </ng-template>
-    </p-dialog>
-
     <app-footer class="mt-auto"></app-footer>
 </div>

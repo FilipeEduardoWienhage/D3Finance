@@ -7,18 +7,19 @@
     </ng-template>
   </p-splitter>
 
-  <div class="flex flex-row flex-grow">
-    <div class="ml-3 mr-3">
+  <div class="flex flex-row flex-grow px-4 gap-4">
+    <div class="flex-shrink-0">
       <app-nav-bar-system></app-nav-bar-system>
       <p-toast></p-toast>
     </div>
+
     <div class="flex flex-col flex-grow gap-y-6">
 
       <div class="flex flex-col space-y-4">
         <p-card header="Receitas por Mês" class="bg-[#2c2c2c] text-white rounded-xl">
           <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
             <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/ano</label>
+              <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
               <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria"
                 placeholder="Todas as categorias" (onChange)="filtrarDadosMensais()"
                 [style]="{ 'width': '250px' }"></p-dropdown>
@@ -50,7 +51,7 @@
         <p-card header="Receitas por Categoria" class="bg-[#2c2c2c] text-white rounded-xl">
           <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg">
             <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
+              <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
               <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy"
                 [readonlyInput]="true" placeholder="Selecione o período" (onSelect)="filtrarDados()"></p-calendar>
             </div>

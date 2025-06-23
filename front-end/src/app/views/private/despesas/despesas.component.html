@@ -1,6 +1,6 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
     <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
-        <ng-template pTemplate="1">
+        <ng-template #panel>
             <div class="flex items-center justify-center h-full text-white">
                 D3 Finance
             </div>
@@ -26,13 +26,15 @@
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
-                            <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroMensal.conta_id" placeholder="Todas as contas"
-                                (onChange)="filtrarDadosMensais()" [style]="{ 'width': '200px' }"></p-dropdown>
+                            <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroMensal.conta_id"
+                                placeholder="Todas as contas" (onChange)="filtrarDadosMensais()"
+                                [style]="{ 'width': '200px' }"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
-                            <p-dropdown [options]="formasPagamentoOpcoes" [(ngModel)]="filtroMensal.forma_pagamento" placeholder="Todas as formas"
-                                (onChange)="filtrarDadosMensais()" [style]="{ 'width': '200px' }"></p-dropdown>
+                            <p-dropdown [options]="formasPagamentoOpcoes" [(ngModel)]="filtroMensal.forma_pagamento"
+                                placeholder="Todas as formas" (onChange)="filtrarDadosMensais()"
+                                [style]="{ 'width': '200px' }"></p-dropdown>
                         </div>
                         <div class="flex flex-col justify-end">
                             <label class="text-sm mb-1 invisible">.</label>
@@ -59,12 +61,14 @@
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
-                            <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id" placeholder="Todas as contas"
-                                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
+                            <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id"
+                                placeholder="Todas as contas" (onChange)="filtrarDados()"
+                                [style]="{ 'width': '200px' }"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
-                            <p-dropdown [options]="formasPagamentoOpcoes" [(ngModel)]="filtroConsolidado.forma_pagamento" placeholder="Todas as formas"
+                            <p-dropdown [options]="formasPagamentoOpcoes"
+                                [(ngModel)]="filtroConsolidado.forma_pagamento" placeholder="Todas as formas"
                                 (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
                         </div>
                         <div class="flex flex-col justify-end">
@@ -78,7 +82,7 @@
                             style="height: 100%"></p-chart>
                     </div>
                 </p-card>
-            </div>    
+            </div>
         </div>
     </div>
 
