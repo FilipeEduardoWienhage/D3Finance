@@ -1,38 +1,41 @@
-<div class="min-h-screen flex flex-col bg-[#1e1e1e] relative">
-  <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
-    <app-nav-bar-system></app-nav-bar-system>
-  </div>
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
+  <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+    <ng-template pTemplate="1">
+      <div class="flex items-center justify-center h-full text-white">
+        D3 Finance
+      </div>
+    </ng-template>
+  </p-splitter>
 
-  <div class="card">
-    <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
-      <ng-template #panel>
-        <div class="flex items-center justify-center h-full">D3 Finance</div>
-      </ng-template>
-    </p-splitter>
-  </div>
+  <div class="relative flex-grow">
 
-
-  <div class="flex-grow flex items-center justify-center mt-16">
-    <div class="card w-full max-w-lg p-8">
+    <div class="absolute top-0 left-4 z-10">
+      <app-nav-bar-system></app-nav-bar-system>
       <p-toast></p-toast>
-      <p-fileupload name="arquivo" url="http://localhost:8000/v1/importar-transacoes" (onUpload)="onUpload($event)"
-        [multiple]="true" accept=".xml, .csv" maxFileSize="1000000000" mode="advanced"
-        chooseLabel="Selecionar Arquivos" uploadLabel="Enviar" cancelLabel="Cancelar">
-        <ng-template #empty>
-          <div class="text-center text-white">
-            Arraste e solte os arquivos aqui para fazer upload
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ul *ngIf="uploadedFiles.length" class="text-white">
-            <li *ngFor="let file of uploadedFiles">
-              {{ file.name }} - {{ file.size }} bytes
-            </li>
-          </ul>
-        </ng-template>
-      </p-fileupload>
     </div>
-  </div>
 
+    <div class="absolute inset-0 flex flex-col items-center justify-start pt-8 space-y-8">
+      <div class="card w-full max-w-lg p-8">
+        <p-toast></p-toast>
+        <p-fileupload name="arquivo" url="http://localhost:8000/v1/importar-transacoes" (onUpload)="onUpload($event)"
+          [multiple]="true" accept=".xml, .csv" maxFileSize="1000000000" mode="advanced"
+          chooseLabel="Selecionar Arquivos" uploadLabel="Enviar" cancelLabel="Cancelar">
+          <ng-template #empty>
+            <div class="text-center text-white">
+              Arraste e solte os arquivos aqui para fazer upload
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ul *ngIf="uploadedFiles.length" class="text-white">
+              <li *ngFor="let file of uploadedFiles">
+                {{ file.name }} - {{ file.size }} bytes
+              </li>
+            </ul>
+          </ng-template>
+        </p-fileupload>
+      </div>
+    </div>
+
+  </div>
   <app-footer class="mt-auto"></app-footer>
 </div>

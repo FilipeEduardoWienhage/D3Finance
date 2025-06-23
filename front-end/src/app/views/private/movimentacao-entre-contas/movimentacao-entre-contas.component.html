@@ -1,58 +1,60 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
-
-    <div style="position: absolute; top: 105px; left: 0; z-index: 1000;">
-        <app-nav-bar-system></app-nav-bar-system>
-    </div>
-
-    <div class="card">
-        <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
-            <ng-template #panel>
-                <div class="flex items-center justify-center h-full">D3 Finance</div>
-            </ng-template>
-        </p-splitter>
-    </div>
-
-    <div class="flex-1 flex items-center justify-center">
-        <p-card header="Movimentar entre contas" class="w-96">
-
-
-            <div class="card flex justify-center">
-                <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Conta origem<span class="asterisco">*</span></label>
-                    <p-select [options]="contas" [(ngModel)]="transacao.conta_origem_id" optionLabel="name" optionValue="id" placeholder="Conta origem"
-                        class="w-full md:w-64" />
-                </div>
+    <p-splitter [style]="{ height: '100px' }" styleClass="mb-8" layout="vertical">
+        <ng-template pTemplate="1">
+            <div class="flex items-center justify-center h-full text-white">
+                D3 Finance
             </div>
+        </ng-template>
+    </p-splitter>
 
-            <p-fluid class="card flex justify-center">
-                <div class="flex flex-col gap-2 w-64">
-                    <label for="currency-br">
-                        Valor Movimentado<span class="asterisco">*</span>
-                    </label>
-                    <p-inputnumber inputId="currency-br" mode="currency" currency="BRL" locale="pt-BR" [(ngModel)]="transacao.valor" />
-                </div>
-            </p-fluid>
+    <div class="relative flex-grow">
 
-            <div class="card flex justify-center">
-                <div class="flex flex-col gap-">
-                    <label for="dataRecebimento">Conta destino<span class="asterisco">*</span></label>
-                    <p-select [options]="contas" [(ngModel)]="transacao.conta_destino_id" optionLabel="name" optionValue="id" placeholder="Conta destino"
-                        class="w-full md:w-64" />
-                </div>
-            </div>
+        <div class="absolute top-0 left-4 z-10">
+            <app-nav-bar-system></app-nav-bar-system>
+        </div>
 
-            <div class="card flex justify-center">
-                <div class="flex flex-col gap-2">
-                    <a href="#">
-                        <div class="flex gap-4 mt-1">
-                            <p-button (click)="doMovimentarContas()" label="Confirmar" class="w-full  md:w-64"
-                                styleClass="w-full" />
-                        </div>
-                    </a>
+        <div class="absolute inset-0 flex flex-col items-center justify-start pt-8 space-y-8">
+
+            <p-card header="Movimentar entre contas" class="w-96">
+                <div class="card flex justify-center">
+                    <div class="flex flex-col gap-">
+                        <label for="dataRecebimento">Conta origem<span class="asterisco">*</span></label>
+                        <p-select [options]="contas" [(ngModel)]="transacao.conta_origem_id" optionLabel="name"
+                            optionValue="id" placeholder="Conta origem" class="w-full md:w-64" />
+                    </div>
                 </div>
-            </div>
-        </p-card>
+
+                <p-fluid class="card flex justify-center">
+                    <div class="flex flex-col gap-2 w-64">
+                        <label for="currency-br">
+                            Valor Movimentado<span class="asterisco">*</span>
+                        </label>
+                        <p-inputnumber inputId="currency-br" mode="currency" currency="BRL" locale="pt-BR"
+                            [(ngModel)]="transacao.valor" />
+                    </div>
+                </p-fluid>
+
+                <div class="card flex justify-center">
+                    <div class="flex flex-col gap-">
+                        <label for="dataRecebimento">Conta destino<span class="asterisco">*</span></label>
+                        <p-select [options]="contas" [(ngModel)]="transacao.conta_destino_id" optionLabel="name"
+                            optionValue="id" placeholder="Conta destino" class="w-full md:w-64" />
+                    </div>
+                </div>
+
+                <div class="card flex justify-center">
+                    <div class="flex flex-col gap-2">
+                        <a href="#">
+                            <div class="flex gap-4 mt-1">
+                                <p-button (click)="doMovimentarContas()" label="Confirmar" class="w-full  md:w-64"
+                                    styleClass="w-full" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+
     </div>
-
     <app-footer class="mt-auto"></app-footer>
 </div>

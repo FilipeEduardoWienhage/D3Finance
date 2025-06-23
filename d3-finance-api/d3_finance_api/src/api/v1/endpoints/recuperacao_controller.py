@@ -29,9 +29,11 @@ def get_db():
     finally:
         db.close()
 
+
 def gerar_codigo_otp() -> str:
     """Gera um código OTP de 4 dígitos"""
     return ''.join(random.choices(string.digits, k=4))
+
 
 def limpar_codigos_antigos(db: Session, email: str):
     """Remove códigos antigos e expirados do usuário"""
