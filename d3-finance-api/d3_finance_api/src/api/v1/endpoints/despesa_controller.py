@@ -188,6 +188,7 @@ def create_despesa(despesa: DespesaCreate, usuario_logado: Annotated[TokenData, 
 )
 def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
     despesa = db.query(Despesas).filter(Despesas.id == despesas_id, Despesas.usuario_id == usuario_logado.id).first()
+    
     if not despesa:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Despesa não encontrada")
 

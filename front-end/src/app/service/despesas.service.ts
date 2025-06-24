@@ -67,7 +67,7 @@ export class DespesasService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  editarDespesa(conta: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${conta.id}`, conta);
+  editarDespesa(despesa: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${despesa.id}`, despesa);
   }
 }
