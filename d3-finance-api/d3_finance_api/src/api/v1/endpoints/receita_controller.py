@@ -200,8 +200,9 @@ def update_receita(receita_id: int, receita_update: ReceitaUpdate, usuario_logad
     conta.saldo -= receita.valor_recebido
 
     # Atualiza os campos da receita
-    for field, value in receita_update.model_dump(exclude_unset=True).items():
-        setattr(receita, field, value)
+    for field, value in receita_update.__dict__.items():
+        if value is not None:
+            setattr(receita, field, value)
 
     # Soma o novo valor da receita no saldo da conta
     conta.saldo += receita.valor_recebido
@@ -209,7 +210,17 @@ def update_receita(receita_id: int, receita_update: ReceitaUpdate, usuario_logad
     db.commit()
     db.refresh(receita)
 
-    return ReceitaResponse.model_validate(receita)
+    return ReceitaResponse(
+        id=receita.id,
+        categoria=receita.categoria,
+        valor_recebido=receita.valor_recebido,
+        data_recebimento=receita.data_recebimento,
+        descricao=receita.descricao,
+        forma_recebimento=receita.forma_recebimento,
+        conta_id=receita.conta_id,
+        data_criacao=receita.data_criacao,
+        data_alteracao=receita.data_alteracao,
+    )
 
 
 @router.delete(
