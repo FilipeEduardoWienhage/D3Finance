@@ -10,6 +10,9 @@ from src.api.tags import Tag
 from src.schemas.receita_schemas import ReceitaCategoriaResponse, ReceitaCreate, ReceitaUpdate, ReceitaResponse, ReceitaMensalResponse
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
+from src.utils.notification_utils import send_notification_background
+from src.services.telegram_service import telegram_service
+
 
 CONSOLIDADO_MENSAL_RECEITAS = "/v1/receitas/consolidado/mensal"
 LISTA_RECEITAS = "/v1/receitas"
@@ -167,7 +170,24 @@ def create_receita(receita: ReceitaCreate, usuario_logado: Annotated[TokenData, 
     conta.saldo += receita.valor_recebido
 
     db.commit()
+    send_notification_background("receita", db, receita=db_receita)
     db.refresh(db_receita)
+
+    # Envia notificação do Telegram
+    try:
+        telegram_service.notify_receita_cadastrada(
+            usuario_id=usuario_logado.id,
+            categoria=receita.categoria,
+            valor=receita.valor_recebido,
+            descricao=receita.descricao or "Sem descrição",
+            data_recebimento=receita.data_recebimento.strftime("%d/%m/%Y"),
+            conta_nome=conta.nome_conta
+        )
+    except Exception as e:
+        # Log do erro mas não falha a operação
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Erro ao enviar notificação do Telegram para receita: {e}")
 
     return ReceitaResponse(
         id=db_receita.id,

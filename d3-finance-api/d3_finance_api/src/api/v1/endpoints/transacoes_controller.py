@@ -8,6 +8,8 @@ from src.api.tags import Tag
 from src.schemas.transacoes_schemas import TransacoesCreate, TransacoesUpdate, TransacoesResponse
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
+from src.utils.notification_utils import send_notification_background
+from src.services.telegram_service import telegram_service
 
 
 LISTA_TRANSACOES = "/v1/transacoes"
@@ -81,7 +83,24 @@ def create_transacao(transacao: TransacoesCreate, usuario_logado: Annotated[Toke
     )
     db.add(db_transacao)
     db.commit()
+    send_notification_background("transacao", db, transacao=db_transacao)
     db.refresh(db_transacao)
+
+    # Envia notificação do Telegram
+    try:
+        telegram_service.notify_movimentacao_contas(
+            usuario_id=usuario_logado.id,
+            valor=transacao.valor,
+            conta_origem=conta_origem.nome_conta,
+            conta_destino=conta_destino.nome_conta,
+            descricao=transacao.descricao or "Movimentação entre contas"
+        )
+    except Exception as e:
+        # Log do erro mas não falha a operação
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Erro ao enviar notificação do Telegram para transação: {e}")
+
     return TransacoesResponse(
         id=db_transacao.id,
         conta_origem_id=db_transacao.conta_origem_id,

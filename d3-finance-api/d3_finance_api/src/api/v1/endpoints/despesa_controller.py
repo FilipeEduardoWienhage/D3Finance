@@ -10,6 +10,8 @@ from src.api.tags import Tag
 from src.schemas.despesa_schemas import DespesaCategoriaResponse, DespesaCreate, DespesaUpdate, DespesaResponse, DespesaMensalResponse
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
+from src.utils.notification_utils import send_notification_background
+from src.services.telegram_service import telegram_service
 
 
 LISTA_DESPESAS = "/v1/despesas"
@@ -169,7 +171,24 @@ def create_despesa(despesa: DespesaCreate, usuario_logado: Annotated[TokenData, 
     conta.saldo -= despesa.valor_pago
 
     db.commit()
+    send_notification_background("despesa", db, despesa=db_despesa)
     db.refresh(db_despesa)
+
+    # Envia notificação do Telegram
+    try:
+        telegram_service.notify_despesa_cadastrada(
+            usuario_id=usuario_logado.id,
+            categoria=despesa.categoria,
+            valor=despesa.valor_pago,
+            descricao=despesa.descricao or "Sem descrição",
+            data_pagamento=despesa.data_pagamento.strftime("%d/%m/%Y"),
+            conta_nome=conta.nome_conta
+        )
+    except Exception as e:
+        # Log do erro mas não falha a operação
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Erro ao enviar notificação do Telegram para despesa: {e}")
 
     return DespesaResponse(
         id=db_despesa.id,

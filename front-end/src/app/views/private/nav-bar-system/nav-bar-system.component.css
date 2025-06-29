@@ -1,0 +1,285 @@
+/* Estilos para o modal do Telegram */
+.telegram-dialog-content {
+  padding: 1rem 0;
+}
+
+.status-section {
+  margin-bottom: 1.5rem;
+}
+
+.status-section h3 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.config-section {
+  margin-bottom: 1.5rem;
+}
+
+.config-section h3 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.form-help {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.config-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.help-section h3 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+.system-info {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.system-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.system-info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.help-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+}
+
+.step-number {
+  background: #667eea;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  margin: 0 0 0.25rem 0;
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.step-content p {
+  margin: 0 0 0.25rem 0;
+  color: #6c757d;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.step-content code {
+  background: #e9ecef;
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+}
+
+.notification-info {
+  background: #e8f4fd;
+  border: 1px solid #bee5eb;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.notification-info h4 {
+  margin: 0 0 0.75rem 0;
+  color: #0c5460;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.notification-info ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.notification-info li {
+  margin-bottom: 0.5rem;
+  color: #0c5460;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.notification-info li:last-child {
+  margin-bottom: 0;
+}
+
+.notification-info strong {
+  color: #495057;
+}
+
+.warning-info {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.warning-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #856404;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.warning-info p {
+  margin: 0;
+  color: #856404;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.success-info {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.success-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #155724;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.success-info p {
+  margin: 0;
+  color: #155724;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.dialog-content {
+  padding: 1rem 0;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 1rem;
+}
+
+/* Responsividade para o modal */
+@media (max-width: 768px) {
+  .status-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .config-actions {
+    flex-direction: column;
+  }
+  
+  .config-actions p-button {
+    width: 100%;
+  }
+  
+  .step {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .step-number {
+    align-self: center;
+  }
+  
+  .notification-info {
+    padding: 0.75rem;
+  }
+  
+  .notification-info ul {
+    padding-left: 1rem;
+  }
+  
+  .warning-info {
+    padding: 0.75rem;
+  }
+  
+  .success-info {
+    padding: 0.75rem;
+  }
+}

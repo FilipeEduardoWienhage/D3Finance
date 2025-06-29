@@ -9,6 +9,8 @@ from src.api.tags import Tag
 from sqlalchemy.exc import IntegrityError
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
+from src.utils.notification_utils import send_notification_background
+from src.services.telegram_service import telegram_service
 
 # Endpoints
 LISTA_CONTAS = "/v1/contas"
@@ -76,7 +78,22 @@ def create_contas(conta: ContaCreate, usuario_logado: Annotated[TokenData, Depen
     try:
         db.add(db_conta)
         db.commit()
+        send_notification_background("conta", db, conta=db_conta)
         db.refresh(db_conta)
+
+        # Envia notificação do Telegram
+        try:
+            telegram_service.notify_conta_criada(
+                usuario_id=usuario_logado.id,
+                nome_conta=conta.nome_conta,
+                tipo_conta=conta.tipo_conta,
+                saldo_inicial=conta.saldo if conta.saldo is not None else 0.0
+            )
+        except Exception as e:
+            # Log do erro mas não falha a operação
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Erro ao enviar notificação do Telegram para conta: {e}")
 
         return ContaResponse(
             id=db_conta.id,

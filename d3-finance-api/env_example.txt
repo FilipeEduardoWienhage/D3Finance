@@ -1,0 +1,25 @@
+# Configurações do Banco de Dados
+DB_USER = root
+DB_PASSWORD = 1234
+DB_HOST = localhost
+DB_PORT = 3306
+DB_NAME = d3_finance_db
+
+# JWT
+SECRET_KEY = c554fa225b44ee8df8f824f911a8bb8bd4fbbde33b78162f04dba2ed7e3bf278
+
+# Telegram Bot
+NOTIFICATION_ENABLED = true
+TELEGRAM_BOT_TOKEN = 8037320303:AAGl_n8k0OGFhu62UF27GKU3p_44pquAbLo
+
+# Email
+SMTP_SERVER = smtp.gmail.com
+SMTP_PORT = 587
+EMAIL_REMETENTE = d2financeproway@gmail.com
+SENHA_EMAIL = nkno tivf jwnh jpki
+
+# Instruções:
+# 1. Copie este arquivo para .env
+# 2. Substitua os valores conforme sua configuração
+# 3. Para desabilitar notificações do Telegram, mude NOTIFICATION_ENABLED = false
+# 4. Execute o bot com: python bot.py ou python -m d3_finance_api.main 

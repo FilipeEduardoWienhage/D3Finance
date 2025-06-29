@@ -13,6 +13,7 @@ from src.schemas.autenticacao_schemas import AutenticacaoLogin, Token
 from src.utils.auth_utils import gerar_hash_senha, verificar_senha
 from sqlalchemy.exc import IntegrityError
 from src.services.autenticacao_service import generate_token
+from src.utils.notification_utils import send_notification_background
 
 AUTENTICACAO_LOGIN = "/v1/autenticacao"
 
