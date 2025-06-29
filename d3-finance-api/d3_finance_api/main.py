@@ -2,9 +2,13 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from src.app import app
 from src.database.database import engine, Base
-from src.api.v1.endpoints import usuario_controller, receita_controller, despesa_controller, contas_controller, importacao_controller, transacoes_controller, autenticacao_controller, recuperacao_controller
+from src.api.v1.endpoints import usuario_controller,telegram_controller, receita_controller, despesa_controller, contas_controller, importacao_controller, transacoes_controller, autenticacao_controller, recuperacao_controller
+from src.services.telegram_service import telegram_service
+import logging
 
-
+# Configuração de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,7 +29,28 @@ app.include_router(importacao_controller.router)
 app.include_router(transacoes_controller.router)
 app.include_router(autenticacao_controller.router)
 app.include_router(recuperacao_controller.router)
+app.include_router(telegram_controller.router)
 
+# Inicializa o bot do Telegram
+@app.on_event("startup")
+async def startup_event():
+    """Evento executado quando a aplicação inicia"""
+    try:
+        logger.info("Iniciando bot do Telegram...")
+        telegram_service.start_bot()
+        logger.info("Bot do Telegram iniciado com sucesso!")
+    except Exception as e:
+        logger.error(f"Erro ao iniciar bot do Telegram: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Evento executado quando a aplicação é finalizada"""
+    try:
+        logger.info("Parando bot do Telegram...")
+        telegram_service.stop_bot()
+        logger.info("Bot do Telegram parado com sucesso!")
+    except Exception as e:
+        logger.error(f"Erro ao parar bot do Telegram: {e}")
 
 if __name__ == "__main__":
     uvicorn.run("main:app")

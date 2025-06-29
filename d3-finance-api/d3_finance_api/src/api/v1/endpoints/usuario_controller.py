@@ -8,6 +8,7 @@ from src.api.tags import Tag
 from src.schemas.usuario_schemas import UsuarioCreate, UsuarioUpdate, UsuarioResponse
 from src.utils.auth_utils import gerar_hash_senha
 from sqlalchemy.exc import IntegrityError
+from src.utils.notification_utils import send_notification_background
 
 # Endpoints
 LISTA_USUARIOS = "/v1/usuarios"

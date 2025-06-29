@@ -26,6 +26,7 @@ class Usuario(Base):
     contas = relationship("Contas", back_populates="usuario", cascade="all, delete-orphan")
     receitas = relationship("Receitas", back_populates="usuario", cascade="all, delete-orphan")
     despesas = relationship("Despesas", back_populates="usuario", cascade="all, delete-orphan")
+    telegram_config = relationship("TelegramConfig", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
 
 
 class Receitas(Base):
@@ -115,5 +116,19 @@ class CodigoRecuperacao(Base):
 
     def __repr__(self):
         return f"<CodigoRecuperacao(id={self.id}, email={self.email}, usado={self.usado})>"
-
     
+
+class TelegramConfig(Base):
+    __tablename__ = "telegram_config"
+
+    id = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True)
+    chat_id = Column(String(50), nullable=False)
+    ativo = Column(Boolean, default=True, nullable=False)
+    data_criacao = Column(DateTime, default=func.now(), nullable=False)
+    data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
+
+    usuario = relationship("Usuario", back_populates="telegram_config")
+
+    def __repr__(self):
+        return f"<TelegramConfig(id={self.id}, usuario_id={self.usuario_id}, ativo={self.ativo})>"

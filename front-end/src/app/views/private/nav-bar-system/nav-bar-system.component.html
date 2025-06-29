@@ -1,5 +1,133 @@
 <div class="card flex justify-center">
-    <p-toast />
-    <p-menu [model]="items" />
+  <p-toast />
+  <p-menu [model]="items" />
 </div>
 <p-confirmDialog></p-confirmDialog>
+
+<!-- Modal de Configuração do Telegram -->
+<p-dialog [(visible)]="showTelegramModal" header="Configuração do Telegram BOT" [modal]="true"
+  [style]="{width: '600px'}" [draggable]="false" [resizable]="false" (onHide)="closeTelegramModal()">
+
+  <div class="telegram-dialog-content">
+    <!-- Status da Integração -->
+    <div class="status-section">
+      <h3>Status da Integração</h3>
+      <div class="status-info">
+        <p-tag [value]="getStatusText()" [severity]="getStatusSeverity()"
+          [icon]="telegramConfig?.ativo ? 'pi pi-check' : 'pi pi-times'">
+        </p-tag>
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <!-- Configuração do Chat -->
+    <div class="config-section">
+      <h3>Configuração do Chat</h3>
+      <div class="form-group">
+        <label for="chatId">Chat ID do Telegram *</label>
+        <input id="chatId" type="text" pInputText [(ngModel)]="chatId" placeholder="Ex: 5225708426" class="w-full" />
+        <small class="form-help">
+          O Chat ID é um número único que identifica sua conversa com o bot.
+        </small>
+
+        <!-- Botão de ajuda -->
+        <button pButton type="button" label="Como obter Chat ID?" class="p-button-text p-button-sm"
+          (click)="toggleChatIdHelp()" [disabled]="isLoading">
+        </button>
+
+        <!-- Ajuda sobre Chat ID -->
+        <div class="help-section" *ngIf="showChatIdHelp">
+          <div class="help-content">
+            <h5>Como obter seu Chat ID:</h5>
+            <ol>
+              <li>Abra o Telegram e procure por <strong>&#64;D3FinanceBot</strong></li>
+              <li>Inicie uma conversa com o bot</li>
+              <li>Envie <code>/start</code> para o bot</li>
+              <li>O bot responderá com seu Chat ID</li>
+              <li>Copie o Chat ID e cole no campo acima</li>
+            </ol>
+            <p><strong>Dica:</strong> Use o comando <code>/chatid</code> para ver seu Chat ID novamente.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-actions">
+        <p-button [label]="telegramConfig ? 'Atualizar' : 'Salvar'" icon="pi pi-check" severity="primary"
+          [loading]="isLoading" (onClick)="saveTelegramConfig()">
+        </p-button>
+
+        <p-button *ngIf="telegramConfig" label="Enviar Teste" icon="pi pi-send" severity="secondary"
+          (onClick)="sendTestMessage()">
+        </p-button>
+
+        <p-button *ngIf="telegramConfig" label="Remover" icon="pi pi-trash" severity="danger" [loading]="isLoading"
+          (onClick)="removeTelegramConfig()">
+        </p-button>
+      </div>
+    </div>
+
+    <p-divider></p-divider>
+
+    <!-- Ajuda -->
+    <div class="help-section">
+      <div class="system-info">
+        <h4>🤖 Como funciona?</h4>
+        <p>O D3 Finance possui um bot oficial no Telegram que envia notificações automáticas quando você realiza ações
+          no sistema. Você só precisa configurar seu Chat ID para começar a receber as notificações.</p>
+      </div>
+
+      <h3>Como obter seu Chat ID?</h3>
+      <div class="help-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Encontre o bot do D3 Finance</h4>
+            <p>Procure por <strong>&#64;D3FinanceBot</strong> no Telegram, ou <a href="https://t.me/D3FinanceBOT"
+                target="_blank" rel="noopener noreferrer"><strong>clique aqui!</strong></a></p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Inicie uma conversa</h4>
+            <p>Clique em "Iniciar" ou envie <code>/start</code> para o bot</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Receba seu Chat ID</h4>
+            <p>O bot responderá automaticamente com seu Chat ID e botões de opções</p>
+            <p><em>Use <code>/chatid</code> se quiser ver o ID novamente</em></p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Configure no sistema</h4>
+            <p>Cole o Chat ID no campo acima e clique em "Salvar"</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="notification-info">
+        <h4>📱 Notificações que você receberá:</h4>
+        <ul>
+          <li>💰 <strong>Despesas:</strong> Quando registrar uma nova despesa</li>
+          <li>💵 <strong>Receitas:</strong> Quando registrar uma nova receita</li>
+          <li>🏦 <strong>Contas:</strong> Quando criar uma nova conta</li>
+          <li>🔄 <strong>Movimentações:</strong> Quando transferir entre contas</li>
+        </ul>
+      </div>
+
+      <div class="success-info">
+        <h4>✅ Bot Oficial</h4>
+        <p>Este é o bot oficial do D3 Finance. É seguro e confiável para receber suas notificações financeiras.</p>
+      </div>
+    </div>
+  </div>
+</p-dialog>

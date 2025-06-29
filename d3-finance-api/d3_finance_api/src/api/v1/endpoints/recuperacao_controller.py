@@ -16,6 +16,8 @@ from src.schemas.recuperacao_schemas import (
 )
 from src.services.email_service import EmailService
 from src.utils.auth_utils import gerar_hash_senha
+from src.utils.notification_utils import send_notification_background
+
 
 # Endpoints
 ENVIAR_CODIGO = "/v1/recuperar-senha/enviar-codigo"
