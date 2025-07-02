@@ -13,6 +13,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TransacaoService } from '../../../service/transacao.service';
 import { TransacaoRequestModel } from '../../../models/RequestTransacao';
+import { ToastModule } from 'primeng/toast';
 
 
 
@@ -23,7 +24,17 @@ interface Conta {
 
 @Component({
   selector: 'app-movimentacao-entre-contas',
-  imports: [NavBarSystemComponent, FooterComponent, FormsModule, SplitterModule, DividerModule, InputNumber, Fluid, SelectModule, CardModule, ButtonModule],
+  imports: [NavBarSystemComponent,
+    ToastModule,
+    FooterComponent,
+    FormsModule,
+    SplitterModule,
+    DividerModule,
+    InputNumber,
+    Fluid,
+    SelectModule,
+    CardModule,
+    ButtonModule],
   templateUrl: './movimentacao-entre-contas.component.html',
   styleUrl: './movimentacao-entre-contas.component.css',
   providers: [
@@ -31,7 +42,7 @@ interface Conta {
   ]
 })
 export class MovimentacaoEntreContasComponent {
-  
+
   transacao: TransacaoRequestModel = new TransacaoRequestModel();
   contas: Conta[] = [];
 
@@ -39,7 +50,7 @@ export class MovimentacaoEntreContasComponent {
     private contasService: ContasService,
     private transacaoService: TransacaoService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.contasService.listarContas().subscribe({

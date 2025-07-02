@@ -17,7 +17,7 @@ from src.utils.auth_utils import gerar_hash_senha, verificar_senha
 from sqlalchemy.exc import IntegrityError
 
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 90  # Tempo de expiração do token em minutos
+ACCESS_TOKEN_EXPIRE_MINUTES = 60  # Tempo de expiração do token em minutos
 ALGORITHM = "HS256"
 SECRET_KEY = os.getenv("SECRET_KEY")  # Substitua por uma chave secreta segura
 

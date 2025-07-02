@@ -26,7 +26,19 @@ class TelegramService:
         self.is_running = False
         self.bot_thread = None
         self.notification_enabled = NOTIFICATION_ENABLED
-        
+
+    # --- NOVO MÉTODO AUXILIAR PARA FORMATAR VALORES ---
+    def _formatar_valor_brl(self, valor: float) -> str:
+        """
+        Formata um número para o padrão monetário brasileiro (R$ 1.234,50).
+        """
+        if valor is None:
+            valor = 0.0
+        valor_str = f"{valor:.2f}"
+        parte_inteira, parte_decimal = valor_str.split('.')
+        parte_inteira_formatada = f"{int(parte_inteira):,}".replace(',', '.')
+        return f"R$ {parte_inteira_formatada},{parte_decimal}"
+
     def start_bot(self):
         """Inicia o bot em uma thread separada"""
         if self.is_running:
@@ -113,12 +125,12 @@ class TelegramService:
             
     def send_notification_to_user(self, usuario_id: int, message: str, parse_mode: str = "HTML") -> bool:
         """Envia notificação para um usuário específico"""
+        db = SessionLocal()
         try:
             if not self.notification_enabled:
                 logger.info("Notificações do Telegram estão desabilitadas")
                 return False
                 
-            db = SessionLocal()
             config = db.query(TelegramConfig).filter(
                 TelegramConfig.usuario_id == usuario_id,
                 TelegramConfig.ativo == True
@@ -138,14 +150,15 @@ class TelegramService:
     def notify_receita_cadastrada(self, usuario_id: int, categoria: str, valor: float, descricao: str, data_recebimento: str, conta_nome: str) -> bool:
         """Notifica quando uma receita é cadastrada"""
         if not self.notification_enabled:
-            logger.info("Notificações do Telegram estão desabilitadas")
             return False
-            
+        
+        # --- Alterado para usar o método de formatação ---
+        valor_formatado = self._formatar_valor_brl(valor)
         message = f"""
 💵 <b>Receita Cadastrada!</b>
 
 <b>Categoria:</b> {categoria}
-<b>Valor:</b> R$ {valor:,.2f}
+<b>Valor:</b> {valor_formatado}
 <b>Descrição:</b> {descricao}
 <b>Data de Recebimento:</b> {data_recebimento}
 <b>Conta:</b> {conta_nome}
@@ -157,14 +170,15 @@ class TelegramService:
     def notify_despesa_cadastrada(self, usuario_id: int, categoria: str, valor: float, descricao: str, data_pagamento: str, conta_nome: str) -> bool:
         """Notifica quando uma despesa é cadastrada"""
         if not self.notification_enabled:
-            logger.info("Notificações do Telegram estão desabilitadas")
             return False
             
+        # --- Alterado para usar o método de formatação ---
+        valor_formatado = self._formatar_valor_brl(valor)
         message = f"""
 💰 <b>Despesa Cadastrada!</b>
 
 <b>Categoria:</b> {categoria}
-<b>Valor:</b> R$ {valor:,.2f}
+<b>Valor:</b> {valor_formatado}
 <b>Descrição:</b> {descricao}
 <b>Data de Pagamento:</b> {data_pagamento}
 <b>Conta:</b> {conta_nome}
@@ -176,15 +190,16 @@ class TelegramService:
     def notify_conta_criada(self, usuario_id: int, nome_conta: str, tipo_conta: str, saldo_inicial: float) -> bool:
         """Notifica quando uma conta é criada"""
         if not self.notification_enabled:
-            logger.info("Notificações do Telegram estão desabilitadas")
             return False
             
+        # --- Alterado para usar o método de formatação ---
+        saldo_formatado = self._formatar_valor_brl(saldo_inicial)
         message = f"""
 🏦 <b>Conta Criada!</b>
 
 <b>Nome da Conta:</b> {nome_conta}
 <b>Tipo:</b> {tipo_conta}
-<b>Saldo Inicial:</b> R$ {saldo_inicial:,.2f}
+<b>Saldo Inicial:</b> {saldo_formatado}
 
 ✅ Conta criada com sucesso no sistema D3 Finance!
 """
@@ -193,13 +208,14 @@ class TelegramService:
     def notify_movimentacao_contas(self, usuario_id: int, valor: float, conta_origem: str, conta_destino: str, descricao: str) -> bool:
         """Notifica quando há movimentação entre contas"""
         if not self.notification_enabled:
-            logger.info("Notificações do Telegram estão desabilitadas")
             return False
             
+        # --- Alterado para usar o método de formatação ---
+        valor_formatado = self._formatar_valor_brl(valor)
         message = f"""
 🔄 <b>Movimentação Entre Contas!</b>
 
-<b>Valor:</b> R$ {valor:,.2f}
+<b>Valor:</b> {valor_formatado}
 <b>Conta Origem:</b> {conta_origem}
 <b>Conta Destino:</b> {conta_destino}
 <b>Descrição:</b> {descricao}
