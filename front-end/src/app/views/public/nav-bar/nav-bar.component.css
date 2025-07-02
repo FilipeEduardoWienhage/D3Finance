@@ -13,7 +13,7 @@ header {
     display: flex;
     gap: 48px;
     list-style: none;
-    padding: 0;
+    padding: 15px;
     margin: 0;
 }
 
