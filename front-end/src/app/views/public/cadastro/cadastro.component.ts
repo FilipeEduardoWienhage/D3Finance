@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
-import { InputMask } from 'primeng/inputmask';
-import { DatePicker } from 'primeng/datepicker';
+import { InputMaskModule } from 'primeng/inputmask';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
@@ -15,28 +14,28 @@ import { UsuarioCadastroRequestModel } from '../../../models/RequestCadastro';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-
-
+import { PrimeNG } from 'primeng/config';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-cadastro',
   standalone: true,
   imports: [
-  FooterComponent,
-  InputTextModule,
-  FormsModule,
-  InputMask,
-  DatePicker,
-  PasswordModule,
-  ButtonModule,
-  StepperModule,
-  CommonModule,
-  NavBarComponent,
-  Select,
-  ToastModule,
+    FooterComponent,
+    InputTextModule,
+    FormsModule,
+    InputMaskModule,
+    PasswordModule,
+    ButtonModule,
+    StepperModule,
+    CommonModule,
+    NavBarComponent,
+    Select,
+    ToastModule,
+    CalendarModule
   ],
-  providers:[
-  MessageService,
+  providers: [
+    MessageService,
   ],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css'
@@ -48,22 +47,40 @@ export class CadastroComponent implements OnInit {
     private usuarioService: UsuarioService,
     private router: Router,
     private messageService: MessageService,
-  ) {}
+    private primengConfig: PrimeNG,
+  ) { }
+
   
+  maxDataPermitida = new Date(2020, 11, 31);
+  minDate = new Date(1900, 0, 1);
+  dataDefault = new Date(2020, 0, 1); 
+
 
   ngOnInit(): void {
     this.requestCadastro = new UsuarioCadastroRequestModel();
+    this.primengConfig.setTranslation({
+      dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+      dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+      dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+      monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      today: 'Hoje',
+      clear: 'Limpar',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'Sm',
+      firstDayOfWeek: 0,
+    });
   }
 
-  
+
   public doCadastro(): void {
     const senha = this.requestCadastro.password;
     const confirmar = this.requestCadastro.confirmarSenha;
-  
+
     const senhaForte = /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(senha);
     this.senhaValida = senhaForte;
     this.senhasConferem = senha === confirmar;
-  
+
     if (!senhaForte || !this.senhasConferem) {
       if (!senhaForte) {
         this.messageService.add({
@@ -72,7 +89,7 @@ export class CadastroComponent implements OnInit {
           detail: 'A senha deve ter ao menos 8 caracteres, uma letra maiúscula e um número.'
         });
       }
-  
+
       if (!this.senhasConferem) {
         this.messageService.add({
           severity: 'error',
@@ -80,12 +97,12 @@ export class CadastroComponent implements OnInit {
           detail: 'As senhas não coincidem.'
         });
       }
-  
+
       return;
     }
-  
+
     console.log(this.requestCadastro);
-  
+
     this.usuarioService.cadastrarUsuario(this.requestCadastro).subscribe({
       next: () => {
         this.messageService.add({
@@ -120,15 +137,15 @@ export class CadastroComponent implements OnInit {
     { label: 'Feminino', value: 'Feminino' },
     { label: 'Outro', value: 'Outro' },
   ];
-   
+
 
   public buscarCnpj(): void {
     let cnpj = this.requestCadastro.cnpj.replace(/[-_.\/]/g, '');
     console.log('CNPJ digitado:', cnpj);
-  
+
     if (cnpj.length === 14) {
       const brasilApiUrl = `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`;
-  
+
       fetch(brasilApiUrl)
         .then((response) => {
           if (!response.ok) {
@@ -143,7 +160,7 @@ export class CadastroComponent implements OnInit {
             this.requestCadastro.cidade = data.municipio;
             this.requestCadastro.bairro = data.bairro;
             this.requestCadastro.cep = data.cep.replace(/[-_.]/g, '');
-  
+
             console.log('CNPJ encontrado:', data);
             this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'CNPJ encontrado com sucesso!' });
           } else {

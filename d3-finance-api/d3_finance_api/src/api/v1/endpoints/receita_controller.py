@@ -211,21 +211,33 @@ def update_receita(receita_id: int, receita_update: ReceitaUpdate, usuario_logad
     if not receita:
         raise HTTPException(status_code=404, detail="Receita não encontrada ou não pertence ao usuário")
 
-    conta = db.query(Contas).filter(Contas.id == receita.conta_id).first()
-    if not conta:
+    # Busca a conta atual da receita
+    conta_atual = db.query(Contas).filter(Contas.id == receita.conta_id, Contas.usuario_id == usuario_logado.id).first()
+    if not conta_atual:
         raise HTTPException(status_code=404, detail="Conta associada à receita não encontrada")
 
-    # Ajusta o saldo da conta:
-    # Subtrai o valor antigo da receita do saldo da conta
-    conta.saldo -= receita.valor_recebido
+    # Remove o valor da receita da conta atual
+    conta_atual.saldo -= receita.valor_recebido
+
+    # Se a conta foi alterada, busca a nova conta
+    nova_conta = None
+    if receita_update.conta_id and receita_update.conta_id != receita.conta_id:
+        nova_conta = db.query(Contas).filter(Contas.id == receita_update.conta_id, Contas.usuario_id == usuario_logado.id).first()
+        if not nova_conta:
+            raise HTTPException(status_code=404, detail="Nova conta não encontrada ou não pertence ao usuário")
 
     # Atualiza os campos da receita
+    valor_antigo = receita.valor_recebido
     for field, value in receita_update.__dict__.items():
         if value is not None:
             setattr(receita, field, value)
 
-    # Soma o novo valor da receita no saldo da conta
-    conta.saldo += receita.valor_recebido
+    # Se a conta foi alterada, adiciona o valor na nova conta
+    if nova_conta:
+        nova_conta.saldo += receita.valor_recebido
+    else:
+        # Se não mudou de conta, apenas ajusta o valor na conta atual
+        conta_atual.saldo += receita.valor_recebido
 
     db.commit()
     db.refresh(receita)

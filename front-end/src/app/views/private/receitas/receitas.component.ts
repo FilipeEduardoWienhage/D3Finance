@@ -60,40 +60,42 @@ export class ReceitasComponent implements OnInit {
     forma_recebimento: null as string | null
   };
 
-  categoriasOpcoes = [
-    { label: 'Todas as Categorias', value: null },
-    { label: 'Venda de Produtos', value: 'Venda de Produtos' },
-    { label: 'Prestação de Serviços', value: 'Prestação de Serviços' },
-    { label: 'Receitas de Assinaturas / Mensalidades', value: 'Receitas de Assinaturas / Mensalidades' },
-    { label: 'Receitas de Consultoria', value: 'Receitas de Consultoria' },
-    { label: 'Receitas de Licenciamento', value: 'Receitas de Licenciamento' },
-    { label: 'Receitas de Aluguel de Bens', value: 'Receitas de Aluguel de Bens' },
-    { label: 'Receita com Publicidade / Parcerias', value: 'Receita com Publicidade / Parcerias' },
-    { label: 'Recebimento de Contratos', value: 'Recebimento de Contratos' },
-    { label: 'Royalties Recebidos', value: 'Royalties Recebidos' },
-    { label: 'Rendimentos de Investimentos', value: 'Rendimentos de Investimentos' },
-    { label: 'Reembolso de Custos Operacionais', value: 'Reembolso de Custos Operacionais' },
-    { label: 'Multas Contratuais Recebidas', value: 'Multas Contratuais Recebidas' },
-    { label: 'Recuperação de Crédito / Cobrança', value: 'Recuperação de Crédito / Cobrança' },
-    { label: 'Outras Receitas Operacionais', value: 'Outras Receitas Operacionais' },
-    { label: 'Outras Receitas Não Operacionais', value: 'Outras Receitas Não Operacionais' }
-  ];
-
   // NOVOS FILTROS
   contasOpcoes = [
     { label: 'Todas as Contas', value: null }
   ];
 
+
+  categoriasOpcoes = [
+    { label: 'Todas as Categorias', value: null },
+    { label: 'Multas Contratuais Recebidas', value: 'Multas Contratuais Recebidas' },
+    { label: 'Outras Receitas Não Operacionais', value: 'Outras Receitas Não Operacionais' },
+    { label: 'Outras Receitas Operacionais', value: 'Outras Receitas Operacionais' },
+    { label: 'Prestação de Serviços', value: 'Prestação de Serviços' },
+    { label: 'Recebimento de Contratos', value: 'Recebimento de Contratos' },
+    { label: 'Receita com Publicidade / Parcerias', value: 'Receita com Publicidade / Parcerias' },
+    { label: 'Receitas de Aluguel de Bens', value: 'Receitas de Aluguel de Bens' },
+    { label: 'Receitas de Assinaturas / Mensalidades', value: 'Receitas de Assinaturas / Mensalidades' },
+    { label: 'Receitas de Consultoria', value: 'Receitas de Consultoria' },
+    { label: 'Receitas de Licenciamento', value: 'Receitas de Licenciamento' },
+    { label: 'Recuperação de Crédito / Cobrança', value: 'Recuperação de Crédito / Cobrança' },
+    { label: 'Reembolso de Custos Operacionais', value: 'Reembolso de Custos Operacionais' },
+    { label: 'Rendimentos de Investimentos', value: 'Rendimentos de Investimentos' },
+    { label: 'Royalties Recebidos', value: 'Royalties Recebidos' },
+    { label: 'Venda de Produtos', value: 'Venda de Produtos' }
+  ];
+
+
   formasRecebimentoOpcoes = [
     { label: 'Todas as Formas', value: null },
+    { label: 'Boleto', value: 'boleto' },
+    { label: 'Cartão de Crédito', value: 'cartao_credito' },
+    { label: 'Cartão de Débito', 'value': 'cartao_debito' },
+    { label: 'Cheque', value: 'cheque' },
     { label: 'Dinheiro', value: 'dinheiro' },
     { label: 'PIX', value: 'pix' },
-    { label: 'Cartão de Crédito', value: 'cartao_credito' },
-    { label: 'Cartão de Débito', value: 'cartao_debito' },
-    { label: 'Transferência Bancária', value: 'transferencia' },
-    { label: 'Boleto', value: 'boleto' },
-    { label: 'Cheque', value: 'cheque' }
-  ];
+    { label: 'Transferência Bancária', value: 'transferencia' }
+  ]
 
   statusReceitaOpcoes = [
     { label: 'Todos os Status', value: null },

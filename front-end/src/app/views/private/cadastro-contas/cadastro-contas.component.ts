@@ -52,6 +52,7 @@ export class CadastroContasComponent implements OnInit {
 
   editDialogVisible = false;
   itemEmEdicao: any = {};
+  tituloModal = 'Editar Conta';
 
   constructor(
     private contasService: ContasService,
@@ -116,7 +117,8 @@ export class CadastroContasComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao editar conta:', err);
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível atualizar a conta.' });
+        const msg = err.error?.detail || 'Não foi possível atualizar a conta.';
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: msg });
       }
     });
   }

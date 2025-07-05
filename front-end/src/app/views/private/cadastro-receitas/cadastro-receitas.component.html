@@ -36,7 +36,7 @@
                     <div class="flex flex-col gap-2">
                         <label for="dataRecebimento">Data de recebimento<span class="asterisco">*</span></label>
                         <p-datepicker id="dataNascimento" [(ngModel)]="requestReceita.data" required
-                            [showButtonBar]="true" class="w-64" [dateFormat]="'dd/mm/yy'" />
+                            [showButtonBar]="true" class="w-64" [dateFormat]="'dd/mm/yy'" placeholder="dd/mm/aaaa" [showIcon]="true" />
                     </div>
                 </div>
                 <div class="card flex justify-center">

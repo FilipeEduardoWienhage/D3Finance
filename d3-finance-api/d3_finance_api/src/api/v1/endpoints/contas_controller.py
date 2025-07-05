@@ -32,7 +32,7 @@ def get_db():
     path=LISTA_CONTAS, response_model=List[ContaResponse], tags=[Tag.Contas.name]
 )
 def get_contas(usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
-    contas = db.query(Contas).filter(Contas.usuario_id == usuario_logado.id).all()
+    contas = db.query(Contas).filter(Contas.usuario_id == usuario_logado.id).order_by(Contas.nome_conta).all()
     return [ContaResponse(
         id=conta.id,
         tipo_conta=conta.tipo_conta,
@@ -71,7 +71,7 @@ def create_contas(conta: ContaCreate, usuario_logado: Annotated[TokenData, Depen
     db_conta = Contas(
         tipo_conta=conta.tipo_conta,
         nome_conta=conta.nome_conta,
-        saldo=conta.saldo if conta.saldo is not None else 0.0,
+        saldo=0.0,
         usuario_id=usuario_logado.id
     )
 

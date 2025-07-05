@@ -211,18 +211,32 @@ def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, usuario_loga
     if not despesa:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Despesa não encontrada")
 
-    conta = db.query(Contas).filter(Contas.id == despesa.conta_id, Contas.usuario_id == usuario_logado.id).first()
-    if not conta:
+    # Busca a conta atual da despesa
+    conta_atual = db.query(Contas).filter(Contas.id == despesa.conta_id, Contas.usuario_id == usuario_logado.id).first()
+    if not conta_atual:
         raise HTTPException(status_code=404, detail="Conta não encontrada ou não pertence ao usuário")
 
-    # Ajusta o saldo: soma o valor antigo (pois vai ser removido) e depois subtrai o novo valor
-    conta.saldo += despesa.valor_pago
+    # Remove o valor da despesa da conta atual (soma de volta o valor pago)
+    conta_atual.saldo += despesa.valor_pago
 
+    # Se a conta foi alterada, busca a nova conta
+    nova_conta = None
+    if despesa_update.conta_id and despesa_update.conta_id != despesa.conta_id:
+        nova_conta = db.query(Contas).filter(Contas.id == despesa_update.conta_id, Contas.usuario_id == usuario_logado.id).first()
+        if not nova_conta:
+            raise HTTPException(status_code=404, detail="Nova conta não encontrada ou não pertence ao usuário")
+
+    # Atualiza os campos da despesa
     for field, value in despesa_update.__dict__.items():
         if value is not None:
             setattr(despesa, field, value)
 
-    conta.saldo -= despesa.valor_pago
+    # Se a conta foi alterada, subtrai o valor da nova conta
+    if nova_conta:
+        nova_conta.saldo -= despesa.valor_pago
+    else:
+        # Se não mudou de conta, apenas ajusta o valor na conta atual
+        conta_atual.saldo -= despesa.valor_pago
 
     db.commit()
     db.refresh(despesa)

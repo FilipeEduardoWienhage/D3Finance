@@ -27,6 +27,7 @@ class ReceitaUpdate:
     data_recebimento: Optional[date] = None
     descricao: Optional[str] = None
     forma_recebimento: Optional[str] = None
+    conta_id: Optional[int] = None
 
 
 @dataclass

@@ -16,6 +16,7 @@ import { DespesaMensal } from '../../../models/despesa-mensal';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ContasService } from '../../../service/contas.service';
+import { PrimeNG } from 'primeng/config';
 
 
 @Component({
@@ -60,35 +61,37 @@ export class DespesasComponent implements OnInit {
     forma_pagamento: null as string | null
   };
 
-  categoriasOpcoes = [
-    { label: 'Todas as Categorias', value: null },
-    { label: 'Despesas com Pessoal', value: 'Despesas com Pessoal' },
-    { label: 'Despesas Operacionais', value: 'Despesas Operacionais' },
-    { label: 'Despesas com Materiais', value: 'Despesas com Materiais' },
-    { label: 'Despesas Administrativas', value: 'Despesas Administrativas' },
-    { label: 'Despesas com Marketing', value: 'Despesas com Marketing' },
-    { label: 'Despesas com Transporte', value: 'Despesas com Transporte' },
-    { label: 'Impostos e Taxas', value: 'Impostos e Taxas' },
-    { label: 'Despesas Financeiras', value: 'Despesas Financeiras' },
-    { label: 'Manutenção e Reparos', value: 'Manutenção e Reparos' },
-    { label: 'Despesas com Terceirizados', value: 'Despesas com Terceirizados' },
-    { label: 'Outras Despesas', value: 'Outras Despesas' }
-  ]
-
   // NOVOS FILTROS
   contasOpcoes = [
     { label: 'Todas as Contas', value: null }
   ];
 
+
+  categoriasOpcoes = [
+    { label: 'Todas as Categorias', value: null },
+    { label: 'Despesas Administrativas', value: 'Despesas Administrativas' },
+    { label: 'Despesas Financeiras', value: 'Despesas Financeiras' },
+    { label: 'Despesas Operacionais', value: 'Despesas Operacionais' },
+    { label: 'Despesas com Marketing', value: 'Despesas com Marketing' },
+    { label: 'Despesas com Materiais', value: 'Despesas com Materiais' },
+    { label: 'Despesas com Pessoal', value: 'Despesas com Pessoal' },
+    { label: 'Despesas com Terceirizados', value: 'Despesas com Terceirizados' },
+    { label: 'Despesas com Transporte', value: 'Despesas com Transporte' },
+    { label: 'Impostos e Taxas', value: 'Impostos e Taxas' },
+    { label: 'Manutenção e Reparos', value: 'Manutenção e Reparos' },
+    { label: 'Outras Despesas', value: 'Outras Despesas' }
+  ];
+
+
   formasPagamentoOpcoes = [
     { label: 'Todas as Formas', value: null },
-    { label: 'Dinheiro', value: 'dinheiro' },
-    { label: 'PIX', value: 'pix' },
+    { label: 'Boleto', value: 'boleto' },
     { label: 'Cartão de Crédito', value: 'cartao_credito' },
     { label: 'Cartão de Débito', value: 'cartao_debito' },
-    { label: 'Transferência Bancária', value: 'transferencia' },
-    { label: 'Boleto', value: 'boleto' },
-    { label: 'Cheque', value: 'cheque' }
+    { label: 'Cheque', value: 'cheque' },
+    { label: 'Dinheiro', value: 'dinheiro' },
+    { label: 'PIX', value: 'pix' },
+    { label: 'Transferência Bancária', value: 'transferencia' }
   ];
 
   statusDespesaOpcoes = [
@@ -104,13 +107,27 @@ export class DespesasComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private despesaService: DespesasService,
     private messageService: MessageService,
-    private contasService: ContasService
+    private contasService: ContasService,
+    private primengConfig: PrimeNG
   ) { }
+
 
   ngOnInit() {
     this.carregarContas();
     this.carregarDadosConsolidado();
     this.carregarDadosMensal();
+    this.primengConfig.setTranslation({
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    dayNamesMin: ['D','S','T','Q','Q','S','S'],
+    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    clear: 'Limpar',
+    dateFormat: 'dd/mm/yy',
+    weekHeader: 'Sm',
+    firstDayOfWeek: 0,
+  });
   }
 
   carregarContas() {
@@ -143,8 +160,8 @@ export class DespesasComponent implements OnInit {
       categoria: this.filtroMensal.categoria,
       conta_id: this.filtroMensal.conta_id,
       forma_pagamento: this.filtroMensal.forma_pagamento
-  };
-  this.despesaService.getDespesaConsolidadasMensal(filtrosParaApi).subscribe({
+    };
+    this.despesaService.getDespesaConsolidadasMensal(filtrosParaApi).subscribe({
       next: (dados) => {
         if (this.filtroMensal.categoria && dados.every(d => d.valor === 0)) {
           this.messageService.add({

@@ -17,7 +17,6 @@ import { ReceitasService } from '../../../service/receitas.service';
 import { ContasService } from '../../../service/contas.service';
 import { ToastModule } from 'primeng/toast';
 
-
 interface formaRecebimento {
   name: string;
 }
@@ -103,10 +102,12 @@ export class CadastroReceitasComponent {
 
     this.contasService.listarContas().subscribe({
       next: (contas) => {
-        this.contaDestino = contas.map(conta => ({
-          id: conta.id,
-          name: conta.nome_conta
-        }));
+        this.contaDestino = contas
+          .map(conta => ({
+            id: conta.id,
+            name: conta.nome_conta
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
       },
       error: (erro) => {
         console.error('Erro ao carregar contas:', erro);

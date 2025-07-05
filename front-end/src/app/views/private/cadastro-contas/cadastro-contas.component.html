@@ -17,29 +17,22 @@
         <div class="absolute inset-0 flex flex-col items-center justify-start pt-8 space-y-8">
 
             <p-card header="Cadastrar Contas" class="w-96">
-                <div class="card flex justify-center">
-                    <div class="flex flex-col gap-2">
-                        <label for="tipoConta">Tipo da Conta<span class="asterisco">*</span></label>
+                <div class="space-y-4">
+                    <div class="field">
+                        <label for="tipoConta" class="block text-sm font-medium text-gray-300 mb-2">Tipo da Conta<span class="text-red-500">*</span></label>
                         <p-dropdown [options]="tipoContaOptions" [(ngModel)]="requestConta.tipoConta" optionLabel="name"
-                            optionValue="name" placeholder="Tipo da Conta" class="w-full md:w-64" [appendTo]="'body'" />
+                            optionValue="name" placeholder="Selecione o tipo da conta" class="w-full" [appendTo]="'body'" />
                     </div>
-                </div>
-                <div class="card flex justify-center">
-                    <div class="flex flex-col gap-2 w-full md:w-64">
-                        <label for="nomeConta">Nome da Conta<span class="asterisco">*</span></label>
+                    <div class="field">
+                        <label for="nomeConta" class="block text-sm font-medium text-gray-300 mb-2">Nome da Conta<span class="text-red-500">*</span></label>
                         <input pInputText id="nomeConta" aria-describedby="nomeContas"
                             [(ngModel)]="requestConta.nomeConta"
-                            class="w-full p-2 rounded-md bg-black text-white border border-gray-700" />
+                            class="w-full p-3 bg-[#2a2a2a] border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                            placeholder="Digite o nome da conta" />
                     </div>
-                </div>
-                <div class="card flex justify-center">
-                    <div class="flex flex-col gap-2">
-                        <a href="#">
-                            <div class="flex gap-4 mt-1">
-                                <p-button (click)="doCadastroContas()" label="Cadastrar" class="w-full md:w-64"
-                                    styleClass="w-full" />
-                            </div>
-                        </a>
+                    <div class="field">
+                        <p-button (click)="doCadastroContas()" label="Cadastrar" 
+                            class="w-full" styleClass="p-button-success" />
                     </div>
                 </div>
             </p-card>
@@ -85,25 +78,33 @@
                 </p-card>
             </div>
 
-            <p-dialog header="Editar Item" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
-                [style]="{ width: '450px' }" (onHide)="editDialogVisible = false" [baseZIndex]="10000">
+            <p-dialog [header]="tituloModal" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
+                [style]="{ width: '600px' }" (onHide)="editDialogVisible = false" [baseZIndex]="10000"
+                styleClass="edit-dialog">
                 <ng-template pTemplate="content">
-                    <div *ngIf="itemEmEdicao">
-                        <div class="p-field">
-                            <label for="tipoContaEdit">Tipo: </label>
+                    <div *ngIf="itemEmEdicao" class="space-y-4">
+                        <div class="field">
+                            <label for="tipoContaEdit" class="block text-sm font-medium text-gray-300 mb-2">Tipo da Conta</label>
                             <p-dropdown id="tipoContaEdit" [(ngModel)]="itemEmEdicao.tipo_conta"
                                 [options]="tipoContaOptions" optionLabel="name" optionValue="name" [appendTo]="'body'"
-                                placeholder="Selecione um tipo"></p-dropdown>
+                                placeholder="Selecione o tipo da conta" class="w-full"></p-dropdown>
                         </div>
-                        <div class="p-field">
-                            <label for="nomeContaEdit">Nome: </label>
-                            <input id="nomeContaEdit" type="text" pInputText [(ngModel)]="itemEmEdicao.nome_conta" />
+                        <div class="field">
+                            <label for="nomeContaEdit" class="block text-sm font-medium text-gray-300 mb-2">Nome da Conta</label>
+                            <input id="nomeContaEdit" type="text" pInputText [(ngModel)]="itemEmEdicao.nome_conta" 
+                                class="w-full p-3 bg-[#2a2a2a] border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="footer">
-                    <button pButton label="Salvar" icon="pi pi-check" (click)="salvarEdicao()">
-                    </button>
+                    <div class="flex justify-end gap-2">
+                        <button pButton label="Cancelar" icon="pi pi-times" 
+                            class="p-button-secondary" (click)="editDialogVisible = false">
+                        </button>
+                        <button pButton label="Salvar" icon="pi pi-check" 
+                            class="p-button-success" (click)="salvarEdicao()">
+                        </button>
+                    </div>
                 </ng-template>
             </p-dialog>
             <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
