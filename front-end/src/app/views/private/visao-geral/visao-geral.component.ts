@@ -12,17 +12,17 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DialogModule } from 'primeng/dialog';
-import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
-
 import { ReceitasService } from '../../../service/receitas.service';
 import { DespesasService } from '../../../service/despesas.service';
 import { TransacaoService } from '../../../service/transacao.service';
 import { ContasService } from '../../../service/contas.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
+import { PrimeNG } from 'primeng/config';
+import { DatePicker } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-visao-geral',
@@ -38,6 +38,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     MultiSelectModule,
     DialogModule,
     CalendarModule,
+    DatePicker,
+
     ConfirmDialogModule,
     ToastModule,
     CardModule,
@@ -59,58 +61,62 @@ export class VisaoGeralComponent implements OnInit {
     private messageService: MessageService,
     private transacaoService: TransacaoService,
     private contasService: ContasService,
+    private primengConfig: PrimeNG
   ) { }
 
   tipoContas = [
-    { name: 'Pessoal' },
-    { name: 'Empresa' },
     { name: 'Despesas' },
+    { name: 'Empresa' },
+    { name: 'Pessoal' },
   ];
 
   categoriaDaReceita = [
-    { name: 'Venda de Produtos' },
+    { name: 'Multas Contratuais Recebidas' },
+    { name: 'Outras Receitas Não Operacionais' },
+    { name: 'Outras Receitas Operacionais' },
     { name: 'Prestação de Serviços' },
+    { name: 'Recebimento de Contratos' },
+    { name: 'Receita com Publicidade / Parcerias' },
+    { name: 'Receitas de Aluguel de Bens' },
     { name: 'Receitas de Assinaturas / Mensalidades' },
     { name: 'Receitas de Consultoria' },
     { name: 'Receitas de Licenciamento' },
-    { name: 'Receitas de Aluguel de Bens' },
-    { name: 'Receita com Publicidade / Parcerias' },
-    { name: 'Recebimento de Contratos' },
-    { name: 'Royalties Recebidos' },
-    { name: 'Rendimentos de Investimentos' },
-    { name: 'Reembolso de Custos Operacionais' },
-    { name: 'Multas Contratuais Recebidas' },
     { name: 'Recuperação de Crédito / Cobrança' },
-    { name: 'Outras Receitas Operacionais' },
-    { name: 'Outras Receitas Não Operacionais' }
+    { name: 'Reembolso de Custos Operacionais' },
+    { name: 'Rendimentos de Investimentos' },
+    { name: 'Royalties Recebidos' },
+    { name: 'Venda de Produtos' }
   ];
 
   categoriaDaDespesa = [
-    { name: 'Despesas com Pessoal' },
-    { name: 'Despesas Operacionais' },
-    { name: 'Despesas com Materiais' },
     { name: 'Despesas Administrativas' },
+    { name: 'Despesas Financeiras' },
+    { name: 'Despesas Operacionais' },
     { name: 'Despesas com Marketing' },
+    { name: 'Despesas com Materiais' },
+    { name: 'Despesas com Pessoal' },
+    { name: 'Despesas com Terceirizados' },
     { name: 'Despesas com Transporte' },
     { name: 'Impostos e Taxas' },
-    { name: 'Despesas Financeiras' },
     { name: 'Manutenção e Reparos' },
-    { name: 'Despesas com Terceirizados' },
     { name: 'Outras Despesas' }
   ];
 
   formasPags = [
+    { name: 'Cheque' },
+    { name: 'Crédito' },
+    { name: 'Depósito' },
     { name: 'Dinheiro' },
     { name: 'Débito' },
-    { name: 'Crédito' },
-    { name: 'Cheque' },
-    { name: 'Depósito' },
     { name: 'Pix' }
   ];
+
+  formasPagsComTodas: { name: string }[] = [];
 
   editDialogVisible = false;
   itemEmEdicao: any = null;
   tipoItemEmEdicao: 'conta' | 'receita' | 'despesa' | '' = '';
+  tituloModal = 'Editar Item';
 
   receitas: any[] = [];
   despesas: any[] = [];
@@ -127,12 +133,11 @@ export class VisaoGeralComponent implements OnInit {
     categoria: [] as { name: string }[],
     desc: '',
     conta: '',
-    data: '',
-    valor: '',
-    forma_pagamento: '',
-    forma_recebimento: '',
+    data: null as Date | null,
+    valor: null as string | number | null,
+    forma_pagamento: null as string | null,
+    forma_recebimento: null as string | null,
   };
-
 
   first = 0;
   rows = 10;
@@ -148,15 +153,32 @@ export class VisaoGeralComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.formasPagsComTodas = [{ name: 'Todas' }, ...this.formasPags];
+
     this.contasService.getContas().subscribe({
       next: (data) => {
-        this.contas = data;
-        this.filteredContas = [...data];
+        // Ordenar contas alfabeticamente por nome
+        this.contas = data.sort((a, b) => a.nome_conta.localeCompare(b.nome_conta));
+        this.filteredContas = [...this.contas];
         this.onTabChange(this.activeTab);  // Agora que contas estão carregadas, carregar o resto
       },
       error: (err) => console.error('Erro ao buscar contas:', err)
     });
     this.onTabChange(this.activeTab);
+
+    this.primengConfig.setTranslation({
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    dayNamesMin: ['D','S','T','Q','Q','S','S'],
+    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    clear: 'Limpar',
+    dateFormat: 'dd/mm/yy',
+    weekHeader: 'Sm',
+    firstDayOfWeek: 0,
+  });
   }
 
 
@@ -164,16 +186,50 @@ export class VisaoGeralComponent implements OnInit {
     const categoriasSelecionadas = this.filters.categoria.map((c: any) => c.name);
     const tiposSelecionados = this.filters.tipoConta.map((t: any) => t.name.toLowerCase());
 
+    const formaPagamentoSelecionada = this.filters.forma_pagamento;
+    const formaRecebimentoSelecionada = this.filters.forma_recebimento;
+
     if (this.activeTab.label === 'Receitas') {
       this.filteredReceitas = this.receitas.filter(item => {
-        // Formatar a data do item para comparação
-        const itemData = item.data_recebimento ? new Date(item.data_recebimento).toISOString().split('T')[0] : '';
-        
+        let filtroData = '';
+        if (this.filters.data) {
+          try {
+            const dataFiltro = typeof this.filters.data === 'string' 
+              ? new Date(this.filters.data) 
+              : this.filters.data;
+            
+            if (!isNaN(dataFiltro.getTime())) {
+              filtroData = dataFiltro.toISOString().split('T')[0];
+            }
+          } catch (e) {
+            console.error('Erro ao converter data do filtro:', e);
+          }
+        }
+
+        let itemData = '';
+        if (item.data_recebimento) {
+          try {
+            const dataItem = new Date(item.data_recebimento);
+            if (!isNaN(dataItem.getTime())) {
+              itemData = dataItem.toISOString().split('T')[0];
+            }
+          } catch (e) {
+            console.error('Erro ao converter data do item:', e);
+          }
+        }
+
+        const filtroFormaRecebimento = !formaRecebimentoSelecionada || formaRecebimentoSelecionada === 'Todas' || item.forma_recebimento === formaRecebimentoSelecionada;
+
         return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
           (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
           (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
-          (this.filters.data === '' || itemData === this.filters.data) &&
-          (this.filters.forma_recebimento === '' || item.forma_recebimento === this.filters.forma_recebimento);
+          (filtroData === '' || itemData === filtroData) &&
+          filtroFormaRecebimento;
+      }).sort((a, b) => {
+        // Manter ordenação por data de recebimento (mais recente primeiro)
+        const dataA = new Date(a.data_recebimento);
+        const dataB = new Date(b.data_recebimento);
+        return dataB.getTime() - dataA.getTime();
       });
     }
 
@@ -188,27 +244,99 @@ export class VisaoGeralComponent implements OnInit {
 
     if (this.activeTab.label === 'Despesas') {
       this.filteredDespesas = this.despesas.filter(item => {
-        // Formatar a data do item para comparação
-        const itemData = item.data_pagamento ? new Date(item.data_pagamento).toISOString().split('T')[0] : '';
+        let filtroData = '';
+        if (this.filters.data) {
+          try {
+            const dataFiltro = typeof this.filters.data === 'string' 
+              ? new Date(this.filters.data) 
+              : this.filters.data;
+            
+            if (!isNaN(dataFiltro.getTime())) {
+              filtroData = dataFiltro.toISOString().split('T')[0];
+            }
+          } catch (e) {
+            console.error('Erro ao converter data do filtro:', e);
+          }
+        }
+
+        let itemData = '';
+        if (item.data_pagamento) {
+          try {
+            const dataItem = new Date(item.data_pagamento);
+            if (!isNaN(dataItem.getTime())) {
+              itemData = dataItem.toISOString().split('T')[0];
+            }
+          } catch (e) {
+            console.error('Erro ao converter data do item:', e);
+          }
+        }
         
+        const filtroFormaPagamento = !formaPagamentoSelecionada || formaPagamentoSelecionada === 'Todas' || item.forma_pagamento === formaPagamentoSelecionada;
+
         return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
           (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
           (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
-          (this.filters.data === '' || itemData === this.filters.data) &&
-          (this.filters.forma_pagamento === '' || item.forma_pagamento === this.filters.forma_pagamento);
+          (filtroData === '' || itemData === filtroData) &&
+          filtroFormaPagamento; 
+      }).sort((a, b) => {
+        // Manter ordenação por data de pagamento (mais recente primeiro)
+        const dataA = new Date(a.data_pagamento);
+        const dataB = new Date(b.data_pagamento);
+        return dataB.getTime() - dataA.getTime();
       });
     }
 
     if (this.activeTab.label === 'Transações') {
       this.filteredTransacoes = this.transacoes.filter(item => {
-        // Formatar a data do item para comparação
-        const itemData = item.data_transacao ? new Date(item.data_transacao).toISOString().split('T')[0] : '';
-        
+        let filtroData = '';
+        if (this.filters.data) {
+          try {
+            const dataFiltro = typeof this.filters.data === 'string' 
+              ? new Date(this.filters.data) 
+              : this.filters.data;
+            
+            if (!isNaN(dataFiltro.getTime())) {
+              filtroData = dataFiltro.toISOString().split('T')[0];
+            }
+          } catch (e) {
+            console.error('Erro ao converter data do filtro:', e);
+          }
+        }
+
+        let itemData = '';
+        if (item.data_transacao) {
+          try {
+            const dataItem = new Date(item.data_transacao);
+            if (!isNaN(dataItem.getTime())) {
+              itemData = dataItem.toISOString().split('T')[0];
+            }
+          } catch (e) {
+            console.error('Erro ao converter data do item:', e);
+          }
+        }
+
+        // Tratar filtro de valor (pode ser string formatada como moeda ou número)
+        let valorFiltro = null;
+        if (this.filters.valor !== '' && this.filters.valor !== null) {
+          if (typeof this.filters.valor === 'string') {
+            // Remover formatação de moeda (R$, pontos, vírgulas)
+            const valorLimpo = this.filters.valor.replace(/[R$\s.]/g, '').replace(',', '.');
+            valorFiltro = parseFloat(valorLimpo);
+          } else {
+            valorFiltro = this.filters.valor;
+          }
+        }
+
         return (this.filters.conta === '' ||
           item.conta_origem_nome?.toLowerCase().includes(this.filters.conta.toLowerCase()) ||
           item.conta_destino_nome?.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
-        (this.filters.data === '' || itemData === this.filters.data) &&
-        (this.filters.valor === '' || item.valor === +this.filters.valor);
+          (filtroData === '' || itemData === filtroData) &&
+          (valorFiltro === null || item.valor === valorFiltro);
+      }).sort((a, b) => {
+        // Manter ordenação por data de transação (mais recente primeiro)
+        const dataA = new Date(a.data_transacao);
+        const dataB = new Date(b.data_transacao);
+        return dataB.getTime() - dataA.getTime();
       });
     }
 
@@ -234,6 +362,11 @@ export class VisaoGeralComponent implements OnInit {
               ...receita,
               conta_nome: conta?.nome_conta || 'Desconhecida'
             };
+          }).sort((a, b) => {
+            // Ordenar por data de recebimento (mais recente primeiro)
+            const dataA = new Date(a.data_recebimento);
+            const dataB = new Date(b.data_recebimento);
+            return dataB.getTime() - dataA.getTime();
           });
           this.filteredReceitas = [...this.receitas];
         },
@@ -250,6 +383,11 @@ export class VisaoGeralComponent implements OnInit {
               ...despesa,
               conta_nome: conta?.nome_conta || 'Desconhecida'
             };
+          }).sort((a, b) => {
+            // Ordenar por data de pagamento (mais recente primeiro)
+            const dataA = new Date(a.data_pagamento);
+            const dataB = new Date(b.data_pagamento);
+            return dataB.getTime() - dataA.getTime();
           });
 
           this.filteredDespesas = [...this.despesas];
@@ -274,6 +412,11 @@ export class VisaoGeralComponent implements OnInit {
               conta_origem_nome: contaOrigem?.nome_conta || 'Desconhecida',
               conta_destino_nome: contaDestino?.nome_conta || 'Desconhecida'
             };
+          }).sort((a, b) => {
+            // Ordenar por data de transação (mais recente primeiro)
+            const dataA = new Date(a.data_transacao);
+            const dataB = new Date(b.data_transacao);
+            return dataB.getTime() - dataA.getTime();
           });
 
           console.log('Transações enriquecidas:', this.transacoes);
@@ -387,12 +530,30 @@ export class VisaoGeralComponent implements OnInit {
     this.itemEmEdicao = { ...item };
     if (aba === 'Contas e Saldo') {
       this.tipoItemEmEdicao = 'conta';
+      this.tituloModal = 'Editar Conta';
     } else if (aba === 'Receitas') {
       this.tipoItemEmEdicao = 'receita';
+      this.tituloModal = 'Editar Receita';
+      // Garantir que o conta_id está configurado corretamente
+      if (this.itemEmEdicao.conta_id) {
+        const contaSelecionada = this.contas.find(c => c.id === this.itemEmEdicao.conta_id);
+        if (contaSelecionada) {
+          this.itemEmEdicao.conta_nome = contaSelecionada.nome_conta;
+        }
+      }
     } else if (aba === 'Despesas') {
       this.tipoItemEmEdicao = 'despesa';
+      this.tituloModal = 'Editar Despesa';
+      // Garantir que o conta_id está configurado corretamente
+      if (this.itemEmEdicao.conta_id) {
+        const contaSelecionada = this.contas.find(c => c.id === this.itemEmEdicao.conta_id);
+        if (contaSelecionada) {
+          this.itemEmEdicao.conta_nome = contaSelecionada.nome_conta;
+        }
+      }
     } else {
       this.tipoItemEmEdicao = '';
+      this.tituloModal = 'Editar Item';
     }
 
     this.editDialogVisible = true;
@@ -400,50 +561,71 @@ export class VisaoGeralComponent implements OnInit {
 
 
   salvarEdicao(): void {
-  if (!this.itemEmEdicao) return;
+    if (!this.itemEmEdicao) return;
 
-  let saveObservable;
+    let saveObservable;
 
-  switch (this.tipoItemEmEdicao) {
-    case 'conta':
-      saveObservable = this.contasService.editarConta(this.itemEmEdicao);
-      break;
-    case 'receita':
-      saveObservable = this.receitasService.editarReceita(this.itemEmEdicao);
-      break;
-    case 'despesa':
-      saveObservable = this.despesasService.editarDespesa(this.itemEmEdicao);
-      break;
-    default:
-      return;
-  }
-
-  
-  saveObservable.subscribe({
-    next: () => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: 'Item atualizado com sucesso!'
-      });
-      this.onTabChange(this.activeTab);
-      this.fecharModalEdicao();
-    },
-    error: err => {
-      console.error('Erro ao editar item:', err);
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'Não foi possível atualizar o item.'
-      });
+    switch (this.tipoItemEmEdicao) {
+      case 'conta':
+        saveObservable = this.contasService.editarConta(this.itemEmEdicao);
+        break;
+      case 'receita':
+        saveObservable = this.receitasService.editarReceita(this.itemEmEdicao);
+        break;
+      case 'despesa':
+        saveObservable = this.despesasService.editarDespesa(this.itemEmEdicao);
+        break;
+      default:
+        return;
     }
-  });
-}
+
+
+    saveObservable.subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Item atualizado com sucesso!'
+        });
+        this.onTabChange(this.activeTab);
+        this.fecharModalEdicao();
+      },
+      error: err => {
+        console.error('Erro ao editar item:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Não foi possível atualizar o item.'
+        });
+      }
+    });
+  }
 
   fecharModalEdicao(): void {
     this.editDialogVisible = false;
     this.itemEmEdicao = null;
     this.tipoItemEmEdicao = null!;
+    this.tituloModal = 'Editar Item';
+  }
+
+  onContaChange(): void {
+    if (!this.itemEmEdicao) return;
+
+    // Se for receita, atualizar o nome da conta
+    if (this.tipoItemEmEdicao === 'receita') {
+      const contaSelecionada = this.contas.find(c => c.id === this.itemEmEdicao.conta_id);
+      if (contaSelecionada) {
+        this.itemEmEdicao.conta_nome = contaSelecionada.nome_conta;
+      }
+    }
+
+    // Se for despesa, atualizar o nome da conta
+    if (this.tipoItemEmEdicao === 'despesa') {
+      const contaSelecionada = this.contas.find(c => c.id === this.itemEmEdicao.conta_id);
+      if (contaSelecionada) {
+        this.itemEmEdicao.conta_nome = contaSelecionada.nome_conta;
+      }
+    }
   }
 }
 

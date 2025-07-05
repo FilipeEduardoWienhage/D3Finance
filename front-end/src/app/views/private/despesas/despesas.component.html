@@ -22,19 +22,19 @@
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
                             <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria"
                                 placeholder="Todas as categorias" (onChange)="filtrarDadosMensais()"
-                                [style]="{ 'width': '250px' }"></p-dropdown>
+                                [style]="{ 'width': '250px' }" [showClear]="true"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
                             <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroMensal.conta_id"
                                 placeholder="Todas as contas" (onChange)="filtrarDadosMensais()"
-                                [style]="{ 'width': '200px' }"></p-dropdown>
+                                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
                             <p-dropdown [options]="formasPagamentoOpcoes" [(ngModel)]="filtroMensal.forma_pagamento"
                                 placeholder="Todas as formas" (onChange)="filtrarDadosMensais()"
-                                [style]="{ 'width': '200px' }"></p-dropdown>
+                                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
                         </div>
                         <div class="flex flex-col justify-end">
                             <label class="text-sm mb-1 invisible">.</label>
@@ -63,13 +63,13 @@
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
                             <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id"
                                 placeholder="Todas as contas" (onChange)="filtrarDados()"
-                                [style]="{ 'width': '200px' }"></p-dropdown>
+                                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
                             <p-dropdown [options]="formasPagamentoOpcoes"
                                 [(ngModel)]="filtroConsolidado.forma_pagamento" placeholder="Todas as formas"
-                                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
+                                (onChange)="filtrarDados()" [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
                         </div>
                         <div class="flex flex-col justify-end">
                             <label class="text-sm mb-1 invisible">.</label>

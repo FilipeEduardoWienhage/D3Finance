@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Bot do Telegram para D3 Finance
-Executa o bot independentemente da API
-"""
-
 import os
 import sys
 import signal

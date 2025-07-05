@@ -22,18 +22,18 @@
               <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
               <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria"
                 placeholder="Todas as categorias" (onChange)="filtrarDadosMensais()"
-                [style]="{ 'width': '250px' }"></p-dropdown>
+                [style]="{ 'width': '250px' }" [showClear]="true"></p-dropdown>
             </div>
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
               <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroMensal.conta_id" placeholder="Todas as contas"
-                (onChange)="filtrarDadosMensais()" [style]="{ 'width': '200px' }"></p-dropdown>
+                (onChange)="filtrarDadosMensais()" [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
             </div>
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Forma de Recebimento</label>
               <p-dropdown [options]="formasRecebimentoOpcoes" [(ngModel)]="filtroMensal.forma_recebimento"
                 placeholder="Todas as formas" (onChange)="filtrarDadosMensais()"
-                [style]="{ 'width': '200px' }"></p-dropdown>
+                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
             </div>
             <div class="flex flex-col justify-end">
               <label class="text-sm mb-1 invisible">.</label>
@@ -53,12 +53,12 @@
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
               <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy"
-                [readonlyInput]="true" placeholder="Selecione o período" (onSelect)="filtrarDados()"></p-calendar>
+                [readonlyInput]="true" placeholder="Selecione o período" (onSelect)="filtrarDados()" [showClear]="true"></p-calendar>
             </div>
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
               <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id"
-                placeholder="Todas as contas" (onChange)="filtrarDados()" [style]="{ 'width': '200px' }"></p-dropdown>
+                placeholder="Todas as contas" (onChange)="filtrarDados()" [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
             </div>
             <div class="flex flex-col">
               <label class="text-sm text-gray-400 mb-1">Forma de Recebimento</label>

@@ -27,6 +27,7 @@ class DespesaUpdate:
     data_pagamento: Optional[date] = None
     forma_pagamento: Optional[str] = None
     descricao: Optional[str] = None
+    conta_id: Optional[int] = None
 
 
 @dataclass

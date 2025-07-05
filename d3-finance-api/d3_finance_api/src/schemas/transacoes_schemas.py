@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import datetime
 from pydantic.dataclasses import dataclass
 
 @dataclass
@@ -25,4 +26,5 @@ class TransacoesResponse:
     conta_origem_id: int
     conta_destino_id: int
     valor: float
+    data_transacao: datetime
     descricao: Optional[str] = None

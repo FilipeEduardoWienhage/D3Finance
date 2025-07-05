@@ -55,10 +55,12 @@ export class MovimentacaoEntreContasComponent {
   ngOnInit(): void {
     this.contasService.listarContas().subscribe({
       next: (contas) => {
-        this.contas = contas.map(conta => ({
-          id: conta.id,
-          name: conta.nome_conta
-        }));
+        this.contas = contas
+          .map(conta => ({
+            id: conta.id,
+            name: conta.nome_conta
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
       },
       error: (erro) => console.error('Erro ao carregar contas:', erro)
     });

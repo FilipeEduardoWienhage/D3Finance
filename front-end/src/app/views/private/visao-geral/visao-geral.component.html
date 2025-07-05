@@ -23,12 +23,14 @@
                     <div *ngIf="activeTab.label === 'Contas e Saldo'"
                         class="flex flex-col items-center justify-center px-4 py-8 w-full">
                         <h1>Filtros</h1>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded w-full max-w-5xl mb-6">
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded w-full max-w-5xl mb-6">
                             <div>
                                 <label class="block text-sm mb-1">Tipo</label>
                                 <p-multiselect [options]="tipoContas" (onChange)="onFilterChange()"
                                     [(ngModel)]="filters.tipoConta" optionLabel="name" placeholder="Selecione um tipo"
-                                    [maxSelectedLabels]="3" class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+                                    [maxSelectedLabels]="3"
+                                    class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
                             </div>
                             <div>
                                 <label class="block text-sm mb-1">Contas</label>
@@ -71,12 +73,15 @@
                     <div *ngIf="activeTab.label === 'Receitas'"
                         class="flex flex-col items-center justify-center px-4 py-8 w-full">
                         <h1>Filtros</h1>
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-[#2a2a2a] p-4 rounded w-full max-w-5xl mb-6">
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-[#2a2a2a] p-4 rounded w-full max-w-5xl mb-6">
                             <div>
                                 <label class="block text-sm mb-1">Categoria</label>
                                 <p-multiselect [options]="categoriaDaReceita" (onChange)="onFilterChange()"
-                                    [(ngModel)]="filters.categoria" optionLabel="name" placeholder="Selecione uma categoria"
-                                    [maxSelectedLabels]="3" class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+                                    [(ngModel)]="filters.categoria" optionLabel="name"
+                                    placeholder="Selecione uma categoria" [maxSelectedLabels]="3"
+                                    class="w-full bg-[#1e1e1e] text-white border border-gray-600"
+                                    [showClear]="true"></p-multiselect>
                             </div>
                             <div>
                                 <label class="block text-sm mb-1">Descrição</label>
@@ -91,16 +96,19 @@
                                     placeholder="Pesquisar contas..." />
                             </div>
                             <div>
-                                <label class="block text-sm mb-1">Data</label>
-                                <input type="date" [(ngModel)]="filters.data" (input)="onFilterChange()"
-                                    class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+                                <label class="text-sm mb-1">Data</label>
+                                <p-datepicker [(ngModel)]="filters.data" (onSelect)="onFilterChange()"
+                                    dateFormat="dd/mm/yy" inputId="filtroDataReceitas"
+                                    placeholder="dd/mm/aaaa" [showButtonBar]="true" [showIcon]="true">
+                                </p-datepicker>
                             </div>
                             <div>
-                                <label class="block text-sm mb-1">Forma de Recebimento</label>
-                                <p-dropdown [options]="formasPags" [(ngModel)]="filters.forma_recebimento"
+                                <label class="text-sm mb-1">Forma de Recebimento</label>
+                                <p-dropdown [options]="formasPagsComTodas" [(ngModel)]="filters.forma_recebimento"
                                     (onChange)="onFilterChange()" optionLabel="name" optionValue="name"
                                     placeholder="Todas as formas"
-                                    class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+                                    class="w-full bg-[#1e1e1e] text-white border border-gray-600" [showClear]="true">
+                                </p-dropdown>
                             </div>
                         </div>
                         <div class="bg-[#2a2a2a] p-6 w-full max-w-5xl">
@@ -146,8 +154,9 @@
                             <div>
                                 <label class="block text-sm mb-1">Categoria</label>
                                 <p-multiselect [options]="categoriaDaDespesa" (onChange)="onFilterChange()"
-                                    [(ngModel)]="filters.categoria" optionLabel="name" placeholder="Selecione uma categoria"
-                                    [maxSelectedLabels]="3" class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+                                    [(ngModel)]="filters.categoria" optionLabel="name"
+                                    placeholder="Selecione uma categoria" [maxSelectedLabels]="3"
+                                    class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
                             </div>
                             <div>
                                 <label class="block text-sm mb-1">Descrição</label>
@@ -162,16 +171,19 @@
                                     placeholder="Pesquisar contas..." />
                             </div>
                             <div>
-                                <label class="block text-sm mb-1">Data</label>
-                                <input type="date" [(ngModel)]="filters.data" (input)="onFilterChange()"
-                                    class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+                                <label class="text-sm mb-1">Data</label>
+                                <p-datepicker [(ngModel)]="filters.data" (onSelect)="onFilterChange()"
+                                    dateFormat="dd/mm/yy" inputId="filtroDataReceitas"
+                                    placeholder="dd/mm/aaaa" [showButtonBar]="true" [showIcon]="true">
+                                </p-datepicker>
                             </div>
                             <div>
                                 <label class="block text-sm mb-1">Forma de Pagamento</label>
-                                <p-dropdown [options]="formasPags" [(ngModel)]="filters.forma_pagamento"
+                                <p-dropdown [options]="formasPagsComTodas" [(ngModel)]="filters.forma_pagamento"
                                     (onChange)="onFilterChange()" optionLabel="name" optionValue="name"
                                     placeholder="Todas as formas"
-                                    class="w-full bg-[#1e1e1e] text-white border border-gray-600" />
+                                    class="w-full bg-[#1e1e1e] text-white border border-gray-600" [showClear]="true">
+                                </p-dropdown>
                             </div>
                         </div>
                         <div class="bg-[#2a2a2a] p-6 w-full max-w-5xl">
@@ -213,7 +225,8 @@
                     <div *ngIf="activeTab.label === 'Transações'"
                         class="flex flex-col items-center justify-center px-4 py-8 w-full">
                         <h1>Filtros</h1>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded w-full max-w-5xl mb-6">
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#2a2a2a] p-4 rounded w-full max-w-5xl mb-6">
                             <div>
                                 <label class="block text-sm mb-1">Contas</label>
                                 <input type="text" [(ngModel)]="filters.conta" (input)="onFilterChange()"
@@ -221,14 +234,17 @@
                                     placeholder="Pesquisar contas..." />
                             </div>
                             <div>
-                                <label class="block text-sm mb-1">Data</label>
-                                <input type="date" [(ngModel)]="filters.data" (input)="onFilterChange()"
-                                    class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1" />
+                                <label class="text-sm mb-1">Data</label>
+                                <p-datepicker [(ngModel)]="filters.data" (onSelect)="onFilterChange()"
+                                    dateFormat="dd/mm/yy" inputId="filtroDataTransacoes"
+                                    placeholder="dd/mm/aaaa" [showButtonBar]="true" [showIcon]="true">
+                                </p-datepicker>
                             </div>
                             <div>
                                 <label class="block text-sm mb-1">Valor</label>
-                                <input type="number" [(ngModel)]="filters.valor" (input)="onFilterChange()"
-                                    class="p-inputtext w-full bg-[#1e1e1e] border border-gray-600 text-white rounded px-2 py-1"
+                                <p-inputNumber [(ngModel)]="filters.valor" (onInput)="onFilterChange()"
+                                    mode="currency" currency="BRL" locale="pt-BR"
+                                    
                                     placeholder="Digite o valor..." />
                             </div>
                         </div>
@@ -245,8 +261,8 @@
                                 </ng-template>
                                 <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
                                     <tr>
-                                        <td>{{ item.conta_origem_nome}}</td>
-                                        <td>{{ item.conta_destino_nome}}</td>
+                                        <td>{{ item.conta_origem_nome }}</td>
+                                        <td>{{ item.conta_destino_nome }}</td>
                                         <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
                                         <td>{{ item.data_transacao | date:'dd/MM/yyyy' }}</td>
                                     </tr>
@@ -261,92 +277,122 @@
 
     <p-confirmDialog></p-confirmDialog>
 
-    <p-dialog header="Editar Item" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
-        [style]="{ width: '450px' }" (onHide)="fecharModalEdicao()" [baseZIndex]="10000">
+    <p-dialog [header]="tituloModal" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
+        [style]="{ width: '600px' }" (onHide)="fecharModalEdicao()" [baseZIndex]="10000"
+        styleClass="edit-dialog">
         <ng-template pTemplate="content">
-            <div *ngIf="tipoItemEmEdicao === 'conta'">
-                <div class="p-field">
-                    <label for="tipoConta">Tipo: </label>
-                    <p-dropdown id="tipoConta" [(ngModel)]="itemEmEdicao.tipo_conta" [options]="tipoContas"
-                        optionLabel="name" optionValue="name" [appendTo]="'body'"
-                        placeholder="Selecione um tipo"></p-dropdown>
+            <div class="space-y-4">
+                <!-- Edição de Conta -->
+                <div *ngIf="tipoItemEmEdicao === 'conta'" class="space-y-4">
+                    <div class="field">
+                        <label for="tipoConta" class="block text-sm font-medium text-gray-300 mb-2">Tipo de Conta</label>
+                        <p-dropdown id="tipoConta" [(ngModel)]="itemEmEdicao.tipo_conta" [options]="tipoContas"
+                            optionLabel="name" optionValue="name" [appendTo]="'body'"
+                            placeholder="Selecione um tipo" class="w-full">
+                        </p-dropdown>
+                    </div>
+                    <div class="field">
+                        <label for="nomeConta" class="block text-sm font-medium text-gray-300 mb-2">Nome da Conta</label>
+                        <input id="nomeConta" type="text" pInputText [(ngModel)]="itemEmEdicao.nome_conta" 
+                            class="w-full p-3 bg-[#2a2a2a] border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
                 </div>
-                <div class="p-field">
-                    <label for="nomeConta">Nome: </label>
-                    <input id="nomeConta" type="text" pInputText [(ngModel)]="itemEmEdicao.nome_conta" />
-                </div>
-            </div>
 
-            <div *ngIf="tipoItemEmEdicao === 'receita'">
-                <div class="p-field">
-                    <label for="categoriaReceita">Categoria: </label>
-                    <p-dropdown id="categoriaReceita" [(ngModel)]="itemEmEdicao.categoria"
-                        [options]="categoriaDaReceita" optionLabel="name" optionValue="name" [appendTo]="'body'"
-                        placeholder="Selecione uma categoria"></p-dropdown>
+                <!-- Edição de Receita -->
+                <div *ngIf="tipoItemEmEdicao === 'receita'" class="space-y-4">
+                    <div class="field">
+                        <label for="categoriaReceita" class="block text-sm font-medium text-gray-300 mb-2">Categoria</label>
+                        <p-dropdown id="categoriaReceita" [(ngModel)]="itemEmEdicao.categoria"
+                            [options]="categoriaDaReceita" optionLabel="name" optionValue="name" [appendTo]="'body'"
+                            placeholder="Selecione uma categoria" class="w-full">
+                        </p-dropdown>
+                    </div>
+                    <div class="field">
+                        <label for="descricaoReceita" class="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
+                        <input id="descricaoReceita" type="text" pInputText [(ngModel)]="itemEmEdicao.descricao" 
+                            class="w-full p-3 bg-[#2a2a2a] border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+                    <div class="field">
+                        <label for="contaReceita" class="block text-sm font-medium text-gray-300 mb-2">Conta</label>
+                        <p-dropdown id="contaReceita" [(ngModel)]="itemEmEdicao.conta_id" [options]="contas"
+                            optionLabel="nome_conta" optionValue="id" [appendTo]="'body'"
+                            placeholder="Selecione uma conta" class="w-full" (onChange)="onContaChange()">
+                        </p-dropdown>
+                    </div>
+                    <div class="field">
+                        <label for="valorReceita" class="block text-sm font-medium text-gray-300 mb-2">Valor</label>
+                        <p-inputNumber id="valorReceita" [(ngModel)]="itemEmEdicao.valor_recebido" mode="currency"
+                            currency="BRL" locale="pt-BR" class="w-full">
+                        </p-inputNumber>
+                    </div>
+                    <div class="field">
+                        <label for="formaRecebimento" class="block text-sm font-medium text-gray-300 mb-2">Forma de Recebimento</label>
+                        <p-dropdown id="formaRecebimento" [(ngModel)]="itemEmEdicao.forma_recebimento" 
+                            [options]="formasPags" optionLabel="name" optionValue="name" [appendTo]="'body'"
+                            placeholder="Selecione uma forma" class="w-full"  />
+                    </div>
+                    <div class="field">
+                        <label for="dataRecebimento" class="block text-sm font-medium text-gray-300 mb-2">Data de Recebimento</label>
+                        <p-calendar id="dataRecebimento" [(ngModel)]="itemEmEdicao.data_recebimento" 
+                            dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" [showButtonBar]="true" class="w-full" 
+                        [showIcon]="true">
+                        </p-calendar>
+                    </div>
                 </div>
-                <div class="p-field">
-                    <label for="descricaoReceita">Descrição: </label>
-                    <input id="descricaoReceita" type="text" pInputText [(ngModel)]="itemEmEdicao.descricao" />
-                </div>
-                <div class="p-field">
-                    <label for="contaReceita">Conta: </label>
-                    <input id="contaReceita" type="text" pInputText [(ngModel)]="itemEmEdicao.conta_nome" />
-                </div>
-                <div class="p-field">
-                    <label for="saldoConta">Valor: </label>
-                    <p-inputNumber id="saldoConta" [(ngModel)]="itemEmEdicao.valor_recebido" mode="currency"
-                        currency="BRL" locale="pt-BR">
-                    </p-inputNumber>
-                </div>
-                <div class="p-field">
-                    <label for="formaRecebimento">Forma de Recebimento: </label>
-                    <p-dropdown id="formaRecebimento" type="text" pInputText
-                        [(ngModel)]="itemEmEdicao.forma_recebimento" [options]="formasPags" optionLabel="name"
-                        [appendTo]="'body'" optionValue="name" placeholder="Selecione uma forma" />
-                </div>
-                <div class="p-field">
-                    <label for="dataRecebimento">Data de Recebimento: </label>
-                    <input id="dataRecebimento" type="date" pInputText [(ngModel)]="itemEmEdicao.data_recebimento" />
-                </div>
-            </div>
 
-            <div *ngIf="tipoItemEmEdicao === 'despesa'">
-                <div class="p-field">
-                    <label for="categoriaDespesa">Categoria: </label>
-                    <p-dropdown id="categoriaDespesa" [(ngModel)]="itemEmEdicao.categoria"
-                        [options]="categoriaDaDespesa" optionLabel="name" optionValue="name" [appendTo]="'body'"
-                        placeholder="Selecione uma categoria"></p-dropdown>
-                </div>
-                <div class="p-field">
-                    <label for="descricaoDespesa">Descrição: </label>
-                    <input id="descricaoDespesa" type="text" pInputText [(ngModel)]="itemEmEdicao.descricao" />
-                </div>
-                <div class="p-field">
-                    <label for="contaDespesa">Conta: </label>
-                    <input id="contaDespesa" type="text" pInputText [(ngModel)]="itemEmEdicao.conta_nome" />
-                </div>
-                <div class="p-field">
-                    <label for="valorDespesa">Valor: </label>
-                    <p-inputNumber id="saldoConta" [(ngModel)]="itemEmEdicao.valor_pago" mode="currency" currency="BRL"
-                        locale="pt-BR">
-                    </p-inputNumber>
-                </div>
-                <div class="p-field">
-                    <label for="formaPagamento">Forma de Pagamento: </label>
-                    <p-dropdown id="formaRecebimento" type="text" pInputText [(ngModel)]="itemEmEdicao.forma_pagamento"
-                        [options]="formasPags" optionLabel="name" optionValue="name" [appendTo]="'body'"
-                        placeholder="Selecione uma forma" />
-                </div>
-                <div class="p-field">
-                    <label for="dataPagamento">Data de Pagamento: </label>
-                    <input id="dataPagamento" type="date" pInputText [(ngModel)]="itemEmEdicao.data_pagamento" />
+                <!-- Edição de Despesa -->
+                <div *ngIf="tipoItemEmEdicao === 'despesa'" class="space-y-4">
+                    <div class="field">
+                        <label for="categoriaDespesa" class="block text-sm font-medium text-gray-300 mb-2">Categoria</label>
+                        <p-dropdown id="categoriaDespesa" [(ngModel)]="itemEmEdicao.categoria"
+                            [options]="categoriaDaDespesa" optionLabel="name" optionValue="name" [appendTo]="'body'"
+                            placeholder="Selecione uma categoria" class="w-full">
+                        </p-dropdown>
+                    </div>
+                    <div class="field">
+                        <label for="descricaoDespesa" class="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
+                        <input id="descricaoDespesa" type="text" pInputText [(ngModel)]="itemEmEdicao.descricao" 
+                            class="w-full p-3 bg-[#2a2a2a] border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+                    <div class="field">
+                        <label for="contaDespesa" class="block text-sm font-medium text-gray-300 mb-2">Conta</label>
+                        <p-dropdown id="contaDespesa" [(ngModel)]="itemEmEdicao.conta_id" [options]="contas"
+                            optionLabel="nome_conta" optionValue="id" [appendTo]="'body'"
+                            placeholder="Selecione uma conta" class="w-full" (onChange)="onContaChange()">
+                        </p-dropdown>
+                    </div>
+                    <div class="field">
+                        <label for="valorDespesa" class="block text-sm font-medium text-gray-300 mb-2">Valor</label>
+                        <p-inputNumber id="valorDespesa" [(ngModel)]="itemEmEdicao.valor_pago" mode="currency" 
+                            currency="BRL" locale="pt-BR" class="w-full">
+                        </p-inputNumber>
+                    </div>
+                    <div class="field">
+                        <label for="formaPagamento" class="block text-sm font-medium text-gray-300 mb-2">Forma de Pagamento</label>
+                        <p-dropdown id="formaPagamento" [(ngModel)]="itemEmEdicao.forma_pagamento"
+                            [options]="formasPags" optionLabel="name" optionValue="name" [appendTo]="'body'"
+                            placeholder="Selecione uma forma" class="w-full" />
+                    </div>
+                    <div class="field">
+                        <label for="dataPagamento" class="block text-sm font-medium text-gray-300 mb-2">Data de Pagamento</label>
+                        <p-calendar id="dataPagamento" [(ngModel)]="itemEmEdicao.data_pagamento" 
+                            dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" [showButtonBar]="true" class="w-full" 
+                        [showIcon]="true">
+                        </p-calendar>
+                    </div>
                 </div>
             </div>
         </ng-template>
 
         <ng-template pTemplate="footer">
-            <button pButton label="Salvar" icon="pi pi-check" (click)="salvarEdicao()">
-            </button>
+            <div class="flex justify-end gap-2">
+                <button pButton label="Cancelar" icon="pi pi-times" 
+                    class="p-button-secondary" (click)="fecharModalEdicao()">
+                </button>
+                <button pButton label="Salvar" icon="pi pi-check" 
+                    class="p-button-success" (click)="salvarEdicao()">
+                </button>
+            </div>
         </ng-template>
     </p-dialog>
 
