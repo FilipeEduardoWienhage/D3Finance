@@ -1,3 +1,26 @@
 .invisivel {
     visibility: hidden;
 }
+
+.titulo {
+    text-align: center;
+    font-weight: bold;
+}
+
+.pi-instagram,
+.pi-linkedin,
+.pi-whatsapp,
+.qrcode-wrapper {
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.pi-instagram:hover,
+.pi-linkedin:hover,
+.pi-whatsapp:hover {
+    transform: scale(1.2);
+}
+
+.qrcode-wrapper:hover {
+    transform: scale(1.1);
+}

@@ -1,6 +1,6 @@
 <div class="min-h-screen flex flex-col bg-[#1e1e1e]">
 
-<app-nav-bar></app-nav-bar>
+  <app-nav-bar></app-nav-bar>
 
   <div class="flex flex-row flex-wrap justify-center items-center min-h-screen gap-6 px-6">
 
@@ -11,22 +11,27 @@
       <ng-template #title> Filipe Eduardo </ng-template>
       <ng-template #subtitle> Super DEV </ng-template>
       <p>
-        Após uma carreira de 15 anos no Tênis, vindo da minha formação em Educação Física, hoje estou trilhando um novo caminho na tecnologia.
-        Como Desenvolvedor Júnior, busco aplicar a disciplina e a estratégia do esporte para solucionar problemas na programação.
-        Para fortalecer minhas competências, estou finalizando o curso Super Dev da Proway e também curso Análise e Desenvolvimento de Sistemas.
+        Após uma carreira de 15 anos no Tênis, vindo da minha formação em Educação Física, hoje estou trilhando um novo
+        caminho na tecnologia.
+        Como Desenvolvedor Júnior, busco aplicar a disciplina e a estratégia do esporte para solucionar problemas na
+        programação.
+        Para fortalecer minhas competências, estou finalizando o curso Super Dev da Proway e também curso Análise e
+        Desenvolvimento de Sistemas.
       </p>
       <ng-template #footer>
         <div class="flex gap-2 mt-2 justify-between">
+          <div>
+            <h3 class='invisivel'>invisivel</h3>
+            <a href="https://wa.me/5547992512258" target="_blank">
+              <i class="pi pi-whatsapp" style="font-size: 4rem; color: #25d366;"></i>
+            </a>
+          </div>
           <div>
             <!-- esse h3 deixa os icones alinhados -->
             <h3 class='invisivel'>invisivel</h3>
             <a href="https://www.instagram.com/filipeeduw/" target="_blank">
               <i class="pi pi-instagram" style="font-size: 4rem; color: #e66b94;"></i>
             </a>
-          </div>
-          <div class="qrcode-wrapper">
-            <h3>GitHub</h3>
-            <qrcode [qrdata]="githubFilipe" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
           </div>
           <div>
             <!-- esse h3 deixa os icones alinhados -->
@@ -35,6 +40,12 @@
               <i class="pi pi-linkedin" style="font-size: 4rem; color: #0e76a8;"></i>
             </a>
           </div>
+          <div class="qrcode-wrapper">
+            <a href="https://github.com/filipeeduardowienhage">
+              <h3 class="titulo">GitHub</h3>
+            </a>
+            <qrcode [qrdata]="githubFilipe" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
+          </div>        
         </div>
       </ng-template>
     </p-card>
@@ -46,20 +57,25 @@
       <ng-template #title> Luis Spezia </ng-template>
       <ng-template #subtitle> Super DEV </ng-template>
       <p>
-       Sou estudante de Análise e Desenvolvimento de Sistemas, atualmente no 2º semestre, em transição de carreira para a área de tecnologia. Tenho me dedicado ao aprendizado em programação e desenvolvimento de software, com foco na criação de soluções eficientes e bem estruturadas.
-Praticante de Jiu-Jitsu há 4 anos, desenvolvi valores como disciplina, resiliência e trabalho em equipe, que aplico no meu crescimento como profissional de tecnologia.
+        Sou estudante de Análise e Desenvolvimento de Sistemas, atualmente no 2º semestre, em transição de carreira para
+        a área de tecnologia. Tenho me dedicado ao aprendizado em programação e desenvolvimento de software, com foco na
+        criação de soluções eficientes e bem estruturadas.
+        Praticante de Jiu-Jitsu há 4 anos, desenvolvi valores como disciplina, resiliência e trabalho em equipe, que
+        aplico no meu crescimento como profissional de tecnologia.
       </p>
       <ng-template #footer>
         <div class="flex gap-1 mt-3 justify-between">
           <div>
             <h3 class='invisivel'>invisivel</h3>
+            <a href="https://wa.me/5547992616180" target="_blank">
+              <i class="pi pi-whatsapp" style="font-size: 4rem; color: #25d366;"></i>
+            </a>
+          </div>
+          <div>
+            <h3 class='invisivel'>invisivel</h3>
             <a href="https://instagram.com/lhspezia" target="_blank">
               <i class="pi pi-instagram" style="font-size: 4rem; color: #e66b94;"></i>
             </a>
-          </div>
-          <div class="qrcode-wrapper">
-            <h3>GitHub</h3>
-            <qrcode [qrdata]="githubSpezia" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
           </div>
           <div>
             <h3 class="invisivel">invisivel</h3>
@@ -67,9 +83,15 @@ Praticante de Jiu-Jitsu há 4 anos, desenvolvi valores como disciplina, resiliê
               <i class="pi pi-linkedin" style="font-size: 4rem; color: #0e76a8;"></i>
             </a>
           </div>
+          <div class="qrcode-wrapper">
+            <a href="https://github.com/LuisSpezia">
+              <h3 class="titulo">GitHub</h3>
+            </a>
+            <qrcode [qrdata]="githubSpezia" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
+          </div>
         </div>
       </ng-template>
-    </p-card> 
+    </p-card>
 
   </div>
 
