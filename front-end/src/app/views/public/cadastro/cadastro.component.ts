@@ -50,10 +50,10 @@ export class CadastroComponent implements OnInit {
     private primengConfig: PrimeNG,
   ) { }
 
-  
+
   maxDataPermitida = new Date(2020, 11, 31);
   minDate = new Date(1900, 0, 1);
-  dataDefault = new Date(2020, 0, 1); 
+  dataDefault = new Date(2020, 0, 1);
 
 
   ngOnInit(): void {
@@ -72,11 +72,56 @@ export class CadastroComponent implements OnInit {
     });
   }
 
+  // public validarCampos(): boolean {
+  //   this.messageService.clear();
+
+  //   if (!this.validarStep1()) {
+  //     return false;
+  //   }
+
+  //   if (!this.validarStep2()) {
+  //     return false;
+  //   }
+
+  //   if (!this.validarStep3()) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
+
+
 
   public doCadastro(): void {
+    const nome = this.requestCadastro.nome;
     const senha = this.requestCadastro.password;
     const confirmar = this.requestCadastro.confirmarSenha;
+    const email = this.requestCadastro.email;
+    const cpf = this.requestCadastro.cpf;
+    const dataNascimento = this.requestCadastro.dataNascimento;
+    const sexo = this.requestCadastro.selectedSexo;
+    const cargo = this.requestCadastro.cargo;
+    const cnpj = this.requestCadastro.cnpj;
+    const nomeEmpresa = this.requestCadastro.nomeEmpresa;
+    const cep = this.requestCadastro.cep;
+    const estado = this.requestCadastro.estado;
+    const cidade = this.requestCadastro.cidade;
+    const bairro = this.requestCadastro.bairro;
+    const usuario = this.requestCadastro.usuario;
 
+    // Limpar mensagens anteriores
+    this.messageService.clear();
+
+    // Validação de nome
+    if (!nome || nome.trim() === '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Nome não pode ser vazio.'
+      });
+      return;
+    }
+
+    // Validação de senha
     const senhaForte = /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(senha);
     this.senhaValida = senhaForte;
     this.senhasConferem = senha === confirmar;
@@ -100,6 +145,150 @@ export class CadastroComponent implements OnInit {
 
       return;
     }
+
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Email inválido.'
+      });
+      return;
+    }
+
+    // Validação de CPF (remover formatação e validar 11 dígitos)
+    const cpfLimpo = cpf.replace(/[^\d]/g, '');
+    if (!cpfLimpo || cpfLimpo.length !== 11 || !/^\d{11}$/.test(cpfLimpo)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'CPF inválido. Deve conter 11 dígitos.'
+      });
+      return;
+    }
+
+    // Validação de data de nascimento
+    if (!dataNascimento || !(dataNascimento instanceof Date) || isNaN(dataNascimento.getTime())) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Data de nascimento inválida.'
+      });
+      return;
+    }
+
+    // Verificar se a data não é futura
+    const hoje = new Date();
+    if (dataNascimento > hoje) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Data de nascimento não pode ser futura.'
+      });
+      return;
+    }
+
+    // Verificar se a data não é muito antiga (antes de 1900)
+    const dataMinima = new Date(1900, 0, 1);
+    if (dataNascimento < dataMinima) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Data de nascimento inválida.'
+      });
+      return;
+    }
+
+    if (!sexo || !sexo.value) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Selecione um sexo válido.'
+      });
+      return;
+    }
+
+    if (!cargo || cargo.trim() === '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Cargo não pode ser vazio.'
+      });
+      return;
+    }
+
+    // Validação de CNPJ (remover formatação e validar 14 dígitos)
+    const cnpjLimpo = cnpj.replace(/[^\d]/g, '');
+    if (!cnpjLimpo || cnpjLimpo.length !== 14 || !/^\d{14}$/.test(cnpjLimpo)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'CNPJ inválido. Deve conter 14 dígitos.'
+      });
+      return;
+    }
+
+    if (!nomeEmpresa || nomeEmpresa.trim() === '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Nome da empresa não pode ser vazio.'
+      });
+      return;
+    }
+
+    // Validação de CEP (remover formatação e validar 8 dígitos)
+    const cepLimpo = cep.replace(/[^\d]/g, '');
+    if (!cepLimpo || cepLimpo.length !== 8 || !/^\d{8}$/.test(cepLimpo)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'CEP inválido. Deve conter 8 dígitos.'
+      });
+      return;
+    }
+
+    if (!estado || estado.trim() === '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Estado não pode ser vazio.'
+      });
+      return;
+    }
+
+    if (!cidade || cidade.trim() === '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Cidade não pode ser vazia.'
+      });
+      return;
+    }
+
+    if (!bairro || bairro.trim() === '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Bairro não pode ser vazio.'
+      });
+      return;
+    }
+
+    if (!usuario || usuario.trim() === '') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Usuário não pode ser vazio.'
+      });
+      return;
+    }
+
+    // Se todas as validações passarem, prosseguir com o cadastro
+    this.requestCadastro.selectedSexo = this.requestCadastro.selectedSexo || {
+      label: '', value: ''
+    }; // Garantir que selectedSexo não seja nulo
 
     console.log(this.requestCadastro);
 
@@ -127,9 +316,48 @@ export class CadastroComponent implements OnInit {
 
   public senhaValida: boolean = true;
   public senhasConferem: boolean = true;
-
+  public cpfValido: boolean = true;
+  public cnpjValido: boolean = true;
+  public cepValido: boolean = true;
+  public emailValido: boolean = true;
 
   public activeStep: number = 1;
+
+  // Validação em tempo real
+  public validarSenha(): void {
+    const senha = this.requestCadastro.password;
+    this.senhaValida = /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(senha);
+  }
+
+  public validarConfirmacaoSenha(): void {
+    const senha = this.requestCadastro.password;
+    const confirmar = this.requestCadastro.confirmarSenha;
+    this.senhasConferem = senha === confirmar;
+  }
+
+  public validarCpf(): void {
+    const cpf = this.requestCadastro.cpf;
+    const cpfLimpo = cpf.replace(/[^\d]/g, '');
+    this.cpfValido = cpfLimpo.length === 11 && /^\d{11}$/.test(cpfLimpo);
+  }
+
+  public validarCnpj(): void {
+    const cnpj = this.requestCadastro.cnpj;
+    const cnpjLimpo = cnpj.replace(/[^\d]/g, '');
+    this.cnpjValido = cnpjLimpo.length === 14 && /^\d{14}$/.test(cnpjLimpo);
+  }
+
+  public validarCep(): void {
+    const cep = this.requestCadastro.cep;
+    const cepLimpo = cep.replace(/[^\d]/g, '');
+    this.cepValido = cepLimpo.length === 8 && /^\d{8}$/.test(cepLimpo);
+  }
+
+  public validarEmail(): void {
+    const email = this.requestCadastro.email;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    this.emailValido = emailRegex.test(email);
+  }
 
 
   public sexoOptions = [

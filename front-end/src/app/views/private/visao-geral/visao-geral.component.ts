@@ -65,11 +65,12 @@ export class VisaoGeralComponent implements OnInit {
   ) { }
 
   tipoContas = [
-    { name: 'Despesas' },
     { name: 'Empresa' },
+    { name: 'Investimento' },
     { name: 'Pessoal' },
   ];
 
+  
   categoriaDaReceita = [
     { name: 'Multas Contratuais Recebidas' },
     { name: 'Outras Receitas Não Operacionais' },

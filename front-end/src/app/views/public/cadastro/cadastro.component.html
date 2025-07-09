@@ -53,17 +53,19 @@
                         <div class="flex flex-col gap-2">
                             <label for="nome">Nome<span class="asterisco">*</span></label>
                             <input class="w-full" [(ngModel)]="requestCadastro.nome" pInputText id="nome" type="text"
-                                placeholder="Nome" />
+                                placeholder="Nome" required />
                         </div>
                         <div class="flex flex-col gap-2">
                             <label for="email">E-mail<span class="asterisco">*</span></label>
                             <input class="w-full" [(ngModel)]="requestCadastro.email" pInputText id="email" type="email"
-                                placeholder="E-mail" />
+                                placeholder="E-mail" (input)="validarEmail()" [ngClass]="{'p-invalid': !emailValido && requestCadastro.email}" required />
+                            <small *ngIf="!emailValido && requestCadastro.email" class="p-error">Email inválido</small>
                         </div>
                         <div class="flex flex-col gap-2">
                             <label for="cpf">CPF<span class="asterisco">*</span></label>
                             <p-inputMask class="w-full" mask="999.999.999-99" id="cpf" [(ngModel)]="requestCadastro.cpf"
-                                placeholder="000.000.000-00" aria-describedby="CPF-help" required></p-inputMask>
+                                placeholder="000.000.000-00" (onBlur)="validarCpf()" [ngClass]="{'p-invalid': !cpfValido && requestCadastro.cpf}" aria-describedby="CPF-help" required></p-inputMask>
+                            <small *ngIf="!cpfValido && requestCadastro.cpf" class="p-error">CPF inválido</small>
                         </div>
                         <div class="flex flex-col gap-2">
                             <label for="dataNascimento">Data de nascimento<span class="asterisco">*</span></label>
@@ -99,7 +101,8 @@
                             <label for="cnpj">CNPJ<span class="asterisco">*</span></label>
                             <p-inputMask class="w-full" mask="99.999.999/9999-99" id="cnpj"
                                 [(ngModel)]="requestCadastro.cnpj" placeholder="00.000.000/0000-00"
-                                aria-describedby="CNPJ-help" required (onBlur)="buscarCnpj()"></p-inputMask>
+                                (onBlur)="validarCnpj(); buscarCnpj()" [ngClass]="{'p-invalid': !cnpjValido && requestCadastro.cnpj}" aria-describedby="CNPJ-help" required></p-inputMask>
+                            <small *ngIf="!cnpjValido && requestCadastro.cnpj" class="p-error">CNPJ inválido</small>
                         </div>
                         <div class="flex flex-col gap-2">
                             <label for="nomeEmpresa">Razão social<span class="asterisco">*</span></label>
@@ -109,7 +112,8 @@
                         <div class="flex flex-col gap-2">
                             <label for="cep">CEP<span class="asterisco">*</span></label>
                             <p-inputMask class="w-full" mask="99.999-999" id="cep" [(ngModel)]="requestCadastro.cep"
-                                placeholder="00.000-000" aria-describedby="CEP-help" required></p-inputMask>
+                                placeholder="00.000-000" (onBlur)="validarCep()" [ngClass]="{'p-invalid': !cepValido && requestCadastro.cep}" aria-describedby="CEP-help" required></p-inputMask>
+                            <small *ngIf="!cepValido && requestCadastro.cep" class="p-error">CEP inválido</small>
                         </div>
                         <div class="flex flex-col gap-2">
                             <label for="estado">Estado/UF<span class="asterisco">*</span></label>
@@ -151,13 +155,15 @@
                                 <label for="password">Senha<span class="asterisco">*</span></label>
                                 <p-password promptLabel="Crie sua senha" weakLabel="Muito fraca" mediumLabel="Boa"
                                     strongLabel="Excelente" class="w-full" [(ngModel)]="requestCadastro.password"
-                                    placeholder="Senha" id="password"></p-password>
+                                    (input)="validarSenha()" placeholder="Senha" id="password"></p-password>
+                                <small *ngIf="!senhaValida && requestCadastro.password" class="p-error">Senha deve ter pelo menos 8 caracteres, uma letra maiúscula e um número</small>
                             </div>
                             <div class="flex flex-col gap-2">
                                 <label for="confirmarSenha">Confirmar Senha<span class="asterisco">*</span></label>
                                 <p-password promptLabel="Crie sua senha" weakLabel="Muito fraca" mediumLabel="Boa"
                                     strongLabel="Excelente" class="w-full" [(ngModel)]="requestCadastro.confirmarSenha"
-                                    placeholder="Confirmar Senha" id="confirmarSenha"></p-password>
+                                    (input)="validarConfirmacaoSenha()" placeholder="Confirmar Senha" id="confirmarSenha"></p-password>
+                                <small *ngIf="!senhasConferem && requestCadastro.confirmarSenha" class="p-error">As senhas não coincidem</small>
                             </div>
                         </div>
                     </div>

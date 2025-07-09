@@ -85,13 +85,12 @@ export class DespesasComponent implements OnInit {
 
   formasPagamentoOpcoes = [
     { label: 'Todas as Formas', value: null },
-    { label: 'Boleto', value: 'boleto' },
-    { label: 'Cartão de Crédito', value: 'cartao_credito' },
-    { label: 'Cartão de Débito', value: 'cartao_debito' },
+    { label: 'Crédito', value: 'credito' },
+    { label: 'Débito', value: 'debito' },
     { label: 'Cheque', value: 'cheque' },
+    { label: 'Depósito', value: 'deposito' },
     { label: 'Dinheiro', value: 'dinheiro' },
-    { label: 'PIX', value: 'pix' },
-    { label: 'Transferência Bancária', value: 'transferencia' }
+    { label: 'Pix', value: 'pix' }
   ];
 
   statusDespesaOpcoes = [
