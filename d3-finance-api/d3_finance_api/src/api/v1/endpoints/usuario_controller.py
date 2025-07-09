@@ -81,26 +81,26 @@ def get_user(usuario_id: int, db: Session = Depends(get_db)):
 )
 def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
 
-    senha_criptografada = gerar_hash_senha(usuario.senha)
-
-    db_user = Usuario(
-        name=usuario.name,
-        email=usuario.email,
-        cpf=usuario.cpf,
-        data_nascimento=usuario.data_nascimento,
-        sexo=usuario.sexo,
-        profissao=usuario.profissao,
-        cnpj=usuario.cnpj,
-        razao_social=usuario.razao_social,
-        cep=usuario.cep,
-        estado=usuario.estado,
-        cidade=usuario.cidade,
-        bairro=usuario.bairro,
-        usuario=usuario.usuario,
-        senha=senha_criptografada
-    )
-
     try:
+        senha_criptografada = gerar_hash_senha(usuario.senha)
+
+        db_user = Usuario(
+            name=usuario.name,
+            email=usuario.email,
+            cpf=usuario.cpf,
+            data_nascimento=usuario.data_nascimento,
+            sexo=usuario.sexo,
+            profissao=usuario.profissao,
+            cnpj=usuario.cnpj,
+            razao_social=usuario.razao_social,
+            cep=usuario.cep,
+            estado=usuario.estado,
+            cidade=usuario.cidade,
+            bairro=usuario.bairro,
+            usuario=usuario.usuario,
+            senha=senha_criptografada
+        )
+
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
@@ -124,7 +124,7 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
 
     except IntegrityError as e:
         db.rollback()
-        error_msg = str(e.orig)
+        error_msg = str(e.orig).lower()
 
         if "email" in error_msg:
             raise HTTPException(status_code=400, detail="E-mail já cadastrado.")
@@ -136,6 +136,10 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
             raise HTTPException(status_code=400, detail="Nome de usuário já existe.")
         
         raise HTTPException(status_code=500, detail="Erro ao cadastrar usuário.")
+    except Exception as e:
+        db.rollback()
+        print(f"Erro inesperado no cadastro: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erro interno do servidor.")
 
 # PUT - Atualizar usuário
 @router.put(

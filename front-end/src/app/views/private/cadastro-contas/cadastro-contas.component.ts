@@ -65,9 +65,9 @@ export class CadastroContasComponent implements OnInit {
     this.carregarContas();
 
     this.tipoContaOptions = [
-      { name: 'Pessoal' },
       { name: 'Empresa' },
       { name: 'Investimento' },
+      { name: 'Pessoal' },
     ];
   }
 

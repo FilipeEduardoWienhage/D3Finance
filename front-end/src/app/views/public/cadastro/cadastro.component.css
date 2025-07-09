@@ -27,5 +27,19 @@ h1 {
 }
 
 .asterisco {
-    color: rgb(240, 74, 74);
+    color: red;
+}
+
+.p-error {
+    color: #f44336;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.p-invalid {
+    border-color: #f44336 !important;
+}
+
+.p-invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba(244, 67, 54, 0.25) !important;
 }
