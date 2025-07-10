@@ -6,6 +6,9 @@ import { FileUpload, FileUploadEvent } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { SplitterModule } from 'primeng/splitter';
+import { DividerModule } from 'primeng/divider';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-importar-arquivos',
@@ -16,6 +19,9 @@ import { SplitterModule } from 'primeng/splitter';
     ToastModule,
     CommonModule,
     SplitterModule,
+    DividerModule,
+    ButtonModule,
+    DialogModule,
   ],
   templateUrl: './importar-arquivos.component.html',
   styleUrl: './importar-arquivos.component.css',
@@ -23,6 +29,7 @@ import { SplitterModule } from 'primeng/splitter';
 })
 export class ImportarArquivosComponent {
   uploadedFiles: any[] = [];
+  showHelpModal: boolean = false;
 
   constructor(private messageService: MessageService) {}
 
@@ -35,6 +42,31 @@ export class ImportarArquivosComponent {
       severity: 'info',
       summary: 'Arquivo carregado',
       detail: 'Arquivo carregado com sucesso!',
+    });
+  }
+
+  downloadTemplate() {
+    const csvContent = `tipo,conta_id,categoria,valor,data,forma,descricao
+receita,1,Salário,5000.00,2024-01-15,PIX,Salário mensal
+despesa,1,Alimentação,150.00,2024-01-16,Cartão,Supermercado
+despesa,2,Transporte,50.00,2024-01-17,Dinheiro,Combustível`;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'template_importacao.csv');
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Template baixado',
+      detail: 'Template CSV baixado com sucesso!',
     });
   }
 }

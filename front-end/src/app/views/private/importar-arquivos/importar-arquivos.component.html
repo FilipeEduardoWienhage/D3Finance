@@ -17,6 +17,18 @@
     <div class="absolute inset-0 flex flex-col items-center justify-start pt-8 space-y-8">
       <div class="card w-full max-w-lg p-8">
         <p-toast></p-toast>
+        
+        <div class="mb-4">
+          <button pButton 
+                  type="button" 
+                  label="📋 Como importar o arquivo?" 
+                  icon="pi pi-info-circle" 
+                  severity="secondary"
+                  class="p-button-text"
+                  (click)="showHelpModal = true">
+          </button>
+        </div>
+        
         <p-fileupload name="arquivo" url="http://localhost:8000/v1/importar-transacoes" (onUpload)="onUpload($event)"
           [multiple]="true" accept=".xml, .csv" maxFileSize="1000000000" mode="advanced"
           chooseLabel="Selecionar Arquivos" uploadLabel="Enviar" cancelLabel="Cancelar">
@@ -37,5 +49,117 @@
     </div>
 
   </div>
+
+  <!-- Modal de Ajuda -->
+  <p-dialog [(visible)]="showHelpModal" header="Como preparar seu arquivo CSV" [modal]="true"
+    [style]="{width: '700px'}" [draggable]="false" [resizable]="false" (onHide)="showHelpModal = false">
+
+    <div class="help-dialog-content">
+      <div class="help-steps mb-8">
+        <div class="step mb-6">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4 class="text-lg font-semibold text-white mb-2">Formato do Arquivo</h4>
+            <p class="text-gray-300 mb-3">Seu arquivo CSV deve conter as seguintes colunas obrigatórias:</p>
+            <div class="bg-gray-800 p-4 rounded-lg">
+              <code class="text-green-400">
+                tipo,conta_id,categoria,valor,data,forma,descricao
+              </code>
+            </div>
+          </div>
+        </div>
+
+        <div class="step mb-6">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4 class="text-lg font-semibold text-white mb-2">Campos Obrigatórios</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-gray-800 p-4 rounded-lg">
+                <h5 class="font-semibold text-white mb-2">📝 Campos:</h5>
+                <ul class="text-gray-300 text-sm space-y-1">
+                  <li><strong>tipo:</strong> "receita" ou "despesa"</li>
+                  <li><strong>conta_id:</strong> ID da conta (número)</li>
+                  <li><strong>categoria:</strong> Nome da categoria</li>
+                  <li><strong>valor:</strong> Valor da transação</li>
+                  <li><strong>data:</strong> Data (YYYY-MM-DD)</li>
+                  <li><strong>forma:</strong> Forma de pagamento</li>
+                  <li><strong>descricao:</strong> Descrição (opcional)</li>
+                </ul>
+              </div>
+              <div class="bg-gray-800 p-4 rounded-lg">
+                <h5 class="font-semibold text-white mb-2">📊 Exemplo de Linha:</h5>
+                <code class="text-green-400 text-sm">
+                  receita,1,Salário,5000.00,2024-01-15,PIX,Salário mensal
+                </code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step mb-6">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4 class="text-lg font-semibold text-white mb-2">Exemplo Completo</h4>
+            <div class="bg-gray-800 p-4 rounded-lg overflow-x-auto">
+              <table class="text-sm text-gray-300 w-full">
+                <thead>
+                  <tr class="border-b border-gray-600">
+                    <th class="text-left p-2">tipo</th>
+                    <th class="text-left p-2">conta_id</th>
+                    <th class="text-left p-2">categoria</th>
+                    <th class="text-left p-2">valor</th>
+                    <th class="text-left p-2">data</th>
+                    <th class="text-left p-2">forma</th>
+                    <th class="text-left p-2">descricao</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-gray-700">
+                    <td class="p-2">receita</td>
+                    <td class="p-2">1</td>
+                    <td class="p-2">Salário</td>
+                    <td class="p-2">5000.00</td>
+                    <td class="p-2">2024-01-15</td>
+                    <td class="p-2">PIX</td>
+                    <td class="p-2">Salário mensal</td>
+                  </tr>
+                  <tr class="border-b border-gray-700">
+                    <td class="p-2">despesa</td>
+                    <td class="p-2">1</td>
+                    <td class="p-2">Alimentação</td>
+                    <td class="p-2">150.00</td>
+                    <td class="p-2">2024-01-16</td>
+                    <td class="p-2">Cartão</td>
+                    <td class="p-2">Supermercado</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">despesa</td>
+                    <td class="p-2">2</td>
+                    <td class="p-2">Transporte</td>
+                    <td class="p-2">50.00</td>
+                    <td class="p-2">2024-01-17</td>
+                    <td class="p-2">Dinheiro</td>
+                    <td class="p-2">Combustível</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button pButton 
+                type="button" 
+                label="📥 Baixar Template CSV" 
+                icon="pi pi-download" 
+                severity="secondary"
+                class="p-button-outlined"
+                (click)="downloadTemplate()">
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+  
   <app-footer class="mt-auto"></app-footer>
 </div>
