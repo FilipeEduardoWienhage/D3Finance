@@ -12,6 +12,7 @@ import { ImportarArquivosComponent } from './views/private/importar-arquivos/imp
 import { CadastroContasComponent } from './views/private/cadastro-contas/cadastro-contas.component';
 import { MovimentacaoEntreContasComponent } from './views/private/movimentacao-entre-contas/movimentacao-entre-contas.component';
 import { authGuard } from './guards/auth.guards';
+import { PlanosComponent } from './views/public/planos/planos.component';
 
 //Rotas com a autenticação ativada
 export const routes: Routes = [
@@ -20,6 +21,7 @@ export const routes: Routes = [
     { path: "login", component: LoginComponent},
     { path: "cadastro", component: CadastroComponent},
     { path: "contato", component: ContatoComponent},
+    { path: "planos", component: PlanosComponent},
     { path: "visaogeral", component: VisaoGeralComponent, canActivate: [authGuard] },
     { path: "receitas", component: ReceitasComponent, canActivate: [authGuard]},
     { path: "despesas", component: DespesasComponent, canActivate: [authGuard]},
