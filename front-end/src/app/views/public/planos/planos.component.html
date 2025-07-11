@@ -1,0 +1,61 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="flex flex-row flex-wrap justify-center items-center min-h-screen gap-6 px-6">
+
+    <p-card [style]="{ width: '25rem', overflow: 'hidden' }">
+        <ng-template #header>
+            <img alt="Card" class="w-full" src="assets/imagens/planomensal.png" />
+        </ng-template>
+        <ng-template #title>
+            <div class="text-center text-xl font-semibold">
+                Plano mensal
+            </div>
+        </ng-template>
+        <ng-template #footer class="footer">
+            <div class="flex justify-center mt-4">
+                <div class="main_info">
+                    <a href="#"><button class="custom-button">Assinar</button></a>
+                </div>
+            </div>
+        </ng-template>
+    </p-card>
+
+    <p-card [style]="{ width: '25rem', overflow: 'hidden' }">
+        <ng-template #header>
+            <img alt="Card" class="w-full" src="assets/imagens/planosemestral.png" />
+        </ng-template>
+        <ng-template #title>
+            <div class="text-center text-xl font-semibold">
+                Plano Semestral
+            </div>
+        </ng-template>
+        <ng-template #footer class="footer">
+            <div class="flex justify-center mt-4">
+                <div class="main_info">
+                    <a href="#"><button class="custom-button">Assinar</button></a>
+                </div>
+            </div>
+        </ng-template>
+    </p-card>
+
+    <p-card [style]="{ width: '25rem', overflow: 'hidden' }">
+        <ng-template #header>
+            <img alt="Card" class="w-full" src="assets/imagens/plano1.png" />
+        </ng-template>
+        <ng-template #title>
+            <div class="text-center text-xl font-semibold">
+                Plano Anual
+            </div>
+        </ng-template>
+        <ng-template #footer class="footer">
+            <div class="flex justify-center mt-4">
+                <div class="main_info">
+                    <a href="#"><button class="custom-button">Assinar</button></a>
+                </div>
+            </div>
+        </ng-template>
+    </p-card>
+
+</div>
+
+<app-footer class="mt-auto"></app-footer>
