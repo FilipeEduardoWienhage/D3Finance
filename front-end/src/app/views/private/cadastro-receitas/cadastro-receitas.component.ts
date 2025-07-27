@@ -74,30 +74,30 @@ export class CadastroReceitasComponent {
     this.requestReceita = new ReceitaRequestModel();
 
     this.formaDeRecebimento = [
-      { name: 'Dinheiro' },
-      { name: 'Débito' },
-      { name: 'Crédito' },
       { name: 'Cheque' },
+      { name: 'Crédito' },
+      { name: 'Débito' },
       { name: 'Depósito' },
+      { name: 'Dinheiro' },
       { name: 'Pix' }
     ];
 
     this.categoriaDaReceita = [
-      { name: 'Venda de Produtos' },
+      { name: 'Multas Contratuais Recebidas' },
+      { name: 'Outras Receitas Não Operacionais' },
+      { name: 'Outras Receitas Operacionais' },
       { name: 'Prestação de Serviços' },
+      { name: 'Recebimento de Contratos' },
+      { name: 'Receita com Publicidade / Parcerias' },
+      { name: 'Receitas de Aluguel de Bens' },
       { name: 'Receitas de Assinaturas / Mensalidades' },
       { name: 'Receitas de Consultoria' },
       { name: 'Receitas de Licenciamento' },
-      { name: 'Receitas de Aluguel de Bens' },
-      { name: 'Receita com Publicidade / Parcerias' },
-      { name: 'Recebimento de Contratos' },
-      { name: 'Royalties Recebidos' },
-      { name: 'Rendimentos de Investimentos' },
-      { name: 'Reembolso de Custos Operacionais' },
-      { name: 'Multas Contratuais Recebidas' },
       { name: 'Recuperação de Crédito / Cobrança' },
-      { name: 'Outras Receitas Operacionais' },
-      { name: 'Outras Receitas Não Operacionais' }
+      { name: 'Reembolso de Custos Operacionais' },
+      { name: 'Rendimentos de Investimentos' },
+      { name: 'Royalties Recebidos' },
+      { name: 'Venda de Produtos' }
     ];
 
     this.contasService.listarContas().subscribe({

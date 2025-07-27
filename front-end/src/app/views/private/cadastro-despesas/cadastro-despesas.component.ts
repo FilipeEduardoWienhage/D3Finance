@@ -56,11 +56,11 @@ export class CadastroDespesasComponent {
   public requestDespesa!: DespesaRequestModel;
 
   constructor(
-  private despesasService: DespesasService,
-  private contasService: ContasService,
-  private messageService: MessageService,
+    private despesasService: DespesasService,
+    private contasService: ContasService,
+    private messageService: MessageService,
   ) { }
-  
+
 
 
 
@@ -79,24 +79,24 @@ export class CadastroDespesasComponent {
     this.requestDespesa = new DespesaRequestModel();
 
     this.categoriaDaDespesa = [
-      { name: 'Despesas com Pessoal' },
-      { name: 'Despesas Operacionais' },
-      { name: 'Despesas com Materiais' }, 
       { name: 'Despesas Administrativas' },
       { name: 'Despesas com Marketing' },
+      { name: 'Despesas com Materiais' },
+      { name: 'Despesas com Pessoal' },
+      { name: 'Despesas com Terceirizados' },
+      { name: 'Despesas Financeiras' },
+      { name: 'Despesas Operacionais' },
       { name: 'Despesas com Transporte' },
       { name: 'Impostos e Taxas' },
-      { name: 'Despesas Financeiras' },
       { name: 'Manutenção e Reparos' },
-      { name: 'Despesas com Terceirizados' },
       { name: 'Outras Despesas' }
     ];
     this.formaDeRecebimento = [
-      { name: 'Dinheiro' },
-      { name: 'Débito' },
-      { name: 'Crédito' },
       { name: 'Cheque' },
+      { name: 'Crédito' },
+      { name: 'Débito' },
       { name: 'Depósito' },
+      { name: 'Dinheiro' },
       { name: 'Pix' }
     ];
     this.contasService.listarContas().subscribe({
@@ -129,10 +129,10 @@ export class CadastroDespesasComponent {
           detail: 'Despesa cadastrada com sucesso!',
         });
 
-      this.requestDespesa = new DespesaRequestModel();
-      this.selecionarForma = undefined;
-      this.selecionarCategoria = undefined;
-      this.selecionarConta = undefined;
+        this.requestDespesa = new DespesaRequestModel();
+        this.selecionarForma = undefined;
+        this.selecionarCategoria = undefined;
+        this.selecionarConta = undefined;
       },
       error: (erro) => {
         console.error('Erro ao cadastrar despesa:', erro);

@@ -61,11 +61,9 @@ export class DespesasComponent implements OnInit {
     forma_pagamento: null as string | null
   };
 
-  // NOVOS FILTROS
   contasOpcoes = [
     { label: 'Todas as Contas', value: null }
   ];
-
 
   categoriasOpcoes = [
     { label: 'Todas as Categorias', value: null },
@@ -82,12 +80,11 @@ export class DespesasComponent implements OnInit {
     { label: 'Outras Despesas', value: 'Outras Despesas' }
   ];
 
-
   formasPagamentoOpcoes = [
     { label: 'Todas as Formas', value: null },
+    { label: 'Cheque', value: 'cheque' },
     { label: 'Crédito', value: 'credito' },
     { label: 'Débito', value: 'debito' },
-    { label: 'Cheque', value: 'cheque' },
     { label: 'Depósito', value: 'deposito' },
     { label: 'Dinheiro', value: 'dinheiro' },
     { label: 'Pix', value: 'pix' }
@@ -116,17 +113,17 @@ export class DespesasComponent implements OnInit {
     this.carregarDadosConsolidado();
     this.carregarDadosMensal();
     this.primengConfig.setTranslation({
-    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-    dayNamesMin: ['D','S','T','Q','Q','S','S'],
-    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-    today: 'Hoje',
-    clear: 'Limpar',
-    dateFormat: 'dd/mm/yy',
-    weekHeader: 'Sm',
-    firstDayOfWeek: 0,
-  });
+      dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+      dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+      dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+      monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      today: 'Hoje',
+      clear: 'Limpar',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'Sm',
+      firstDayOfWeek: 0,
+    });
   }
 
   carregarContas() {

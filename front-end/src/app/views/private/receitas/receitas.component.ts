@@ -88,12 +88,12 @@ export class ReceitasComponent implements OnInit {
 
   formasRecebimentoOpcoes = [
     { label: 'Todas as Formas', value: null },
+    { label: 'Cheque', value: 'cheque' },
     { label: 'Crédito', value: 'credito' },
     { label: 'Débito', value: 'debito' },
-    { label: 'Cheque', value: 'cheque' },
     { label: 'Depósito', value: 'deposito' },
     { label: 'Dinheiro', value: 'dinheiro' },
-    { label: 'Pix', value: 'pix' },
+    { label: 'Pix', value: 'pix' }
   ]
 
   statusReceitaOpcoes = [
