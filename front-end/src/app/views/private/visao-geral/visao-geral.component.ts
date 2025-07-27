@@ -70,7 +70,7 @@ export class VisaoGeralComponent implements OnInit {
     { name: 'Pessoal' },
   ];
 
-  
+
   categoriaDaReceita = [
     { name: 'Multas Contratuais Recebidas' },
     { name: 'Outras Receitas Não Operacionais' },
@@ -91,12 +91,12 @@ export class VisaoGeralComponent implements OnInit {
 
   categoriaDaDespesa = [
     { name: 'Despesas Administrativas' },
-    { name: 'Despesas Financeiras' },
-    { name: 'Despesas Operacionais' },
     { name: 'Despesas com Marketing' },
     { name: 'Despesas com Materiais' },
     { name: 'Despesas com Pessoal' },
     { name: 'Despesas com Terceirizados' },
+    { name: 'Despesas Financeiras' },
+    { name: 'Despesas Operacionais' },
     { name: 'Despesas com Transporte' },
     { name: 'Impostos e Taxas' },
     { name: 'Manutenção e Reparos' },
@@ -106,9 +106,9 @@ export class VisaoGeralComponent implements OnInit {
   formasPags = [
     { name: 'Cheque' },
     { name: 'Crédito' },
+    { name: 'Débito' },
     { name: 'Depósito' },
     { name: 'Dinheiro' },
-    { name: 'Débito' },
     { name: 'Pix' }
   ];
 
@@ -169,17 +169,17 @@ export class VisaoGeralComponent implements OnInit {
     this.onTabChange(this.activeTab);
 
     this.primengConfig.setTranslation({
-    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-    dayNamesMin: ['D','S','T','Q','Q','S','S'],
-    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-    today: 'Hoje',
-    clear: 'Limpar',
-    dateFormat: 'dd/mm/yy',
-    weekHeader: 'Sm',
-    firstDayOfWeek: 0,
-  });
+      dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+      dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+      dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+      monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      today: 'Hoje',
+      clear: 'Limpar',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'Sm',
+      firstDayOfWeek: 0,
+    });
   }
 
 
@@ -195,10 +195,10 @@ export class VisaoGeralComponent implements OnInit {
         let filtroData = '';
         if (this.filters.data) {
           try {
-            const dataFiltro = typeof this.filters.data === 'string' 
-              ? new Date(this.filters.data) 
+            const dataFiltro = typeof this.filters.data === 'string'
+              ? new Date(this.filters.data)
               : this.filters.data;
-            
+
             if (!isNaN(dataFiltro.getTime())) {
               filtroData = dataFiltro.toISOString().split('T')[0];
             }
@@ -248,10 +248,10 @@ export class VisaoGeralComponent implements OnInit {
         let filtroData = '';
         if (this.filters.data) {
           try {
-            const dataFiltro = typeof this.filters.data === 'string' 
-              ? new Date(this.filters.data) 
+            const dataFiltro = typeof this.filters.data === 'string'
+              ? new Date(this.filters.data)
               : this.filters.data;
-            
+
             if (!isNaN(dataFiltro.getTime())) {
               filtroData = dataFiltro.toISOString().split('T')[0];
             }
@@ -271,14 +271,14 @@ export class VisaoGeralComponent implements OnInit {
             console.error('Erro ao converter data do item:', e);
           }
         }
-        
+
         const filtroFormaPagamento = !formaPagamentoSelecionada || formaPagamentoSelecionada === 'Todas' || item.forma_pagamento === formaPagamentoSelecionada;
 
         return (categoriasSelecionadas.length === 0 || categoriasSelecionadas.includes(item.categoria)) &&
           (item.descricao.toLowerCase().includes(this.filters.desc.toLowerCase())) &&
           (this.filters.conta === '' || item.conta_nome.toLowerCase().includes(this.filters.conta.toLowerCase())) &&
           (filtroData === '' || itemData === filtroData) &&
-          filtroFormaPagamento; 
+          filtroFormaPagamento;
       }).sort((a, b) => {
         // Manter ordenação por data de pagamento (mais recente primeiro)
         const dataA = new Date(a.data_pagamento);
@@ -292,10 +292,10 @@ export class VisaoGeralComponent implements OnInit {
         let filtroData = '';
         if (this.filters.data) {
           try {
-            const dataFiltro = typeof this.filters.data === 'string' 
-              ? new Date(this.filters.data) 
+            const dataFiltro = typeof this.filters.data === 'string'
+              ? new Date(this.filters.data)
               : this.filters.data;
-            
+
             if (!isNaN(dataFiltro.getTime())) {
               filtroData = dataFiltro.toISOString().split('T')[0];
             }
