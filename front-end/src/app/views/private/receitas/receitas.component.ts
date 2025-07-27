@@ -60,11 +60,9 @@ export class ReceitasComponent implements OnInit {
     forma_recebimento: null as string | null
   };
 
-  // NOVOS FILTROS
   contasOpcoes = [
     { label: 'Todas as Contas', value: null }
   ];
-
 
   categoriasOpcoes = [
     { label: 'Todas as Categorias', value: null },
@@ -84,7 +82,6 @@ export class ReceitasComponent implements OnInit {
     { label: 'Royalties Recebidos', value: 'Royalties Recebidos' },
     { label: 'Venda de Produtos', value: 'Venda de Produtos' }
   ];
-
 
   formasRecebimentoOpcoes = [
     { label: 'Todas as Formas', value: null },
@@ -230,9 +227,6 @@ export class ReceitasComponent implements OnInit {
     this.filtroMensal.forma_recebimento = null;
     this.carregarDadosMensais();
   }
-
-
-
   carregarDadosDoGrafico() {
     const filtros: any = {};
     if (this.filtroConsolidado.dataSelecionada) {
@@ -275,7 +269,6 @@ export class ReceitasComponent implements OnInit {
       return;
     }
 
-    // 4. CORREÇÃO PRINCIPAL: Usa 'd.categoria' para os rótulos
     const labels = this.dadosConsolidado.map(d => d.categoria);
     const valores = this.dadosConsolidado.map(d => d.valor);
 
@@ -285,7 +278,7 @@ export class ReceitasComponent implements OnInit {
     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
     this.dataConsolidado = {
-      labels: labels, // <- Agora funciona
+      labels: labels, 
       datasets: [{
         label: 'Total por Categoria',
         backgroundColor: '#22c55e',

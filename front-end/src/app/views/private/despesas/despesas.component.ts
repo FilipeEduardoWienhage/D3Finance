@@ -246,7 +246,6 @@ export class DespesasComponent implements OnInit {
     this.carregarDadosMensal();
   }
 
-
   carregarDadosConsolidado() {
     const filtrosParaApi: any = {};
 

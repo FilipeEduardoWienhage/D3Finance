@@ -61,9 +61,6 @@ export class CadastroDespesasComponent {
     private messageService: MessageService,
   ) { }
 
-
-
-
   valorDespesa: number = 0;
   dataRecebimento: Date | null = null;
   formaDeRecebimento: formaRecebimento[] | undefined;
@@ -73,7 +70,6 @@ export class CadastroDespesasComponent {
   selecionarCategoria: categoriaDespesa | undefined;
   contaDestino: contaDestino[] | undefined;
   selecionarConta: contaDestino | undefined;
-
 
   ngOnInit(): void {
     this.requestDespesa = new DespesaRequestModel();
