@@ -66,6 +66,20 @@ def get_transacao_by_id(transacoes_id: int, usuario_logado: Annotated[TokenData,
     path=CADASTRO_TRANSACOES, response_model=TransacoesResponse, tags=[Tag.Transacoes.name]
 )
 def create_transacao(transacao: TransacoesCreate, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
+    # VALIDAÇÃO: Verificar se conta origem e destino são diferentes
+    if transacao.conta_origem_id == transacao.conta_destino_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A conta origem e a conta destino não podem ser a mesma."
+        )
+    
+    # VALIDAÇÃO: Verificar se o valor é maior que zero
+    if transacao.valor <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="O valor deve ser maior que zero."
+        )
+    
     conta_origem = db.query(Contas).filter(Contas.id == transacao.conta_origem_id, Contas.usuario_id == usuario_logado.id).first()
     conta_destino = db.query(Contas).filter(Contas.id == transacao.conta_destino_id, Contas.usuario_id == usuario_logado.id).first()
     if not conta_origem or not conta_destino:
@@ -118,6 +132,23 @@ def update_transacao(transacoes_id: int, transacao_update: TransacoesUpdate, usu
     transacao = db.query(Transacoes).filter(Transacoes.id == transacoes_id, Transacoes.usuario_id == usuario_logado.id).first()
     if not transacao:
         raise HTTPException(status_code=404, detail="Transação não encontrada")
+    
+    # VALIDAÇÃO: Verificar se conta origem e destino são diferentes (se estiver sendo atualizado)
+    if hasattr(transacao_update, 'conta_origem_id') and hasattr(transacao_update, 'conta_destino_id'):
+        if transacao_update.conta_origem_id == transacao_update.conta_destino_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="A conta origem e a conta destino não podem ser a mesma."
+            )
+    
+    # VALIDAÇÃO: Verificar se o valor é maior que zero (se estiver sendo atualizado)
+    if hasattr(transacao_update, 'valor') and transacao_update.valor is not None:
+        if transacao_update.valor <= 0:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="O valor deve ser maior que zero."
+            )
+    
     conta_origem_atual = db.query(Contas).filter(Contas.id == transacao.conta_origem_id, Contas.usuario_id == usuario_logado.id).first()
     conta_destino_atual = db.query(Contas).filter(Contas.id == transacao.conta_destino_id, Contas.usuario_id == usuario_logado.id).first()
     valor_antigo = transacao.valor

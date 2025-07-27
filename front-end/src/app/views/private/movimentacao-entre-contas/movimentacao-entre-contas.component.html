@@ -47,8 +47,13 @@
                     <div class="flex flex-col gap-2">
                         <a href="#">
                             <div class="flex gap-4 mt-1">
-                                <p-button (click)="doMovimentarContas()" label="Confirmar" class="w-full  md:w-64"
-                                    styleClass="w-full" />
+                                <p-button 
+                                    (click)="doMovimentarContas()" 
+                                    label="Confirmar" 
+                                    class="w-full md:w-64"
+                                    styleClass="w-full"
+                                    [disabled]="!transacao.conta_origem_id || !transacao.conta_destino_id || !transacao.valor || transacao.conta_origem_id === transacao.conta_destino_id"
+                                />
                             </div>
                         </a>
                     </div>
