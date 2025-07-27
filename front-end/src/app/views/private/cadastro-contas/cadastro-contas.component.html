@@ -38,16 +38,16 @@
             </p-card>
 
             <div class="flex justify-center">
-                <button pButton label="{{ mostrarTabelaContas ? 'Esconder Contas' : 'Ver Contas' }}" icon="pi pi-eye"
+                <button pButton label="Ver Contas" icon="pi pi-eye"
                     (click)="toggleTabelaContas()"></button>
             </div>
 
-            <div *ngIf="mostrarTabelaContas" class="w-full max-w-4xl">
-                <p-card>
-                    <ng-template pTemplate="header">
-                        <div class="w-full text-center text-xl font-semibold">Contas</div>
-                    </ng-template>
-                    <div class="p-6">
+            <!-- Modal para visualizar contas -->
+            <p-dialog header="Contas Cadastradas" [(visible)]="visualizarContasModalVisible" [modal]="true" [closable]="true"
+                [style]="{ width: '80%', maxWidth: '1000px' }" (onHide)="visualizarContasModalVisible = false" [baseZIndex]="10000"
+                styleClass="visualizar-contas-dialog">
+                <ng-template pTemplate="content">
+                    <div class="p-4">
                         <p-table [value]="contas" [paginator]="true" [rows]="10"
                             class="p-datatable-sm p-datatable-gridlines w-full">
                             <ng-template pTemplate="header">
@@ -61,7 +61,7 @@
                                 <tr>
                                     <td>{{ conta.tipo_conta }}</td>
                                     <td>{{ conta.nome_conta }}</td>
-                                    <td class="flex gap-2 border-b border-gray-700">
+                                    <td class="flex gap-2">
                                         <button pButton type="button" icon="pi pi-pencil"
                                             class="p-button-sm p-button-rounded p-button-info"
                                             (click)="abrirEdicao(conta)">
@@ -75,8 +75,15 @@
                             </ng-template>
                         </p-table>
                     </div>
-                </p-card>
-            </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <div class="flex justify-end">
+                        <button pButton label="Fechar" icon="pi pi-times" 
+                            class="p-button-secondary" (click)="visualizarContasModalVisible = false">
+                        </button>
+                    </div>
+                </ng-template>
+            </p-dialog>
 
             <p-dialog [header]="tituloModal" [(visible)]="editDialogVisible" [modal]="true" [closable]="true"
                 [style]="{ width: '600px' }" (onHide)="editDialogVisible = false" [baseZIndex]="10000"

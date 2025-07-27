@@ -4,3 +4,9 @@ p {
 .asterisco {
     color: rgb(240, 74, 74);
 }
+
+/* Estilo básico para botão desabilitado */
+:host ::ng-deep .p-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

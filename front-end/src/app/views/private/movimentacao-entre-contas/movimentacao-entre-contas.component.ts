@@ -67,6 +67,37 @@ export class MovimentacaoEntreContasComponent {
   }
 
   doMovimentarContas(): void {
+    // VALIDAÇÃO: Verificar se conta origem e destino são diferentes
+    if (this.transacao.conta_origem_id === this.transacao.conta_destino_id) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro de Validação',
+        detail: 'A conta origem e a conta destino não podem ser a mesma.'
+      });
+      return; // Para a execução aqui
+    }
+
+    // VALIDAÇÃO: Verificar se os campos obrigatórios estão preenchidos
+    if (!this.transacao.conta_origem_id || !this.transacao.conta_destino_id || !this.transacao.valor) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção',
+        detail: 'Preencha todos os campos obrigatórios.'
+      });
+      return;
+    }
+
+    // VALIDAÇÃO: Verificar se o valor é maior que zero
+    if (this.transacao.valor <= 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro de Validação',
+        detail: 'O valor deve ser maior que zero.'
+      });
+      return;
+    }
+
+    // Se passou por todas as validações, continua com a transação
     this.transacaoService.cadastrarTransacao(this.transacao).subscribe({
       next: () => {
         this.messageService.add({
@@ -74,7 +105,7 @@ export class MovimentacaoEntreContasComponent {
           summary: 'Sucesso',
           detail: 'Transação realizada com sucesso!'
         });
-        this.transacao = new TransacaoRequestModel();
+        this.limparFormulario();
       },
       error: (erro) => {
         console.error('Erro ao movimentar contas:', erro);
@@ -85,5 +116,9 @@ export class MovimentacaoEntreContasComponent {
         });
       }
     });
+  }
+
+  limparFormulario(): void {
+    this.transacao = new TransacaoRequestModel();
   }
 }

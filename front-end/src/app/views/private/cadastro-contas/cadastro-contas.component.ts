@@ -48,11 +48,13 @@ export class CadastroContasComponent implements OnInit {
   requestConta!: ContaRequestModel;
   contas: any[] = [];
   tipoContaOptions: TipoContaOption[] = [];
-  mostrarTabelaContas = false;
 
   editDialogVisible = false;
   itemEmEdicao: any = {};
   tituloModal = 'Editar Conta';
+  
+  // Nova propriedade para controlar o modal de visualização de contas
+  visualizarContasModalVisible = false;
 
   constructor(
     private contasService: ContasService,
@@ -146,6 +148,7 @@ export class CadastroContasComponent implements OnInit {
   }
 
   toggleTabelaContas(): void {
-    this.mostrarTabelaContas = !this.mostrarTabelaContas;
+    this.carregarContas(); // Recarrega as contas antes de abrir o modal
+    this.visualizarContasModalVisible = true;
   }
 }
