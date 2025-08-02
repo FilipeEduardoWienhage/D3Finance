@@ -63,7 +63,7 @@
             <p class="text-gray-300 mb-3">Seu arquivo CSV deve conter as seguintes colunas obrigatórias:</p>
             <div class="bg-gray-800 p-4 rounded-lg">
               <code class="text-green-400">
-                tipo,conta_id,categoria,valor,data,forma,descricao
+                tipo,conta_nome,categoria,valor,data,forma,descricao
               </code>
             </div>
           </div>
@@ -78,7 +78,7 @@
                 <h5 class="font-semibold text-white mb-2">📝 Campos:</h5>
                 <ul class="text-gray-300 text-sm space-y-1">
                   <li><strong>tipo:</strong> "receita" ou "despesa"</li>
-                  <li><strong>conta_id:</strong> ID da conta (número)</li>
+                  <li><strong>conta_nome:</strong> Nome da conta (ex: "Nubank")</li>
                   <li><strong>categoria:</strong> Nome da categoria</li>
                   <li><strong>valor:</strong> Valor da transação</li>
                   <li><strong>data:</strong> Data (YYYY-MM-DD)</li>
@@ -89,7 +89,7 @@
               <div class="bg-gray-800 p-4 rounded-lg">
                 <h5 class="font-semibold text-white mb-2">📊 Exemplo de Linha:</h5>
                 <code class="text-green-400 text-sm">
-                  receita,1,Salário,5000.00,2024-01-15,PIX,Salário mensal
+                  receita,Nubank,Salário,5000.00,2024-01-15,PIX,Salário mensal
                 </code>
               </div>
             </div>
@@ -105,7 +105,7 @@
                 <thead>
                   <tr class="border-b border-gray-600">
                     <th class="text-left p-2">tipo</th>
-                    <th class="text-left p-2">conta_id</th>
+                    <th class="text-left p-2">conta_nome</th>
                     <th class="text-left p-2">categoria</th>
                     <th class="text-left p-2">valor</th>
                     <th class="text-left p-2">data</th>
@@ -116,7 +116,7 @@
                 <tbody>
                   <tr class="border-b border-gray-700">
                     <td class="p-2">receita</td>
-                    <td class="p-2">1</td>
+                    <td class="p-2">Nubank</td>
                     <td class="p-2">Salário</td>
                     <td class="p-2">5000.00</td>
                     <td class="p-2">2024-01-15</td>
@@ -125,16 +125,16 @@
                   </tr>
                   <tr class="border-b border-gray-700">
                     <td class="p-2">despesa</td>
-                    <td class="p-2">1</td>
+                    <td class="p-2">Nubank</td>
                     <td class="p-2">Alimentação</td>
                     <td class="p-2">150.00</td>
                     <td class="p-2">2024-01-16</td>
-                    <td class="p-2">Cartão</td>
+                    <td class="p-2">Cartão de Crédito</td>
                     <td class="p-2">Supermercado</td>
                   </tr>
                   <tr>
                     <td class="p-2">despesa</td>
-                    <td class="p-2">2</td>
+                    <td class="p-2">Nubank</td>
                     <td class="p-2">Transporte</td>
                     <td class="p-2">50.00</td>
                     <td class="p-2">2024-01-17</td>
@@ -143,6 +143,22 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="step mb-6">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4 class="text-lg font-semibold text-white mb-2">⚠️ Importante</h4>
+            <div class="bg-yellow-900 bg-opacity-20 border border-yellow-600 p-4 rounded-lg">
+              <ul class="text-yellow-200 text-sm space-y-2">
+                <li>• A conta deve existir no sistema antes da importação</li>
+                <li>• Use o nome exato da conta (ex: "Nubank", "Itaú")</li>
+                <li>• O arquivo deve estar em formato CSV</li>
+                <li>• Use vírgula como separador decimal (ex: 1500,50)</li>
+                <li>• A data deve estar no formato YYYY-MM-DD</li>
+              </ul>
             </div>
           </div>
         </div>

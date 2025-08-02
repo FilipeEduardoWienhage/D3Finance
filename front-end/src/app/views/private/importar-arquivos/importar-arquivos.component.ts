@@ -9,6 +9,7 @@ import { SplitterModule } from 'primeng/splitter';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-importar-arquivos',
@@ -31,7 +32,10 @@ export class ImportarArquivosComponent {
   uploadedFiles: any[] = [];
   showHelpModal: boolean = false;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private router: Router
+  ) {}
 
   onUpload(event: FileUploadEvent) {
     for (let file of event.files) {
@@ -46,10 +50,10 @@ export class ImportarArquivosComponent {
   }
 
   downloadTemplate() {
-    const csvContent = `tipo,conta_id,categoria,valor,data,forma,descricao
-receita,1,Salário,5000.00,2024-01-15,PIX,Salário mensal
-despesa,1,Alimentação,150.00,2024-01-16,Cartão,Supermercado
-despesa,2,Transporte,50.00,2024-01-17,Dinheiro,Combustível`;
+    const csvContent = `tipo,conta_nome,categoria,valor,data,forma,descricao
+receita,Nubank,Salário,5000.00,2024-01-15,PIX,Salário mensal
+despesa,Nubank,Alimentação,150.00,2024-01-16,Cartão de Crédito,Supermercado
+despesa,Nubank,Transporte,50.00,2024-01-17,Dinheiro,Combustível`;
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
