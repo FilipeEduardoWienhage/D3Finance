@@ -10,6 +10,7 @@ import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 @Component({
   selector: 'app-importar-arquivos',
@@ -23,6 +24,7 @@ import { Router } from '@angular/router';
     DividerModule,
     ButtonModule,
     DialogModule,
+    HeaderSystemComponent,
   ],
   templateUrl: './importar-arquivos.component.html',
   styleUrl: './importar-arquivos.component.css',

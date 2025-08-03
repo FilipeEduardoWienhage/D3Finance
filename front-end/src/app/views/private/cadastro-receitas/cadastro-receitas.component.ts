@@ -16,6 +16,7 @@ import { ReceitaRequestModel } from '../../../models/RequestReceitas';
 import { ReceitasService } from '../../../service/receitas.service';
 import { ContasService } from '../../../service/contas.service';
 import { ToastModule } from 'primeng/toast';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 interface formaRecebimento {
   name: string;
@@ -45,7 +46,8 @@ interface contaDestino {
     SelectModule,
     ButtonModule,
     SplitterModule,
-    ToastModule
+    ToastModule,
+    HeaderSystemComponent,
   ],
   templateUrl: './cadastro-receitas.component.html',
   styleUrl: './cadastro-receitas.component.css',

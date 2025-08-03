@@ -13,6 +13,9 @@ import { CadastroContasComponent } from './views/private/cadastro-contas/cadastr
 import { MovimentacaoEntreContasComponent } from './views/private/movimentacao-entre-contas/movimentacao-entre-contas.component';
 import { authGuard } from './guards/auth.guards';
 import { PlanosComponent } from './views/public/planos/planos.component';
+import { SmartReportComponent } from './views/private/smart-report/smart-report.component';
+import { ContasPagarComponent } from './views/private/contas-pagar/contas-pagar.component';
+import { ContasReceberComponent } from './views/private/contas-receber/contas-receber.component';
 
 //Rotas com a autenticação ativada
 export const routes: Routes = [
@@ -30,6 +33,9 @@ export const routes: Routes = [
     { path: "importararquivo", component: ImportarArquivosComponent, canActivate: [authGuard]},
     { path: "contas/cadastrar", component: CadastroContasComponent, canActivate: [authGuard]},
     { path: "movimentarcontas", component: MovimentacaoEntreContasComponent, canActivate: [authGuard]},
+    { path: "smartreport", component: SmartReportComponent, canActivate: [authGuard]},
+    { path: "contasreceber", component: ContasReceberComponent, canActivate: [authGuard]},
+    { path: "contaspagar", component: ContasPagarComponent, canActivate: [authGuard]},
     { path: "**", redirectTo: "/home" }
 ];
 

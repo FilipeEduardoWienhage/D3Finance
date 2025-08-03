@@ -16,6 +16,7 @@ import { ReceitaMensal } from '../../../models/receita-mensal';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ContasService } from '../../../service/contas.service';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 
 @Component({
@@ -32,7 +33,8 @@ import { ContasService } from '../../../service/contas.service';
     ButtonModule,
     ToastModule,
     DropdownModule,
-    InputTextModule
+    InputTextModule,
+    HeaderSystemComponent,
   ],
   templateUrl: './receitas.component.html',
   styleUrls: ['./receitas.component.css'],

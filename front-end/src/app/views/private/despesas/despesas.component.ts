@@ -17,6 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ContasService } from '../../../service/contas.service';
 import { PrimeNG } from 'primeng/config';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 
 @Component({
@@ -33,7 +34,8 @@ import { PrimeNG } from 'primeng/config';
     ButtonModule,
     ToastModule,
     DropdownModule,
-    InputTextModule
+    InputTextModule,
+    HeaderSystemComponent,
   ],
   templateUrl: './despesas.component.html',
   styleUrls: ['./despesas.component.css'],

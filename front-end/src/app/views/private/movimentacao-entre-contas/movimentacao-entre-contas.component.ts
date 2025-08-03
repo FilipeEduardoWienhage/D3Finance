@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { TransacaoService } from '../../../service/transacao.service';
 import { TransacaoRequestModel } from '../../../models/RequestTransacao';
 import { ToastModule } from 'primeng/toast';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 
 
@@ -34,7 +35,9 @@ interface Conta {
     Fluid,
     SelectModule,
     CardModule,
-    ButtonModule],
+    ButtonModule,
+    HeaderSystemComponent
+  ],
   templateUrl: './movimentacao-entre-contas.component.html',
   styleUrl: './movimentacao-entre-contas.component.css',
   providers: [

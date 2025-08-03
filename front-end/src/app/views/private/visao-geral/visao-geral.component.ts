@@ -23,6 +23,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
 import { PrimeNG } from 'primeng/config';
 import { DatePicker } from 'primeng/datepicker';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 @Component({
   selector: 'app-visao-geral',
@@ -39,14 +40,13 @@ import { DatePicker } from 'primeng/datepicker';
     DialogModule,
     CalendarModule,
     DatePicker,
-
+    HeaderSystemComponent,
     ConfirmDialogModule,
     ToastModule,
     CardModule,
     NavBarSystemComponent,
     FooterComponent,
     InputNumberModule,
-
   ],
   templateUrl: './visao-geral.component.html',
   styleUrls: ['./visao-geral.component.css'],

@@ -112,6 +112,21 @@ export class NavBarSystemComponent implements OnInit {
             command: () => this.router.navigate(['/importararquivo'])
           },
           {
+            label: 'Contas à receber',
+            icon: 'pi pi-money-bill',
+            command: () => this.router.navigate(['/contasreceber'])
+          },
+          {
+            label: 'Contas à pagar',
+            icon: 'pi pi-money-bill',
+            command: () => this.router.navigate(['/contaspagar'])
+          },
+          {
+            label: 'Smart Report',
+            icon: 'pi pi-envelope',
+            command: () => this.router.navigate(['/smartreport'])
+          },
+          {
             label: 'Telegram BOT',
             icon: 'pi pi-telegram',
             command: () => this.openTelegramModal()

@@ -15,6 +15,7 @@ import { ContaRequestModel } from '../../../models/RequestContas';
 import { ContasService } from '../../../service/contas.service';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 
 interface TipoContaOption {
@@ -38,6 +39,7 @@ interface TipoContaOption {
     ConfirmDialogModule,
     DropdownModule,
     InputTextModule,
+    HeaderSystemComponent,
   ],
   templateUrl: './cadastro-contas.component.html',
   styleUrls: ['./cadastro-contas.component.css'],

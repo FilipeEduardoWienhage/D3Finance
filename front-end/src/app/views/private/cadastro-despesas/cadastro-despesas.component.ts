@@ -15,6 +15,7 @@ import { DespesasService } from '../../../service/despesas.service';
 import { DespesaRequestModel } from '../../../models/RequestDespesas';
 import { ContasService } from '../../../service/contas.service';
 import { ToastModule } from 'primeng/toast';
+import { HeaderSystemComponent } from '../header-system/header-system.component';
 
 interface formaRecebimento {
   name: string;
@@ -45,6 +46,7 @@ interface categoriaDespesa {
     FormsModule,
     SplitterModule,
     ToastModule,
+    HeaderSystemComponent,
   ],
   templateUrl: './cadastro-despesas.component.html',
   styleUrl: './cadastro-despesas.component.css',
