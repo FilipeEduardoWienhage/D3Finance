@@ -1,0 +1,32 @@
+<app-header-system></app-header-system>
+<div class="flex flex-row flex-grow px-4 gap-4">
+    <div class="flex-shrink-0">
+        <app-nav-bar-system></app-nav-bar-system>
+    </div>
+
+    <div class="card flex flex-col items-center justify-center gap-4 p-6">
+        <h2 class="text-2xl font-semibold">Assistente de Relatórios Personalizados</h2>
+        <p >
+            Utilize o editor abaixo para montar relatórios personalizados de acordo com as informações financeiras do
+            seu negócio.
+            Você pode incluir anotações, resumos de receitas e despesas, além de observações estratégicas. Após
+            finalizar, você poderá salvar ou imprimir o relatório.
+        </p>
+        <div class="flex flex-col gap-1" [style]=" {width: '950px'}">
+            <p-editor #content="ngModel" [(ngModel)]="text" name="content" [style]="{ height: '520px' }" required />
+        </div>
+        <div class="card flex justify-center">
+            <div class="flex flex-col gap-2">
+                <a href="#">
+                    <div class="flex gap-4 mt-1">
+                        <p-button label="Salvar" class="w-full  md:w-64" styleClass="w-full" />
+                        <p-button label="Imprimir" class="w-full  md:w-64" styleClass="w-full" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<app-footer class="mt-auto"></app-footer>
