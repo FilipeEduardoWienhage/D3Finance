@@ -26,6 +26,7 @@ class Usuario(Base):
     contas = relationship("Contas", back_populates="usuario", cascade="all, delete-orphan")
     receitas = relationship("Receitas", back_populates="usuario", cascade="all, delete-orphan")
     despesas = relationship("Despesas", back_populates="usuario", cascade="all, delete-orphan")
+    contas_receber = relationship("ContasReceber", back_populates="usuario", cascade="all, delete-orphan")
     telegram_config = relationship("TelegramConfig", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
 
 
@@ -85,6 +86,7 @@ class Contas(Base):
     usuario = relationship("Usuario", back_populates="contas")
     despesas = relationship("Despesas", back_populates="conta", foreign_keys="[Despesas.conta_id]")
     receitas = relationship("Receitas", back_populates="conta", foreign_keys="[Receitas.conta_id]")
+    contas_receber = relationship("ContasReceber", back_populates="conta", foreign_keys="[ContasReceber.conta_id]")
     transacoes_origem = relationship("Transacoes", foreign_keys="[Transacoes.conta_origem_id]", back_populates="conta_origem")
     transacoes_destino = relationship("Transacoes", foreign_keys="[Transacoes.conta_destino_id]", back_populates="conta_destino")
 
@@ -132,3 +134,26 @@ class TelegramConfig(Base):
 
     def __repr__(self):
         return f"<TelegramConfig(id={self.id}, usuario_id={self.usuario_id}, ativo={self.ativo})>"
+    
+
+
+class ContasReceber(Base):
+    __tablename__ = "contas_receber"
+
+    id = Column(Integer, primary_key=True, index=True)
+    descricao = Column(String(250))
+    valor = Column(Float, nullable=False)
+    data_prevista = Column(Date, nullable=False)
+    categoria_receita = Column(String(50), nullable=False)
+    forma_recebimento = Column(String(50), nullable=False)
+    status = Column(String(20), default="PENDENTE", nullable=False)  # PENDENTE, RECEBIDO, CANCELADO
+    conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    data_criacao = Column(DateTime, default=func.now(), nullable=False)
+    data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
+
+    usuario = relationship("Usuario", back_populates="contas_receber")
+    conta = relationship("Contas", back_populates="contas_receber", foreign_keys=[conta_id])
+
+    def __repr__(self):
+        return f"<ContasReceber(id={self.id}, descricao={self.descricao}, valor={self.valor}, status={self.status})>"

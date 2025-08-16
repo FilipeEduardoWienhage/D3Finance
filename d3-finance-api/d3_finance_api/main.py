@@ -2,7 +2,7 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from src.app import app
 from src.database.database import engine, Base
-from src.api.v1.endpoints import usuario_controller,telegram_controller, receita_controller, despesa_controller, contas_controller, importacao_controller, transacoes_controller, autenticacao_controller, recuperacao_controller
+from src.api.v1.endpoints import usuario_controller,telegram_controller, receita_controller, despesa_controller, contas_controller, importacao_controller, transacoes_controller, autenticacao_controller, recuperacao_controller, contas_receber_controller
 from src.services.telegram_service import telegram_service
 import logging
 
@@ -30,6 +30,7 @@ app.include_router(transacoes_controller.router)
 app.include_router(autenticacao_controller.router)
 app.include_router(recuperacao_controller.router)
 app.include_router(telegram_controller.router)
+app.include_router(contas_receber_controller.router)
 
 # Inicializa o bot do Telegram
 @app.on_event("startup")

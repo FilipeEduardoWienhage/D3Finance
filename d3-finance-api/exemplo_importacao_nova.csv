@@ -1,6 +1,6 @@
 tipo,conta_nome,categoria,valor,data,forma,descricao
-receita,Nubank,Salário,5000.00,2024-01-15,PIX,Salário do mês
-receita,Nubank,Freelance,1500.00,2024-01-20,Transferência,Projeto freelance
-despesa,Nubank,Alimentação,800.00,2024-01-18,Cartão de Crédito,Compras do mês
+receita,Nubank,Salário,5000.00,2025-01-15,PIX,Salário do mês
+receita,Nubank,Freelance,1500.00,2025-01-20,Transferência,Projeto freelance
+despesa,Nubank,Alimentação,800.00,2025-01-18,Cartão de Crédito,Compras do mês
 despesa,Nubank,Transporte,200.00,2024-01-22,Dinheiro,Combustível
-despesa,Nubank,Contas,1200.00,2024-01-25,PIX,Contas do mês 
+despesa,Nubank,Contas,1200.00,2025-01-25,PIX,Contas do mês 
