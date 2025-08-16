@@ -4,12 +4,38 @@
         <app-nav-bar-system></app-nav-bar-system>
     </div>
 
-    <p>Aqui o usuário vai poder cadastrar todas os valores que ele tem previsão de receber, com valor, data... e terá um botão
-        efetuar o recebimento ai o sistema irá fazer o cadastro dessa receita o usuario terá que informar a conta que entrará
-        o valor nesse momento</p>
+    <div class="flex flex-col flex-grow space-y-6 items-center">
+        <p-table [value]="itens" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+                <tr>
+                    <th>Conta</th>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data prevista</th>
+                    <th>Categoria da receita</th>
+                    <th>Forma de Recebimento</th>
+                    <th>Status</th>
+                    <th>Ações </th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-item>
+                <tr>
+                    <td>{{ item.conta }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <td>{{ item.valor }}</td>
+                    <td>{{ item.dataPrevista }}</td>
+                    <td>{{ item.categoriaReceita }}</td>
+                    <td>{{ item.formaRecebimento }}</td>
+                    <td>{{ item.status }}</td>
+                    <td>
+                        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
 
 </div>
-
-
-
 <app-footer class="mt-auto"></app-footer>

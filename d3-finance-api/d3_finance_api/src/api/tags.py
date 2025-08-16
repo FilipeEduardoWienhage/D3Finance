@@ -7,6 +7,7 @@ class Tag(Enum):
     Receitas = "Receitas"
     Despesas = "Despesas"
     Contas = "Contas"
+    ContasReceber = "Contas a Receber"
     Transacoes = "Transações"
     Telegram = "Telegram"
     
