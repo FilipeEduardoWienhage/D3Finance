@@ -8,9 +8,10 @@ export interface ContaReceberResponseModel {
   conta: string;
   descricao: string;
   valor: number;
-  dataPrevista: string | null;
+  dataPrevista: Date | null;
   formaRecebimento: string;
   status: string;
+  categoriaReceita: string;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -5,4 +5,5 @@ export class ContaReceberRequestModel {
     dataPrevista: Date | null = null;
     formaRecebimento: string = "";
     status: string = "";
+    categoriaReceita: string = "";
 }

@@ -17,6 +17,8 @@ import { ReceitasService } from '../../../service/receitas.service';
 import { ContasService } from '../../../service/contas.service';
 import { ToastModule } from 'primeng/toast';
 import { HeaderSystemComponent } from '../header-system/header-system.component';
+import { PrimeNG } from 'primeng/config';
+
 
 interface formaRecebimento {
   name: string;
@@ -55,6 +57,7 @@ interface contaDestino {
 })
 export class CadastroReceitasComponent {
   public requestReceita!: ReceitaRequestModel;
+  primengConfig: any;
 
   constructor(
     private receitaService: ReceitasService,
@@ -114,6 +117,20 @@ export class CadastroReceitasComponent {
       error: (erro) => {
         console.error('Erro ao carregar contas:', erro);
       }
+    });
+
+
+    this.primengConfig.setTranslation({
+      dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+      dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+      dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+      monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      today: 'Hoje',
+      clear: 'Limpar',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'Sm',
+      firstDayOfWeek: 0,
     });
   }
 
