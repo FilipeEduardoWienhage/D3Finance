@@ -14,7 +14,7 @@ class DadosMensais(BaseModel):
     mes: int
     receitas: float
     despesas: float
-    saldo: float
+    saldo_periodo: float
 
     class Config:
         from_attributes = True
@@ -37,7 +37,7 @@ class RelatorioAnualResponse(BaseModel):
     ano: int
     total_receitas: float
     total_despesas: float
-    saldo_ano: float
+    saldo_periodo: float
     dados_mensais: List[DadosMensais]
 
     class Config:

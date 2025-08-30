@@ -1,8 +1,7 @@
 from datetime import date, datetime
-from operator import and_
 from typing import Annotated, List, Optional
 from fastapi import Depends, status, Response, Query, HTTPException
-from sqlalchemy import extract, func
+from sqlalchemy import extract, func, and_
 from sqlalchemy.orm import Session
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
@@ -172,14 +171,14 @@ def get_relatorio_anual(
             "mes": mes,
             "receitas": float(receita_mes),
             "despesas": float(despesa_mes),
-            "saldo": float(receita_mes - despesa_mes)
+            "saldo_periodo": float(receita_mes - despesa_mes)
         })
 
     return RelatorioAnualResponse(
         ano=ano,
         total_receitas=float(total_receitas),
         total_despesas=float(total_despesas),
-        saldo_ano=float(total_receitas - total_despesas),
+        saldo_periodo=float(total_receitas - total_despesas),
         dados_mensais=dados_mensais
     )
 
