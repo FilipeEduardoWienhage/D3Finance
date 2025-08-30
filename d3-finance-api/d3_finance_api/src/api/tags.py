@@ -10,4 +10,5 @@ class Tag(Enum):
     ContasReceber = "Contas a Receber"
     Transacoes = "Transações"
     Telegram = "Telegram"
+    Relatorios = "Relatórios"
     
