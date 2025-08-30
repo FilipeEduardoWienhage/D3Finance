@@ -1,32 +1,82 @@
-<app-header-system></app-header-system>
-<div class="flex flex-row flex-grow px-4 gap-4">
-    <div class="flex-shrink-0">
-        <app-nav-bar-system></app-nav-bar-system>
-    </div>
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
+    <app-header-system></app-header-system>
 
-    <div class="card flex flex-col items-center justify-center gap-4 p-6">
-        <h2 class="text-2xl font-semibold">Assistente de Relatórios Personalizados</h2>
-        <p >
-            Utilize o editor abaixo para montar relatórios personalizados de acordo com as informações financeiras do
-            seu negócio.
-            Você pode incluir anotações, resumos de receitas e despesas, além de observações estratégicas. Após
-            finalizar, você poderá salvar ou imprimir o relatório.
-        </p>
-        <div class="flex flex-col gap-1" [style]=" {width: '950px'}">
-            <p-editor #content="ngModel" [(ngModel)]="text" name="content" [style]="{ height: '520px' }" required />
+    <div class="flex flex-row flex-grow px-4 gap-4">
+        <div class="flex-shrink-0">
+            <app-nav-bar-system></app-nav-bar-system>
+            <p-toast></p-toast>
         </div>
-        <div class="card flex justify-center">
-            <div class="flex flex-col gap-2">
-                <a href="#">
-                    <div class="flex gap-4 mt-1">
-                        <p-button label="Salvar" class="w-full  md:w-64" styleClass="w-full" />
-                        <p-button label="Imprimir" class="w-full  md:w-64" styleClass="w-full" />
-                    </div>
-                </a>
+
+        <div class="flex flex-col flex-grow space-y-6 items-center">
+            <!-- Título e Descrição -->
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-white mb-4">Assistente de Relatórios Inteligentes</h2>
+                <p class="text-gray-300 text-lg max-w-3xl">
+                    Crie relatórios profissionais de forma rápida e eficiente. Escolha um modelo predefinido.
+                </p>
             </div>
+
+
+            <p-card header="Configurações do Relatório" class="w-full max-w-6xl">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    
+                    <div class="flex flex-col gap-2">
+                        <label for="modeloRelatorio">Modelo<span class="asterisco">*</span></label>
+                        <p-select 
+                            [options]="modelosRelatorios" 
+                            [(ngModel)]="modeloSelecionado"
+                            optionLabel="name" 
+                            optionValue="code" 
+                            placeholder="Selecione o modelo"
+                            class="w-full"
+                            (onChange)="onModeloChange()" />
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 mt-6">
+                    <p-button 
+                        (click)="gerarRelatorioAutomatico()" 
+                        label="Gerar Relatório" 
+                        class="w-48"
+                        styleClass="p-button-primary" />
+                    <p-button 
+                        (click)="removerRelatorio()" 
+                        label="Remover" 
+                        class="w-32"
+                        styleClass="p-button-secondary" />
+                </div>
+            </p-card>
+
+            <p-card header="Editor de Relatório" class="w-full max-w-6xl">
+                <div class="mb-4">
+                    <p-editor 
+                        #content="ngModel" 
+                        [(ngModel)]="text" 
+                        name="content" 
+                        [style]="{ height: '500px' }" 
+                        placeholder="Selecione um modelo e período para gerar o relatório..."
+                        required>
+                    </p-editor>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <p-button 
+                        (click)="salvarRelatorio()" 
+                        label="Salvar Relatório" 
+                        icon="pi pi-save"
+                        class="w-48"
+                        styleClass="p-button-success">
+                    </p-button>
+                    <p-button 
+                        (click)="imprimirRelatorio()" 
+                        label="Imprimir" 
+                        icon="pi pi-print"
+                        class="w-48"
+                        styleClass="p-button-info">
+                    </p-button>
+                </div>
+            </p-card>
         </div>
     </div>
+    <app-footer class="mt-auto"></app-footer>
 </div>
-
-
-<app-footer class="mt-auto"></app-footer>
