@@ -8,7 +8,7 @@
         </div>
 
         <div class="flex flex-col flex-grow space-y-6 items-center">
-            <!-- Título e Descrição -->
+
             <div class="text-center mb-6">
                 <h2 class="text-3xl font-bold text-white mb-4">Assistente de Relatórios Inteligentes</h2>
                 <p class="text-gray-300 text-lg max-w-3xl">
@@ -16,20 +16,41 @@
                 </p>
             </div>
 
-
             <p-card header="Configurações do Relatório" class="w-full max-w-6xl">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    
                     <div class="flex flex-col gap-2">
-                        <label for="modeloRelatorio">Modelo<span class="asterisco">*</span></label>
+                        <label for="modeloRelatorio">Período</label>
                         <p-select 
                             [options]="modelosRelatorios" 
                             [(ngModel)]="modeloSelecionado"
-                            optionLabel="name" 
-                            optionValue="code" 
+                            optionLabel="nome" 
                             placeholder="Selecione o modelo"
-                            class="w-full"
-                            (onChange)="onModeloChange()" />
+                            class="w-full">
+                        </p-select>
+                    </div>
+
+                    <div class="flex flex-col gap-2" *ngIf="modeloSelecionado?.id === 'mensal'">
+                        <label for="mes">Mês</label>
+                        <p-select 
+                            [options]="meses" 
+                            [(ngModel)]="dataFim"
+                            optionLabel="label" 
+                            optionValue="value" 
+                            placeholder="Selecione o mês"
+                            class="w-full">
+                        </p-select>
+                    </div>
+
+                    <div class="flex flex-col gap-2" *ngIf="modeloSelecionado?.id === 'mensal' || modeloSelecionado?.id === 'anual'">
+                        <label for="ano">Ano</label>
+                        <p-select 
+                            [options]="anos" 
+                            [(ngModel)]="dataInicio"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Selecione o ano"
+                            class="w-full">
+                        </p-select>
                     </div>
                 </div>
 
@@ -38,19 +59,20 @@
                         (click)="gerarRelatorioAutomatico()" 
                         label="Gerar Relatório" 
                         class="w-48"
-                        styleClass="p-button-primary" />
+                        styleClass="p-button-primary">
+                    </p-button>
                     <p-button 
-                        (click)="removerRelatorio()" 
+                        (click)="limparRelatorio()" 
                         label="Remover" 
                         class="w-32"
-                        styleClass="p-button-secondary" />
+                        styleClass="p-button-secondary">
+                    </p-button>
                 </div>
             </p-card>
 
             <p-card header="Editor de Relatório" class="w-full max-w-6xl">
                 <div class="mb-4">
                     <p-editor 
-                        #content="ngModel" 
                         [(ngModel)]="text" 
                         name="content" 
                         [style]="{ height: '500px' }" 
@@ -78,5 +100,6 @@
             </p-card>
         </div>
     </div>
+
     <app-footer class="mt-auto"></app-footer>
 </div>
