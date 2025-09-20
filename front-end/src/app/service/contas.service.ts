@@ -6,6 +6,8 @@ import { ContaRequestModel } from '../models/RequestContas';
 export interface ContaResponseModel {
     id: number;
     nome_conta: string;
+    tipo_conta: string;
+    saldo: number;
 }
 
 @Injectable({
