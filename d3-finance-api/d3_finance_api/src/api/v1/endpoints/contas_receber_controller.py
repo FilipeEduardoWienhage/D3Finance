@@ -193,21 +193,13 @@ def create_conta_receber(
             detail="Conta não encontrada ou não pertence ao usuário"
         )
     
-    
-    status_validos = ["PENDENTE", "RECEBIDO", "CANCELADO"]
-    if conta_receber.status and conta_receber.status not in status_validos:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Status inválido. Valores permitidos: PENDENTE, RECEBIDO, CANCELADO"
-        )
-    
     db_conta_receber = ContasReceber(
         descricao=conta_receber.descricao,
         valor=conta_receber.valor,
         data_prevista=conta_receber.data_prevista,
         categoria_receita=conta_receber.categoria_receita,
         forma_recebimento=conta_receber.forma_recebimento,
-        status="PENDENTE",  
+        status="Pendente",  
         conta_id=conta_receber.conta_id,
         usuario_id=usuario_logado.id
     )
@@ -297,11 +289,11 @@ def update_conta_receber(
             )
     
     if conta_receber_update.status:
-        status_validos = ["PENDENTE", "RECEBIDO", "CANCELADO"]
+        status_validos = ["Pendente", "Recebido", "Cancelado"]
         if conta_receber_update.status not in status_validos:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Status inválido. Valores permitidos: PENDENTE, RECEBIDO, CANCELADO"
+                detail="Status inválido. Valores permitidos: Pendente, Recebido, Cancelado"
             )
     
     for field, value in conta_receber_update.__dict__.items():

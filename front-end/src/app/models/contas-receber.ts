@@ -1,8 +1,8 @@
 export class ContaReceberRequestModel {
-    conta: string = "";
+    conta_id: number = 0;
     descricao: string = "";
     valor: number = 0;
-    dataPrevista: Date | null = null;
+    dataPrevista: Date | string | null = null;
     formaRecebimento: string = "";
     status: string = "";
     categoriaReceita: string = "";

@@ -9,6 +9,7 @@
             <button pButton label="Nova Conta" icon="pi pi-plus" class="p-button-success mb-3" (click)="abrirDialog()">
             </button>
         </div>
+        
         <p-table [value]="itens" showGridlines [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template #header>
                 <tr>
@@ -19,41 +20,45 @@
                     <th>Categoria da receita</th>
                     <th>Forma de Recebimento</th>
                     <th>Status</th>
-                    <th>Ações </th>
+                    <th>Ações</th>
                 </tr>
             </ng-template>
             <ng-template #body let-item>
                 <tr>
-                    <td>{{ item.conta }}</td>
+                    <td>{{ getNomeConta(item.conta_id) }}</td>
                     <td>{{ item.descricao }}</td>
-                    <td>{{ item.valor }}</td>
-                    <td>{{ item.dataPrevista }}</td>
+                    <td>{{ item.valor | currency:'BRL' }}</td>
+                    <td>{{ item.dataPrevista | date:'dd/MM/yyyy' }}</td>
                     <td>{{ item.categoriaReceita }}</td>
                     <td>{{ item.formaRecebimento }}</td>
                     <td>{{ item.status }}</td>
                     <td>
-                        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text"
+                        <button pButton type="button" icon="pi pi-pencil"
+                        class="p-button-sm p-button-rounded p-button-info"
                             (click)="editarConta(item)">
                         </button>
-
-                        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text"
+                        <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
                             (click)="excluirConta(item.id)">
                         </button>
-
-                        <button pButton icon="pi pi-check" class="p-button-rounded p-button-text"
-                            *ngIf="item.status === 'pendente'" (click)="marcarComoPago(item)">
+                        <button pButton type="button" icon="pi pi-check"
+                        class="p-button-sm p-button-rounded p-button-success"
+                        *ngIf="item.status?.toLowerCase() === 'pendente'" 
+                        (click)="marcarComoPago(item)">
                         </button>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
+        <!-- modal cadastrar nova conta -->
         <p-dialog header="Cadastrar Conta a Receber" [(visible)]="dialogVisible" [modal]="true"
-            [style]="{width: '500px'}" [closable]="true">
-            <form (ngSubmit)="salvarConta()" #contaForm="ngForm" class="space-y-4">
-
+            [style]="{width: '500px'}" [closable]="true" [draggable]="false" [resizable]="false"
+            (onHide)="fecharDialog()">
+            <form (ngSubmit)="salvarConta()" class="space-y-4">
                 <div class="flex flex-col">
-                    <label>Conta</label>
-                    <input pInputText [(ngModel)]="novaConta.conta" name="conta" required />
+                    <label>Conta *</label>
+                    <p-select [options]="contas" [(ngModel)]="novaConta.conta_id" name="conta_id"
+                        optionLabel="nome_conta" optionValue="id" placeholder="Selecione uma conta">
+                    </p-select>
                 </div>
 
                 <div class="flex flex-col">
@@ -62,41 +67,42 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <label>Valor</label>
-                    <p-inputnumber [(ngModel)]="RequestContasReceber.valor" inputId="currency-br" mode="currency"
-                    currency="BRL" locale="pt-BR" />
+                    <label>Valor *</label>
+                    <p-inputnumber [(ngModel)]="novaConta.valor" name="valor" 
+                                  mode="currency" currency="BRL" locale="pt-BR"
+                                  placeholder="0,00" [minFractionDigits]="2" [maxFractionDigits]="2">
+                    </p-inputnumber>
                 </div>
 
                 <div class="flex flex-col">
-                    <label>Data Prevista</label>
-                    <p-datepicker [(ngModel)]="novaConta.dataPrevista" name="dataPrevista" dateFormat="dd/mm/yy"
-                        aria-placeholder="dd/mm/aaaa" showIcon="true"></p-datepicker>
+                    <label>Data Prevista *</label>
+                    <p-calendar [(ngModel)]="novaConta.dataPrevista" name="dataPrevista"
+                               dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" 
+                               [showIcon]="true" [minDate]="minDate">
+                    </p-calendar>
                 </div>
 
                 <div class="flex flex-col">
-                    <label>Categoria da Receita</label>
-                    <p-select [options]="categoriaDaReceita" [(ngModel)]="RequestContasReceber.categoriaReceita"
+                    <label>Categoria da Receita *</label>
+                    <p-select [options]="categoriaDaReceita" [(ngModel)]="novaConta.categoriaReceita" name="categoriaReceita"
                         optionLabel="name" optionValue="name" placeholder="Categoria da Receita"></p-select>
                 </div>
 
                 <div class="flex flex-col">
-                    <label>Forma de Recebimento</label>
-                    <p-select [options]="formaDeRecebimento" [(ngModel)]="RequestContasReceber.formaRecebimento"
+                    <label>Forma de Recebimento *</label>
+                    <p-select [options]="formaDeRecebimento" [(ngModel)]="novaConta.formaRecebimento" name="formaRecebimento"
                         optionLabel="name" optionValue="name" placeholder="Forma de Recebimento"></p-select>
                 </div>
 
                 <div class="flex justify-end gap-2 mt-4">
+                    <button pButton label="Limpar" class="p-button-secondary" type="button"
+                        (click)="limparFormulario()"></button>
                     <button pButton label="Cancelar" class="p-button-text" type="button"
                         (click)="fecharDialog()"></button>
-                    <button pButton label="Salvar" icon="pi pi-check" type="submit"
-                        [disabled]="contaForm.invalid"></button>
+                    <button pButton label="Salvar" icon="pi pi-check" type="submit"></button>
                 </div>
             </form>
         </p-dialog>
     </div>
-
-
-
-
 </div>
 <app-footer class="mt-auto"></app-footer>

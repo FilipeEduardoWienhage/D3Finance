@@ -146,7 +146,7 @@ class ContasReceber(Base):
     data_prevista = Column(Date, nullable=False)
     categoria_receita = Column(String(50), nullable=False)
     forma_recebimento = Column(String(50), nullable=False)
-    status = Column(String(20), default="PENDENTE", nullable=False)  # PENDENTE, RECEBIDO, CANCELADO
+    status = Column(String(20), default="Pendente", nullable=False)  # Pendente, Recebido, Cancelado
     conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
