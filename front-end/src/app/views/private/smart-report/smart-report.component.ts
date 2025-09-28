@@ -87,13 +87,25 @@ export class SmartReportComponent implements OnInit {
           {{despesasPorCategoria}}
         </ul>
         
+        
+        <h3>RESUMO POR CONTA</h3>
+        <h4>Receitas por Conta:</h4>
+        <ul>
+          {{receitasPorConta}}
+        </ul>
+        
+        <h4>Despesas por Conta:</h4>
+        <ul>
+          {{despesasPorConta}}
+        </ul>
+        
         <h3>RESULTADO</h3>
         <p>Saldo do período: R$ {{saldoPeriodo}}</p>
         
         <h3>ANÁLISE E RECOMENDAÇÕES</h3>
         <p>{{analiseRecomendacoes}}</p>
       `,
-      parametros: ['dataInicio', 'dataFim', 'receitasTotal', 'despesasTotal', 'saldoPeriodo', 'quantidadeReceitas', 'quantidadeDespesas', 'receitasPorCategoria', 'despesasPorCategoria', 'analiseRecomendacoes']
+      parametros: ['dataInicio', 'dataFim', 'receitasTotal', 'despesasTotal', 'saldoPeriodo', 'quantidadeReceitas', 'quantidadeDespesas', 'receitasPorCategoria', 'despesasPorCategoria', 'receitasPorConta', 'despesasPorConta', 'analiseRecomendacoes']
     },
     {
       id: 'anual',
@@ -122,6 +134,17 @@ export class SmartReportComponent implements OnInit {
           {{dadosMensais}}
         </table>
         
+        <h3>RESUMO POR CONTA</h3>
+        <h4>Receitas por Conta:</h4>
+        <ul>
+          {{receitasPorConta}}
+        </ul>
+        
+        <h4>Despesas por Conta:</h4>
+        <ul>
+          {{despesasPorConta}}
+        </ul>
+        
         <h3>ANÁLISE POR SETOR/ÁREA</h3>
         <p>{{analisePorSetor}}</p>
         
@@ -134,25 +157,7 @@ export class SmartReportComponent implements OnInit {
         <h3>RECOMENDAÇÕES ESTRATÉGICAS</h3>
         <p>{{recomendacoesEstrategicas}}</p>
       `,
-      parametros: ['ano', 'receitaTotalAnual', 'despesaTotalAnual', 'saldoAnual', 'dadosMensais', 'analisePorSetor', 'investimentosCapital', 'perspectivasProximoAno', 'recomendacoesEstrategicas']
-    },
-    {
-      id: 'personalizado',
-      nome: 'Relatório Personalizado',
-      descricao: 'Crie seu próprio relatório do zero',
-      template: `
-        <h1>RELATÓRIO PERSONALIZADO</h1>
-        <h2>{{tituloRelatorio}}</h2>
-        
-        <p>{{conteudoPersonalizado}}</p>
-        
-        <h3>DADOS ADICIONAIS</h3>
-        <p>{{dadosAdicionais}}</p>
-        
-        <h3>CONCLUSÕES</h3>
-        <p>{{conclusoes}}</p>
-      `,
-      parametros: ['tituloRelatorio', 'conteudoPersonalizado', 'dadosAdicionais', 'conclusoes']
+      parametros: ['ano', 'receitaTotalAnual', 'despesaTotalAnual', 'saldoAnual', 'dadosMensais', 'receitasPorConta', 'despesasPorConta', 'analisePorSetor', 'investimentosCapital', 'perspectivasProximoAno', 'recomendacoesEstrategicas']
     }
   ];
 
@@ -181,16 +186,46 @@ anoSelecionado: number | null = null;
 mesSelecionado: number | null = null;
 
   ngOnInit() {
-  const hoje = new Date();
-  const anoAtual = hoje.getFullYear();
-  for (let i = 0; i < 5; i++) {
-    this.anos.push({ label: (anoAtual - i).toString(), value: anoAtual - i });
-  }  
-    this.dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-    this.dataFim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+    const hoje = new Date();
+    const anoAtual = hoje.getFullYear();
+    for (let i = 0; i < 5; i++) {
+      this.anos.push({ label: (anoAtual - i).toString(), value: anoAtual - i });
+    }  
+    
+    // Inicializar com o mês e ano atual
+    this.anoSelecionado = anoAtual;
+    this.mesSelecionado = hoje.getMonth() + 1;
+    this.atualizarDatas();
+    
+    console.log('Datas inicializadas:', { 
+      anoSelecionado: this.anoSelecionado,
+      mesSelecionado: this.mesSelecionado,
+      dataInicio: this.dataInicio, 
+      dataFim: this.dataFim
+    });
+  }
+
+  atualizarDatas() {
+    if (this.anoSelecionado && this.mesSelecionado) {
+      this.dataInicio = new Date(this.anoSelecionado, this.mesSelecionado - 1, 1);
+      this.dataFim = new Date(this.anoSelecionado, this.mesSelecionado, 0);
+      
+      console.log('Datas atualizadas:', { 
+        anoSelecionado: this.anoSelecionado,
+        mesSelecionado: this.mesSelecionado,
+        dataInicio: this.dataInicio, 
+        dataFim: this.dataFim
+      });
+      
+      // Recarregar dados se já houver um modelo selecionado
+      if (this.modeloSelecionado) {
+        this.carregarDadosRelatorio();
+      }
+    }
   }
 
   selecionarModelo(modelo: RelatorioModelo) {
+    console.log('Modelo selecionado:', modelo);
     this.modeloSelecionado = modelo;
     this.carregarDadosRelatorio();
   }
@@ -200,6 +235,8 @@ mesSelecionado: number | null = null;
 
     this.carregando = true;
     try {
+      console.log('Iniciando carregamento de dados para modelo:', this.modeloSelecionado.id);
+      
       switch (this.modeloSelecionado.id) {
         case 'mensal':
           await this.carregarRelatorioMensal();
@@ -208,12 +245,15 @@ mesSelecionado: number | null = null;
           await this.carregarRelatorioAnual();
           break;
       }
-      this.gerarRelatorioAutomatico();
+      
+      console.log('Dados carregados, gerando relatório...');
+      this.atualizarRelatorio();
     } catch (error) {
+      console.error('Erro detalhado ao carregar dados:', error);
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
-        detail: 'Erro ao carregar dados do relatório'
+        detail: `Erro ao carregar dados do relatório: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
       });
     } finally {
       this.carregando = false;
@@ -221,21 +261,33 @@ mesSelecionado: number | null = null;
   }
 
   private async carregarRelatorioMensal() {
-    if (!this.dataInicio || !this.dataFim) return;
-    const ano = this.dataInicio.getFullYear();
-    const mes = this.dataInicio.getMonth() + 1;
-    this.relatorioMensal = await firstValueFrom(this.relatorioService.getRelatorioMensal(ano, mes));
+    if (!this.anoSelecionado || !this.mesSelecionado) {
+      console.log('Ano ou mês não selecionado para relatório mensal');
+      return;
+    }
+    console.log('Carregando relatório mensal para:', { ano: this.anoSelecionado, mes: this.mesSelecionado });
+    this.relatorioMensal = await firstValueFrom(this.relatorioService.getRelatorioMensal(this.anoSelecionado, this.mesSelecionado));
+    console.log('Relatório mensal carregado:', this.relatorioMensal);
   }
 
   private async carregarRelatorioAnual() {
-    if (!this.dataInicio) return;
-    const ano = this.dataInicio.getFullYear();
-    this.relatorioAnual = await firstValueFrom(this.relatorioService.getRelatorioAnual(ano));
+    if (!this.anoSelecionado) {
+      console.log('Ano não selecionado para relatório anual');
+      return;
+    }
+    console.log('Carregando relatório anual para:', { ano: this.anoSelecionado });
+    this.relatorioAnual = await firstValueFrom(this.relatorioService.getRelatorioAnual(this.anoSelecionado));
+    console.log('Relatório anual carregado:', this.relatorioAnual);
+    console.log('Receitas por conta anual:', this.relatorioAnual?.receitas_por_conta);
+    console.log('Despesas por conta anual:', this.relatorioAnual?.despesas_por_conta);
   }
 
-  gerarRelatorioAutomatico() {
+
+  atualizarRelatorio() {
     if (!this.modeloSelecionado) return;
 
+    console.log('Gerando relatório automático para modelo:', this.modeloSelecionado.id);
+    
     let template = this.modeloSelecionado.template;
 
     if (this.dataInicio) template = template.replace('{{dataInicio}}', this.dataInicio.toLocaleDateString('pt-BR'));
@@ -249,6 +301,7 @@ mesSelecionado: number | null = null;
     });
 
     this.text = template;
+    console.log('Relatório gerado:', this.text ? 'Sim' : 'Não');
   }
 
   private substituirParametrosEspecificos(template: string): string {
@@ -266,6 +319,16 @@ mesSelecionado: number | null = null;
       const despesasCategoria = this.relatorioMensal.despesas_por_categoria
         .map(d => `<li>${d.categoria}: R$ ${d.valor.toFixed(2)}</li>`).join('');
       template = template.replace('{{despesasPorCategoria}}', despesasCategoria);
+
+      // Gerar resumo por conta para receitas
+      const receitasContaHtml = (this.relatorioMensal.receitas_por_conta || [])
+        .map(r => `<li><strong>${r.conta}</strong>: R$ ${r.valor.toFixed(2)}</li>`).join('');
+      template = template.replace('{{receitasPorConta}}', receitasContaHtml || '<li><em>Nenhuma receita encontrada no período</em></li>');
+
+      // Gerar resumo por conta para despesas
+      const despesasContaHtml = (this.relatorioMensal.despesas_por_conta || [])
+        .map(d => `<li><strong>${d.conta}</strong>: R$ ${d.valor.toFixed(2)}</li>`).join('');
+      template = template.replace('{{despesasPorConta}}', despesasContaHtml || '<li><em>Nenhuma despesa encontrada no período</em></li>');
     }
 
     if (this.modeloSelecionado?.id === 'anual' && this.relatorioAnual) {
@@ -277,7 +340,18 @@ mesSelecionado: number | null = null;
       const dadosMensais = this.relatorioAnual.dados_mensais
         .map(d => `<tr><td>${d.mes}</td><td>R$ ${d.receitas.toFixed(2)}</td><td>R$ ${d.despesas.toFixed(2)}</td><td>R$ ${d.saldo_periodo.toFixed(2)}</td></tr>`).join('');
       template = template.replace('{{dadosMensais}}', dadosMensais);
+
+      // Gerar resumo por conta para receitas (anual)
+      const receitasContaHtml = (this.relatorioAnual.receitas_por_conta || [])
+        .map(r => `<li><strong>${r.conta}</strong>: R$ ${r.valor.toFixed(2)}</li>`).join('');
+      template = template.replace('{{receitasPorConta}}', receitasContaHtml || '<li><em>Nenhuma receita encontrada no período</em></li>');
+
+      // Gerar resumo por conta para despesas (anual)
+      const despesasContaHtml = (this.relatorioAnual.despesas_por_conta || [])
+        .map(d => `<li><strong>${d.conta}</strong>: R$ ${d.valor.toFixed(2)}</li>`).join('');
+      template = template.replace('{{despesasPorConta}}', despesasContaHtml || '<li><em>Nenhuma despesa encontrada no período</em></li>');
     }
+
 
     return template;
   }
@@ -290,10 +364,9 @@ mesSelecionado: number | null = null;
       'investimentosCapital': 'Informações sobre investimentos a serem preenchidas.',
       'perspectivasProximoAno': 'Perspectivas para o próximo ano a serem definidas.',
       'recomendacoesEstrategicas': 'Recomendações estratégicas a serem desenvolvidas.',
-      'tituloRelatorio': 'Título do Relatório',
-      'conteudoPersonalizado': 'Conteúdo personalizado do relatório.',
-      'dadosAdicionais': 'Dados adicionais relevantes.',
-      'conclusoes': 'Conclusões do relatório.'
+      'analiseObservacoes': 'Análise e observações sobre o período analisado.',
+      'receitasPorConta': '<li>Nenhuma receita por conta encontrada</li>',
+      'despesasPorConta': '<li>Nenhuma despesa por conta encontrada</li>'
     };
 
     return valoresPadrao[param] || '[A ser preenchido]';
@@ -301,7 +374,7 @@ mesSelecionado: number | null = null;
 
   atualizarParametro(chave: string, valor: any) {
     this.parametrosAdicionais[chave] = valor;
-    if (this.modeloSelecionado) this.gerarRelatorioAutomatico();
+    if (this.modeloSelecionado) this.atualizarRelatorio();
   }
 
   limparRelatorio() {
@@ -312,13 +385,124 @@ mesSelecionado: number | null = null;
     this.relatorioAnual = null;
   }
 
+
   salvarRelatorio() {
-    console.log('Relatório salvo:', this.text);
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Sucesso',
-      detail: 'Relatório salvo com sucesso!'
-    });
+    if (!this.text || !this.modeloSelecionado) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção',
+        detail: 'Nenhum relatório foi gerado para salvar!'
+      });
+      return;
+    }
+
+    try {
+      // Converter HTML para texto limpo
+      const textoLimpo = this.converterHtmlParaTexto(this.text);
+      
+      // Adicionar cabeçalho e rodapé
+      const conteudoCompleto = `
+${this.modeloSelecionado.nome.toUpperCase()}
+${'='.repeat(this.modeloSelecionado.nome.length + 10)}
+
+${textoLimpo}
+
+${'='.repeat(50)}
+Relatório gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}
+Diamond Three Finance
+`;
+
+      // Criar o blob e fazer download
+      const blob = new Blob([conteudoCompleto], { type: 'text/plain;charset=utf-8' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      
+      // Nome do arquivo baseado no tipo de relatório e data
+      const dataAtual = new Date().toISOString().split('T')[0];
+      const nomeArquivo = `${this.modeloSelecionado.nome.replace(/\s+/g, '_')}_${dataAtual}.txt`;
+      
+      link.href = url;
+      link.download = nomeArquivo;
+      link.style.display = 'none';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Limpar URL do objeto
+      window.URL.revokeObjectURL(url);
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: `Relatório salvo como: ${nomeArquivo}`
+      });
+
+    } catch (error) {
+      console.error('Erro ao salvar relatório:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Erro ao salvar o relatório. Tente novamente.'
+      });
+    }
+  }
+
+  private converterHtmlParaTexto(html: string): string {
+    // Criar um elemento temporário para converter HTML para texto
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    // Substituir elementos HTML por formatação de texto
+    let texto = tempDiv.innerHTML;
+
+    // Substituir tags de cabeçalho
+    texto = texto.replace(/<h1[^>]*>(.*?)<\/h1>/gi, '\n\n$1\n' + '='.repeat(50) + '\n');
+    texto = texto.replace(/<h2[^>]*>(.*?)<\/h2>/gi, '\n\n$1\n' + '-'.repeat(30) + '\n');
+    texto = texto.replace(/<h3[^>]*>(.*?)<\/h3>/gi, '\n\n$1\n' + '-'.repeat(20) + '\n');
+    texto = texto.replace(/<h4[^>]*>(.*?)<\/h4>/gi, '\n\n$1:\n');
+
+    // Substituir parágrafos
+    texto = texto.replace(/<p[^>]*>(.*?)<\/p>/gi, '\n$1\n');
+
+    // Substituir listas
+    texto = texto.replace(/<ul[^>]*>/gi, '\n');
+    texto = texto.replace(/<\/ul>/gi, '\n');
+    texto = texto.replace(/<li[^>]*>(.*?)<\/li>/gi, '• $1\n');
+
+    // Substituir tabelas (formato simples)
+    texto = texto.replace(/<table[^>]*>/gi, '\n');
+    texto = texto.replace(/<\/table>/gi, '\n');
+    texto = texto.replace(/<thead[^>]*>/gi, '');
+    texto = texto.replace(/<\/thead>/gi, '');
+    texto = texto.replace(/<tbody[^>]*>/gi, '');
+    texto = texto.replace(/<\/tbody>/gi, '');
+    texto = texto.replace(/<tr[^>]*>/gi, '');
+    texto = texto.replace(/<\/tr>/gi, '\n');
+    texto = texto.replace(/<th[^>]*>(.*?)<\/th>/gi, '$1\t');
+    texto = texto.replace(/<td[^>]*>(.*?)<\/td>/gi, '$1\t');
+
+    // Substituir tags de formatação
+    texto = texto.replace(/<strong[^>]*>(.*?)<\/strong>/gi, '$1');
+    texto = texto.replace(/<b[^>]*>(.*?)<\/b>/gi, '$1');
+    texto = texto.replace(/<em[^>]*>(.*?)<\/em>/gi, '$1');
+    texto = texto.replace(/<i[^>]*>(.*?)<\/i>/gi, '$1');
+
+    // Remover outras tags HTML
+    texto = texto.replace(/<[^>]*>/g, '');
+
+    // Decodificar entidades HTML
+    texto = texto.replace(/&nbsp;/g, ' ');
+    texto = texto.replace(/&amp;/g, '&');
+    texto = texto.replace(/&lt;/g, '<');
+    texto = texto.replace(/&gt;/g, '>');
+    texto = texto.replace(/&quot;/g, '"');
+
+    // Limpar espaços extras e quebras de linha
+    texto = texto.replace(/\n\s*\n\s*\n/g, '\n\n');
+    texto = texto.replace(/^\s+|\s+$/g, '');
+
+    return texto;
   }
 
   imprimirRelatorio() {

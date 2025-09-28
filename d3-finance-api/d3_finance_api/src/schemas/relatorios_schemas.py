@@ -10,6 +10,13 @@ class CategoriaValor(BaseModel):
     class Config:       
         from_attributes = True
 
+class ContaValor(BaseModel):
+    conta: str
+    valor: float
+
+    class Config:
+        from_attributes = True
+
 class DadosMensais(BaseModel):
     mes: int
     receitas: float
@@ -27,6 +34,8 @@ class RelatorioMensalResponse(BaseModel):
     saldo_periodo: float
     receitas_por_categoria: List[CategoriaValor]
     despesas_por_categoria: List[CategoriaValor]
+    receitas_por_conta: List[ContaValor]
+    despesas_por_conta: List[ContaValor]
     quantidade_receitas: int
     quantidade_despesas: int
 
@@ -39,22 +48,10 @@ class RelatorioAnualResponse(BaseModel):
     total_despesas: float
     saldo_periodo: float
     dados_mensais: List[DadosMensais]
+    receitas_por_conta: List[ContaValor]
+    despesas_por_conta: List[ContaValor]
 
     class Config:
         from_attributes = True
 
-class RelatorioPersonalizadoRequest(BaseModel):
-    titulo: str = Field(..., description="Título do relatório")
-    conteudo: str = Field(..., description="Conteúdo principal do relatório")
-    dados_adicionais: Optional[str] = Field(None, description="Dados adicionais relevantes")
-    conclusoes: Optional[str] = Field(None, description="Conclusões do relatório")
 
-class RelatorioPersonalizadoResponse(BaseModel):
-    titulo: str
-    conteudo: str
-    dados_adicionais: Optional[str]
-    conclusoes: Optional[str]
-    data_geracao: datetime
-
-    class Config:
-        from_attributes = True

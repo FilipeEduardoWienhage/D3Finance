@@ -8,6 +8,12 @@ export interface CategoriaValor {
   valor: number;
 }
 
+export interface ContaValor {
+  conta: string;
+  valor: number;
+}
+
+
 export interface DadosMensais {
   mes: number;
   receitas: number;
@@ -23,6 +29,8 @@ export interface RelatorioMensal {
   saldo_periodo: number;
   receitas_por_categoria: CategoriaValor[];
   despesas_por_categoria: CategoriaValor[];
+  receitas_por_conta: ContaValor[];
+  despesas_por_conta: ContaValor[];
   quantidade_receitas: number;
   quantidade_despesas: number;
 }
@@ -33,7 +41,10 @@ export interface RelatorioAnual {
   total_despesas: number;
   saldo_periodo: number;
   dados_mensais: DadosMensais[];
+  receitas_por_conta: ContaValor[];
+  despesas_por_conta: ContaValor[];
 }
+
 
 @Injectable({
   providedIn: 'root'
@@ -59,4 +70,5 @@ export class RelatorioService {
 
     return this.http.get<RelatorioAnual>(`${this.apiUrl}/relatorios/anual`, { params });
   }
+
 }
