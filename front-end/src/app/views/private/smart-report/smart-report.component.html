@@ -25,18 +25,20 @@
                             [(ngModel)]="modeloSelecionado"
                             optionLabel="nome" 
                             placeholder="Selecione o modelo"
+                            (onChange)="selecionarModelo($event.value)"
                             class="w-full">
                         </p-select>
                     </div>
 
-                    <div class="flex flex-col gap-2" *ngIf="modeloSelecionado?.id === 'mensal'">
+                    <div class="flex flex-col gap-2" *ngIf="modeloSelecionado?.id === 'mensal' || modeloSelecionado?.id === 'detalhado'">
                         <label for="mes">Mês</label>
                         <p-select 
                             [options]="meses" 
-                            [(ngModel)]="dataFim"
+                            [(ngModel)]="mesSelecionado"
                             optionLabel="label" 
                             optionValue="value" 
                             placeholder="Selecione o mês"
+                            (onChange)="atualizarDatas()"
                             class="w-full">
                         </p-select>
                     </div>
@@ -45,10 +47,11 @@
                         <label for="ano">Ano</label>
                         <p-select 
                             [options]="anos" 
-                            [(ngModel)]="dataInicio"
+                            [(ngModel)]="anoSelecionado"
                             optionLabel="label"
                             optionValue="value"
                             placeholder="Selecione o ano"
+                            (onChange)="atualizarDatas()"
                             class="w-full">
                         </p-select>
                     </div>
@@ -56,16 +59,11 @@
 
                 <div class="flex justify-center gap-4 mt-6">
                     <p-button 
-                        (click)="gerarRelatorioAutomatico()" 
-                        label="Gerar Relatório" 
-                        class="w-48"
-                        styleClass="p-button-primary">
-                    </p-button>
-                    <p-button 
                         (click)="limparRelatorio()" 
                         label="Remover" 
-                        class="w-32"
-                        styleClass="p-button-secondary">
+                        icon="pi pi-trash"
+                        class="w-48"
+                        styleClass="p-button-danger">
                     </p-button>
                 </div>
             </p-card>

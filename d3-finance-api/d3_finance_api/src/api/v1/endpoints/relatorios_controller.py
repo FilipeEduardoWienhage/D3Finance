@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from typing import Annotated, List, Optional
 from fastapi import Depends, status, Response, Query, HTTPException
 from sqlalchemy import extract, func, and_
@@ -7,14 +7,13 @@ from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
 from src.api.tags import Tag
 from src.database.database import SessionLocal
-from src.database.models import Receitas, Despesas, Contas, Usuario, Transacoes
+from src.database.models import Receitas, Despesas, Contas
 from src.app import router
-from src.schemas.relatorios_schemas import (RelatorioMensalResponse, RelatorioAnualResponse, RelatorioPersonalizadoRequest, RelatorioPersonalizadoResponse)
+from src.schemas.relatorios_schemas import (RelatorioMensalResponse, RelatorioAnualResponse)
 
 #Endpoints
 RELATORIO_MENSAL = "/v1/relatorios/mensal"
 RELATORIO_ANUAL = "/v1/relatorios/anual"
-RELATORIO_PERSONALIZADO = "/v1/relatorios/personalizado"
 
 def get_db():
     db = SessionLocal()
@@ -31,6 +30,7 @@ def get_relatorio_mensal(
     mes: int = Query(..., description="Mês do relatório (1-12)")
 ):
     """Gera um relatório mensal consolidade"""
+    
     if not 1 <= mes <= 12:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Mês inválido. Deve estar entre 1 e 12.")
 
@@ -89,10 +89,47 @@ def get_relatorio_mensal(
         )
     ).group_by(Despesas.categoria).all()
 
+    # Receitas por conta
+    receitas_conta = db.query(
+        Contas.nome_conta,
+        func.sum(Receitas.valor_recebido).label('valor')
+    ).join(Contas, Receitas.conta_id == Contas.id).filter(
+        and_(
+            Receitas.usuario_id == usuario_logado.id,
+            Contas.usuario_id == usuario_logado.id,
+            Receitas.data_recebimento >= data_inicio,
+            Receitas.data_recebimento <= data_fim
+        )
+    ).group_by(Contas.nome_conta).all()
+
+    # Despesas por conta
+    despesas_conta = db.query(
+        Contas.nome_conta,
+        func.sum(Despesas.valor_pago).label('valor')
+    ).join(Contas, Despesas.conta_id == Contas.id).filter(
+        and_(
+            Despesas.usuario_id == usuario_logado.id,
+            Contas.usuario_id == usuario_logado.id,
+            Despesas.data_pagamento >= data_inicio,
+            Despesas.data_pagamento <= data_fim
+        )
+    ).group_by(Contas.nome_conta).all()
+
     total_receitas = receitas.total or 0.0
     total_despesas = despesas.total or 0.0
     saldo_periodo = total_receitas - total_despesas
 
+    # Preparar dados por conta
+    receitas_por_conta_data = [
+        {"conta": r.nome_conta, "valor": float(r.valor)}
+        for r in receitas_conta
+    ]
+    despesas_por_conta_data = [
+        {"conta": d.nome_conta, "valor": float(d.valor)}
+        for d in despesas_conta
+    ]
+    
+    
     return RelatorioMensalResponse(
         periodo_inicio=data_inicio,
         periodo_fim=data_fim,
@@ -107,6 +144,8 @@ def get_relatorio_mensal(
             {"categoria": d.categoria, "valor": float(d.valor)}
             for d in despesas_categoria
         ],
+        receitas_por_conta=receitas_por_conta_data,
+        despesas_por_conta=despesas_por_conta_data,
         quantidade_receitas=receitas.quantidade or 0,
         quantidade_despesas=despesas.quantidade or 0
     )
@@ -174,26 +213,53 @@ def get_relatorio_anual(
             "saldo_periodo": float(receita_mes - despesa_mes)
         })
 
+    # Receitas por conta (anual) - consulta simples com INNER JOIN
+    receitas_conta_anual = db.query(
+        Contas.nome_conta,
+        func.sum(Receitas.valor_recebido).label('valor')
+    ).join(Contas, Receitas.conta_id == Contas.id).filter(
+        and_(
+            Receitas.usuario_id == usuario_logado.id,
+            Contas.usuario_id == usuario_logado.id,
+            Receitas.data_recebimento >= data_inicio,
+            Receitas.data_recebimento <= data_fim
+        )
+    ).group_by(Contas.nome_conta).all()
+    print(f"Receitas por conta (anual) encontradas: {len(receitas_conta_anual)}")
+    for r in receitas_conta_anual:
+        print(f"  - {r.nome_conta}: R$ {r.valor}")
+
+    # Despesas por conta (anual) - consulta simples com INNER JOIN
+    despesas_conta_anual = db.query(
+        Contas.nome_conta,
+        func.sum(Despesas.valor_pago).label('valor')
+    ).join(Contas, Despesas.conta_id == Contas.id).filter(
+        and_(
+            Despesas.usuario_id == usuario_logado.id,
+            Contas.usuario_id == usuario_logado.id,
+            Despesas.data_pagamento >= data_inicio,
+            Despesas.data_pagamento <= data_fim
+        )
+    ).group_by(Contas.nome_conta).all()
+    print(f"Despesas por conta (anual) encontradas: {len(despesas_conta_anual)}")
+    for d in despesas_conta_anual:
+        print(f"  - {d.nome_conta}: R$ {d.valor}")
+
     return RelatorioAnualResponse(
         ano=ano,
         total_receitas=float(total_receitas),
         total_despesas=float(total_despesas),
         saldo_periodo=float(total_receitas - total_despesas),
-        dados_mensais=dados_mensais
+        dados_mensais=dados_mensais,
+        receitas_por_conta=[
+            {"conta": r.nome_conta, "valor": float(r.valor)}
+            for r in receitas_conta_anual
+        ],
+        despesas_por_conta=[
+            {"conta": d.nome_conta, "valor": float(d.valor)}
+            for d in despesas_conta_anual
+        ]
     )
 
-@router.post(path=RELATORIO_PERSONALIZADO, response_model=RelatorioPersonalizadoResponse, tags=[Tag.Relatorios.name])
 
-def gerar_relatorio_personalizado(
-    request: RelatorioPersonalizadoRequest,
-    usuario_logado: Annotated[TokenData, Depends(get_current_user)],
-    db: Session = Depends(get_db)
-):
-    """Gera um relatório personalizado"""
-    relatorio = RelatorioPersonalizadoResponse(
-        titulo=request.titulo,
-        conteudo=request.conteudo,
-        dados_adicionais=request.dados_adicionais,
-        conclusoes=request.conclusoes,
-        data_geracao=datetime.now()
-    )   
+
