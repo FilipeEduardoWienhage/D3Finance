@@ -48,8 +48,8 @@ export class ContasReceberService {
     );
   }
 
-  listarContasReceber(): Observable<ContaReceberResponseModel[]> {
-    return this.http.get<any[]>(this.apiUrl).pipe(
+  listarContasReceber(params?: any): Observable<ContaReceberResponseModel[]> {
+    return this.http.get<any[]>(this.apiUrl, { params }).pipe(
       map(data => data.map(item => ({
         id: item.id,
         conta_id: item.conta_id,
@@ -91,7 +91,19 @@ export class ContasReceberService {
     );
   }
 
+  
   deletarContaReceber(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+
+  confirmarRecebimento(id: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/confirmar`, {});
+  }
+
+
+  exportarContasReceber(filtros: any): Observable<Blob> {
+  return this.http.get(`${this.apiUrl}/exportar`, { params: filtros, responseType: 'blob' });
+}
+
 }
