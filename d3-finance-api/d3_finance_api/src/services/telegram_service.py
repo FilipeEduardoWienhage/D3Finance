@@ -29,9 +29,6 @@ class TelegramService:
 
     # --- NOVO MÉTODO AUXILIAR PARA FORMATAR VALORES ---
     def _formatar_valor_brl(self, valor: float) -> str:
-        """
-        Formata um número para o padrão monetário brasileiro (R$ 1.234,50).
-        """
         if valor is None:
             valor = 0.0
         valor_str = f"{valor:.2f}"

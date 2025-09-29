@@ -27,7 +27,6 @@ class ContaReceberUpdate:
     categoria_receita: Optional[str] = None
     forma_recebimento: Optional[str] = None
     conta_id: Optional[int] = None
-    status: Optional[str] = None
 
 
 @dataclass
@@ -44,7 +43,9 @@ class ContaReceberResponse:
     data_alteracao: Optional[datetime] = None
 
 
-class ContaReceberCategoriaResponse(BaseModel):
-    categoria: str
-    total_valor: float
-    quantidade: int
+@dataclass
+class ContaReceberPaginatedResponse:
+    items: list[ContaReceberResponse]
+    total: int
+    page: int
+    size: int

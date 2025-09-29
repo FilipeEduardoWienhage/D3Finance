@@ -17,7 +17,6 @@ import { ReceitasService } from '../../../service/receitas.service';
 import { ContasService } from '../../../service/contas.service';
 import { ToastModule } from 'primeng/toast';
 import { HeaderSystemComponent } from '../header-system/header-system.component';
-import { PrimeNG } from 'primeng/config';
 
 
 interface formaRecebimento {

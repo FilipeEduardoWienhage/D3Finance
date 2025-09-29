@@ -1,4 +1,5 @@
 export class ContaReceberRequestModel {
+    id?: number;
     conta_id: number = 0;
     descricao: string = "";
     valor: number = 0;
