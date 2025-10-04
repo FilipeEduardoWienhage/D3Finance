@@ -11,12 +11,13 @@
       <!-- Filtros e Tabela -->
       <div class="flex flex-col space-y-4">
         <p-card header="Contas a Receber" class="bg-[#2c2c2c] text-white rounded-xl">
-          <div class="flex items-center gap-4 p-4 bg-[#2c2c2c] rounded-lg mb-4">
+          <div class="flex items-center gap-6 p-6 bg-[#2c2c2c] rounded-lg mb-4">
             <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Status</label>
+              <label class="text-sm text-gray-300 mb-2 font-medium">Status</label>
               <p-dropdown [options]="statusOptions" [(ngModel)]="filtros.status" optionLabel="label"
                 optionValue="value" [showClear]="true" (onChange)="aplicarFiltros()"
-                [style]="{ 'width': '200px' }" placeholder="Todos os status">
+                [style]="{ 'width': '220px', 'min-height': '48px' }" placeholder="Todos os status"
+                styleClass="filter-dropdown">
                 <ng-template let-selectedOption pTemplate="selectedItem">
                   <div class="flex align-items-center gap-2" *ngIf="selectedOption">
                     <i class="pi {{ getStatusIcon(selectedOption.value) }}"></i>
@@ -33,26 +34,19 @@
             </div>
             
             <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Categoria</label>
+              <label class="text-sm text-gray-300 mb-2 font-medium">Categoria</label>
               <p-dropdown [(ngModel)]="filtros.categoria" [options]="categoriaDaReceita" optionLabel="name"
                 optionValue="name" placeholder="Todas as categorias" [showClear]="true"
-                (onChange)="aplicarFiltros()" [style]="{ 'width': '250px' }">
+                (onChange)="aplicarFiltros()" [style]="{ 'width': '300px', 'min-height': '48px' }"
+                styleClass="filter-dropdown">
               </p-dropdown>
             </div>
             
             <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Data Início</label>
-              <p-calendar [(ngModel)]="filtros.dataInicio" placeholder="Data inicial"
+              <label class="text-sm text-gray-300 mb-2 font-medium">Data Prevista</label>
+              <p-calendar [(ngModel)]="filtros.dataPrevista" placeholder="Data prevista"
                 dateFormat="dd/mm/yy" [showIcon]="true" (onSelect)="aplicarFiltros()"
-                [style]="{ 'width': '200px' }">
-              </p-calendar>
-            </div>
-            
-            <div class="flex flex-col">
-              <label class="text-sm text-gray-400 mb-1">Data Fim</label>
-              <p-calendar [(ngModel)]="filtros.dataFim" placeholder="Data final"
-                dateFormat="dd/mm/yy" [showIcon]="true" (onSelect)="aplicarFiltros()"
-                [style]="{ 'width': '200px' }">
+                [style]="{ 'width': '220px', 'min-height': '48px' }" styleClass="filter-calendar">
               </p-calendar>
             </div>
             
@@ -63,104 +57,94 @@
                   (click)="abrirModalResumo()" class="p-button-info"></button>
                 <button pButton type="button" label="Nova Conta" icon="pi pi-plus"
                   (click)="abrirDialog()" class="p-button-success"></button>
-                <button pButton type="button" label="Exportar" icon="pi pi-download"
-                  (onClick)="exportarDados()" class="p-button-secondary"></button>
               </div>
             </div>
           </div>
           
           <!-- Busca -->
           <div class="mb-4">
-            <span class="p-input-icon-left w-full">
-              <i class="pi pi-search"></i>
-              <input type="text" pInputText [(ngModel)]="filtros.search" placeholder="Buscar por descrição..."
-                class="w-full" (input)="aplicarFiltros()">
-            </span>
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-300 mb-2 font-medium">Buscar</label>
+              <span class="p-input-icon-left w-full">
+                <i class="pi pi-search text-gray-400"></i>
+                <input type="text" pInputText [(ngModel)]="filtros.search" placeholder="Buscar por descrição..."
+                  class="w-full search-input" (input)="aplicarFiltros()" styleClass="search-input">
+              </span>
+            </div>
           </div>
 
           <!-- Tabela de dados -->
-          <p-table #dt [value]="itens" [lazy]="true" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
-            [loading]="loading" [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'single'" [sortField]="'dataPrevista'"
-            [sortOrder]="1" (onLazyLoad)="carregarDados($event)" [styleClass]="'p-datatable-sm'"
-            responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+          <div class="bg-[#2a2a2a] p-6 w-full">
+            <p-table #dt [value]="itens" [lazy]="true" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
+              [loading]="loading" [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'single'" [sortField]="'dataPrevista'"
+              [sortOrder]="1" (onLazyLoad)="carregarDados($event)" class="p-datatable-sm p-datatable-gridlines"
+              responsiveLayout="scroll">
 
-            <ng-template pTemplate="header">
-              <tr>
-                <th pSortableColumn="conta_id" class="text-white">Conta <p-sortIcon field="conta_id"></p-sortIcon></th>
-                <th pSortableColumn="descricao" class="text-white">Descrição <p-sortIcon field="descricao"></p-sortIcon></th>
-                <th pSortableColumn="valor" class="text-white">Valor <p-sortIcon field="valor"></p-sortIcon></th>
-                <th pSortableColumn="dataPrevista" class="text-white">Data Prevista <p-sortIcon field="dataPrevista"></p-sortIcon></th>
-                <th pSortableColumn="categoriaReceita" class="text-white">Categoria <p-sortIcon field="categoriaReceita"></p-sortIcon></th>
-                <th pSortableColumn="formaRecebimento" class="text-white">Forma Recebimento <p-sortIcon field="formaRecebimento"></p-sortIcon></th>
-                <th pSortableColumn="status" class="text-white">Status <p-sortIcon field="status"></p-sortIcon></th>
-                <th class="text-white" style="width: 200px;">Ações</th>
-              </tr>
-            </ng-template>
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Categoria</th>
+                  <th>Descrição</th>
+                  <th>Conta</th>
+                  <th>Valor</th>
+                  <th>Data Prevista</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </ng-template>
 
-            <ng-template pTemplate="body" let-item>
-              <tr [ngClass]="{'row-vencida': isVencida(item), 'row-paga': item.status === 'Recebido'}" class="text-white">
-                <td><span class="font-semibold text-blue-300">{{ getNomeConta(item.conta_id) }}</span></td>
-                <td>
-                  <div class="flex align-items-center gap-2">
-                    <span>{{ item.descricao }}</span>
-                    <p-tag *ngIf="isVencida(item)" severity="danger" value="VENCIDA" [rounded]="true"></p-tag>
-                  </div>
-                </td>
-                <td>
-                  <span class="font-semibold text-green-300">{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</span>
-                </td>
-                <td class="text-gray-300">{{ item.dataPrevista | date:'dd/MM/yyyy' }}</td>
-                <td>
-                  <p-tag [value]="item.categoriaReceita" severity="secondary" [rounded]="true"></p-tag>
-                </td>
-                <td class="text-gray-300">{{ item.formaRecebimento }}</td>
-                <td>
-                  <p-tag [value]="item.status" [severity]="getStatusSeverity(item.status)"
-                    [icon]="'pi ' + getStatusIcon(item.status)" [rounded]="true">
-                  </p-tag>
-                </td>
-                <td>
-                  <div class="flex gap-2 align-items-center">
-                    <p-button *ngIf="item.status !== 'Recebido'"
-                      icon="{{ item.status === 'Pendente' ? 'pi pi-check' : 'pi pi-undo' }}"
-                      [severity]="item.status === 'Pendente' ? 'success' : 'warn'" [outlined]="true" size="small"
-                      pTooltip="{{ item.status === 'Pendente' ? 'Marcar como pago' : 'Reverter para pendente' }}"
-                      (onClick)="toggleStatus(item, $event)"></p-button>
-                    <p-button *ngIf="item.status !== 'Recebido'" icon="pi pi-pencil" severity="secondary"
-                      [outlined]="true" size="small" pTooltip="Editar" (onClick)="editarInline(item)"></p-button>
-                    <p-button *ngIf="item.status !== 'Recebido'" icon="pi pi-trash" severity="danger"
-                      [outlined]="true" size="small" pTooltip="Excluir" (onClick)="excluirConta(item.id)"></p-button>
-                    <p-button icon="pi pi-eye" severity="info" [outlined]="true" size="small" pTooltip="Ver detalhes"
-                      (onClick)="verDetalhes(item)"></p-button>
-                  </div>
-                </td>
-              </tr>
-            </ng-template>
-            
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td colspan="8" class="text-center p-4">
-                  <div class="flex flex-column align-items-center gap-3">
-                    <i class="pi pi-inbox text-4xl text-gray-400"></i>
-                    <span class="text-gray-400">Nenhuma conta a receber encontrada</span>
-                  </div>
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
+              <ng-template pTemplate="body" let-item>
+                <tr [ngClass]="{'row-vencida': isVencida(item), 'row-paga': item.status === 'Recebido'}">
+                  <td>{{ item.categoriaReceita }}</td>
+                  <td>{{ item.descricao || 'Sem descrição' }}</td>
+                  <td>{{ getNomeConta(item.conta_id) }}</td>
+                  <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td>{{ item.dataPrevista | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <p-tag [value]="getStatusDisplay(item)" [severity]="getStatusSeverity(getStatusDisplay(item))"
+                      [icon]="'pi ' + getStatusIcon(getStatusDisplay(item))" [rounded]="true">
+                    </p-tag>
+                  </td>
+                  <td class="flex gap-2">
+                    <button pButton type="button" icon="pi pi-money-bill"
+                      class="p-button-sm p-button-rounded p-button-success"
+                      pTooltip="Pagar conta"
+                      (click)="pagarConta(item)"
+                      [disabled]="item.status === 'Recebido'"></button>
+                    <button pButton type="button" icon="pi pi-pencil"
+                      class="p-button-sm p-button-rounded p-button-info"
+                      pTooltip="Editar conta"
+                      (click)="editarInline(item)"></button>
+                    <button pButton type="button" icon="pi pi-trash"
+                      class="p-button-sm p-button-rounded p-button-danger"
+                      pTooltip="Excluir conta"
+                      (click)="excluirConta(item.id)"></button>
+                  </td>
+                </tr>
+              </ng-template>
+              
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="7" class="text-center p-4">
+                    <div class="flex flex-column align-items-center gap-3">
+                      <i class="pi pi-inbox text-4xl text-gray-400"></i>
+                      <span class="text-gray-400">Nenhuma conta a receber encontrada</span>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
         </p-card>
       </div>
     </div>
   </div>
 
 
-  <!-- Modal de cadastro/edição -->
   <p-dialog [header]="isEditing ? 'Editar Conta a Receber' : 'Nova Conta a Receber'" [(visible)]="dialogVisible"
     [modal]="true" [style]="{ width: '1000px', maxWidth: '95vw', height: 'auto' }" [closable]="true" [draggable]="false" [resizable]="false"
     styleClass="custom-dialog modal-cadastro">
 
     <form #contaForm="ngForm" class="flex flex-column gap-5">
-      <!-- Primeira linha: Conta, Valor e Data Prevista -->
       <div class="grid">
         <div class="col-12 md:col-4">
           <div class="field">

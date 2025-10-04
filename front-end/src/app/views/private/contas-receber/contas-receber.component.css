@@ -1,9 +1,9 @@
 
 /* contas-receber.component.css - TEMA ESCURO MODERNO */
 
-/* Tabela com tema escuro */
+/* Tabela com tema escuro - usando mesma estrutura da visão geral */
 .p-datatable {
-  background-color: #2c2c2c !important;
+  background-color: #2a2a2a !important;
   border: 1px solid #404040 !important;
   border-radius: 8px;
   overflow: hidden;
@@ -18,7 +18,7 @@
 }
 
 .p-datatable .p-datatable-tbody > tr {
-  background-color: #2c2c2c !important;
+  background-color: #2a2a2a !important;
   color: #ffffff !important;
 }
 
@@ -42,21 +42,21 @@
 
 /* Rows específicas com tema escuro */
 .row-vencida {
-  background-color: #7f1d1d !important;
-  border-left: 4px solid #ef4444 !important;
+  background-color: #973939 !important;
+  border-left: 4px solid #cc5e5e !important;
 }
 
 .row-vencida:hover {
-  background-color: #991b1b !important;
+  background-color: #e63434ae !important;
 }
 
 .row-paga {
-  background-color: #14532d !important;
-  border-left: 4px solid #10b981 !important;
+  background-color: #208549 !important;
+  border-left: 4px solid #44cd9f !important;
 }
 
 .row-paga:hover {
-  background-color: #166534 !important;
+  background-color: #1bcf5d9a !important;
 }
 
 /* Botões de ação com tema escuro */
@@ -189,6 +189,96 @@
 .field label i {
   color: #60a5fa !important;
   margin-right: 0.5rem;
+}
+
+/* Estilos para filtros melhorados */
+.filter-dropdown .p-dropdown {
+  background-color: #404040 !important;
+  border: 2px solid #525252 !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+  transition: all 0.3s ease !important;
+}
+
+.filter-dropdown .p-dropdown:hover {
+  border-color: #6b7280 !important;
+}
+
+.filter-dropdown .p-dropdown:focus,
+.filter-dropdown .p-dropdown.p-focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.filter-dropdown .p-dropdown .p-dropdown-label {
+  color: #ffffff !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+}
+
+.filter-dropdown .p-dropdown .p-dropdown-trigger {
+  background-color: #525252 !important;
+  color: #ffffff !important;
+  border-radius: 0 6px 6px 0 !important;
+  width: 48px !important;
+}
+
+.filter-calendar .p-calendar {
+  min-height: 48px !important;
+}
+
+.filter-calendar .p-calendar .p-inputtext {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.filter-calendar .p-calendar .p-inputtext:hover {
+  border-color: #6b7280 !important;
+}
+
+.filter-calendar .p-calendar .p-inputtext:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.filter-calendar .p-calendar .p-datepicker-trigger {
+  background-color: #525252 !important;
+  color: #ffffff !important;
+  border-radius: 0 6px 6px 0 !important;
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.search-input {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+  padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+  font-size: 0.95rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.search-input:hover {
+  border-color: #6b7280 !important;
+}
+
+.search-input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  outline: none !important;
+}
+
+.search-input::placeholder {
+  color: #9ca3af !important;
+  font-style: italic;
 }
 
 .p-inputtext,
