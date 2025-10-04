@@ -67,8 +67,7 @@ export class ContasReceberComponent implements OnInit {
   filtros: any = {
     status: null,
     categoria: null,
-    dataInicio: null,
-    dataFim: null,
+    dataPrevista: null,
     search: ''
   };
 
@@ -112,8 +111,8 @@ export class ContasReceberComponent implements OnInit {
   ngOnInit(): void {
     this.carregarDados();
     this.carregarContasDisponiveis();
+    this.carregarResumo();
   }
-
 
   carregarContasDisponiveis() {
     this.contasDisponiveisService.listarContas().subscribe({
@@ -124,19 +123,22 @@ export class ContasReceberComponent implements OnInit {
 
   carregarDados(event?: any): void {
     this.loading = true;
-    const params = {
-      page: event?.first ? Math.floor(event.first / event.rows) + 1 : 1,
-      size: event?.rows || 10,
-      ...this.filtros,
-      sortField: event?.sortField || 'dataPrevista',
-      sortOrder: event?.sortOrder === 1 ? 'asc' : 'desc'
-    };
-
-    this.contasService.listarContasReceber(params).subscribe({
+    // Carregar todos os dados primeiro
+    this.contasService.listarContasReceber({ page: 1, size: 1000 }).subscribe({
       next: (response: any) => {
-        this.itens = response.items || [];
-        this.totalRecords = response.total || 0;
-        this.resumo = this.calculaResumo(response.items || []);
+        let dadosFiltrados = response.items || [];
+        
+        // Aplicar filtros localmente
+        dadosFiltrados = this.aplicarFiltrosLocalmente(dadosFiltrados);
+        
+        // Aplicar paginação
+        const page = event?.first ? Math.floor(event.first / event.rows) + 1 : 1;
+        const size = event?.rows || 10;
+        const startIndex = (page - 1) * size;
+        const endIndex = startIndex + size;
+        
+        this.itens = dadosFiltrados.slice(startIndex, endIndex);
+        this.totalRecords = dadosFiltrados.length;
         this.loading = false;
       },
       error: (err) => {
@@ -147,20 +149,85 @@ export class ContasReceberComponent implements OnInit {
     });
   }
 
+  carregarResumo(): void {
+    // Carregar todos os dados para calcular o resumo correto
+    this.contasService.listarContasReceber({ page: 1, size: 1000 }).subscribe({
+      next: (response: any) => {
+        const dadosFiltrados = this.aplicarFiltrosLocalmente(response.items || []);
+        this.resumo = this.calculaResumo(dadosFiltrados);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar resumo:', err);
+      }
+    });
+  }
+
   calculaResumo(items: ContaReceberResponseModel[]) {
     let pendentes = 0, pagas = 0, vencidas = 0, valorTotal = 0;
     const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zerar horas para comparação apenas de data
+    
     for (const item of items) {
       valorTotal += item.valor ?? 0;
-      if (item.status === 'Pendente') {
-        const dataVenc = item.dataPrevista ? new Date(item.dataPrevista) : null;
-        if (dataVenc && dataVenc < hoje) vencidas++;
-        else pendentes++;
-      } else if (item.status === 'Recebido') {
+      
+      if (item.status === 'Recebido') {
         pagas++;
+      } else {
+        // Para contas não recebidas, verificar se estão vencidas
+        const dataVenc = item.dataPrevista ? new Date(item.dataPrevista) : null;
+        if (dataVenc) {
+          dataVenc.setHours(0, 0, 0, 0); // Zerar horas para comparação
+          if (dataVenc < hoje) {
+            vencidas++;
+          } else {
+            pendentes++;
+          }
+        } else {
+          pendentes++;
+        }
       }
     }
     return { pendentes, pagas, vencidas, valorTotal };
+  }
+
+  aplicarFiltrosLocalmente(dados: ContaReceberResponseModel[]): ContaReceberResponseModel[] {
+    return dados.filter(item => {
+      // Filtro por status
+      if (this.filtros.status) {
+        const statusAtual = this.getStatusDisplay(item);
+        if (statusAtual !== this.filtros.status) {
+          return false;
+        }
+      }
+      
+      // Filtro por categoria
+      if (this.filtros.categoria && item.categoriaReceita !== this.filtros.categoria) {
+        return false;
+      }
+      
+      // Filtro por data prevista
+      if (this.filtros.dataPrevista) {
+        const dataFiltro = new Date(this.filtros.dataPrevista);
+        const dataItem = item.dataPrevista ? new Date(item.dataPrevista) : null;
+        
+        if (dataItem) {
+          dataFiltro.setHours(0, 0, 0, 0);
+          dataItem.setHours(0, 0, 0, 0);
+          if (dataItem.getTime() !== dataFiltro.getTime()) {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+      
+      // Filtro por busca (descrição)
+      if (this.filtros.search && !item.descricao.toLowerCase().includes(this.filtros.search.toLowerCase())) {
+        return false;
+      }
+      
+      return true;
+    });
   }
 
   aplicarFiltros(): void {
@@ -171,6 +238,7 @@ export class ContasReceberComponent implements OnInit {
         this.table.first = 0;
       }
       this.carregarDados();
+      this.carregarResumo();
     }, 400);
   }
 
@@ -226,6 +294,7 @@ export class ContasReceberComponent implements OnInit {
         console.log('Conta atualizada com sucesso:', response);
         this.dialogVisible = false;
         this.carregarDados();
+        this.carregarResumo();
         this.mostrarSucesso('Conta atualizada com sucesso!');
       },
       error: (err) => {
@@ -240,6 +309,7 @@ export class ContasReceberComponent implements OnInit {
         console.log('Conta cadastrada com sucesso:', response);
         this.dialogVisible = false;
         this.carregarDados();
+        this.carregarResumo();
         this.mostrarSucesso('Conta cadastrada com sucesso!');
       },
       error: (err) => {
@@ -259,6 +329,7 @@ export class ContasReceberComponent implements OnInit {
         this.contasService.deletarContaReceber(id).subscribe({
           next: () => {
             this.carregarDados();
+            this.carregarResumo();
             this.mostrarSucesso('Conta excluída com sucesso!');
           },
           error: () => this.mostrarErro('Erro ao excluir conta')
@@ -267,45 +338,32 @@ export class ContasReceberComponent implements OnInit {
     });
   }
 
-  toggleStatus(item: ContaReceberResponseModel, event: Event): void {
-    event.stopPropagation();
+  pagarConta(item: ContaReceberResponseModel) {
     if (item.status === 'Recebido') {
-      this.mostrarAviso('Esta conta já foi confirmada como paga');
+      this.mostrarAviso('Esta conta já foi paga');
       return;
     }
-    const mensagem = item.status === 'Pendente' ? 'Confirmar recebimento desta conta?' : 'Reverter para pendente?';
+
+    const valorFormatado = this.currencyPipe.transform(item.valor, 'BRL', 'symbol', '1.2-2');
     this.confirmationService.confirm({
-      message: mensagem,
-      header: 'Confirmar Ação',
-      icon: 'pi pi-question-circle',
-      accept: () => this.confirmarRecebimento(item)
-    });
-  }
-
-  confirmarRecebimento(item: ContaReceberResponseModel): void {
-    this.contasService.confirmarRecebimento(item.id).subscribe({
-      next: () => {
-        this.carregarDados();
-        this.mostrarSucesso('Recebimento confirmado com sucesso!');
-      },
-      error: (err: any) => this.mostrarErro('Erro ao confirmar recebimento')
-    });
-  }
-
-  exportarDados() {
-    this.contasService.exportarContasReceber(this.filtros).subscribe({
-      next: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `contas-receber-${new Date().toISOString().split('T')[0]}.xlsx`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        this.mostrarSucesso('Arquivo exportado com sucesso!');
-      },
-      error: (err) => this.mostrarErro('Erro ao exportar dados')
+      message: `Confirma o pagamento da conta "${item.descricao || 'Sem descrição'}" no valor de ${valorFormatado}?`,
+      header: 'Confirmar Pagamento',
+      icon: 'pi pi-money-bill',
+      acceptLabel: 'Sim, Pagar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.contasService.confirmarRecebimento(item.id).subscribe({
+          next: () => {
+            this.carregarDados();
+            this.carregarResumo();
+            this.mostrarSucesso('Conta paga com sucesso!');
+          },
+          error: (err: any) => {
+            console.error('Erro ao pagar conta:', err);
+            this.mostrarErro('Erro ao confirmar pagamento: ' + (err.error?.detail || err.message || 'Erro desconhecido'));
+          }
+        });
+      }
     });
   }
 
@@ -328,16 +386,20 @@ export class ContasReceberComponent implements OnInit {
   isVencida(item: ContaReceberResponseModel): boolean {
     if (item.status === 'Recebido') return false;
     const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
     const dataVenc = item.dataPrevista ? new Date(item.dataPrevista) : null;
-        if (dataVenc && dataVenc < hoje) return true;
+    if (dataVenc) {
+      dataVenc.setHours(0, 0, 0, 0);
+      return dataVenc < hoje;
+    }
     return false;
   }
 
-  verDetalhes(item: ContaReceberResponseModel): void {
-    // Modal informativo, conforme design desejado
-    this.mostrarAviso('Visualização de detalhes ainda não implementada.');
+  getStatusDisplay(item: ContaReceberResponseModel): string {
+    if (item.status === 'Recebido') return 'Recebido';
+    if (this.isVencida(item)) return 'Vencido';
+    return 'Pendente';
   }
-
 
   mostrarSucesso(mensagem: string): void {
     this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: mensagem, life: 3000 });
