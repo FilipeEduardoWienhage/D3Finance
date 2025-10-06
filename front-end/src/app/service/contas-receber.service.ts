@@ -62,7 +62,7 @@ export class ContasReceberService {
               valor: item.valor,
               dataPrevista: item.data_prevista ? new Date(item.data_prevista) : null,
               formaRecebimento: item.forma_recebimento,
-              status: item.status,
+              status: item.status === 'Pago' ? 'Recebido' : item.status,
               categoriaReceita: item.categoria_receita,
               dataCriacao: item.data_criacao ? new Date(item.data_criacao) : null,
               dataAlteracao: item.data_alteracao ? new Date(item.data_alteracao) : null
@@ -79,7 +79,7 @@ export class ContasReceberService {
             valor: item.valor,
             dataPrevista: item.data_prevista ? new Date(item.data_prevista) : null,
             formaRecebimento: item.forma_recebimento,
-            status: item.status,
+            status: item.status === 'Pago' ? 'Recebido' : item.status,
             categoriaReceita: item.categoria_receita,
             dataCriacao: item.data_criacao ? new Date(item.data_criacao) : null,
             dataAlteracao: item.data_alteracao ? new Date(item.data_alteracao) : null
@@ -123,7 +123,8 @@ export class ContasReceberService {
 
 
   confirmarRecebimento(id: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/confirmar`, {});
+    // Backend expõe PUT em /v1/contas-receber/{id}/pagar
+    return this.http.put<void>(`${this.apiUrl}/${id}/pagar`, {});
   }
 
 

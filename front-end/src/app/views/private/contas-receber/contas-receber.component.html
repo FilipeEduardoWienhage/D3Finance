@@ -160,7 +160,7 @@
         <div class="col-12 md:col-4">
           <div class="field">
             <label for="valor" class="block text-sm font-medium mb-3 text-white">
-              <i class="pi pi-dollar mr-2"></i>Valor *
+              <i class="pi pi-dollar mr-2"></i>Valor *  
             </label>
             <p-inputNumber id="valor" [(ngModel)]="contaEditando.valor" mode="currency" currency="BRL"
               locale="pt-BR" styleClass="w-full" [required]="true" name="valor" [min]="0.01">
@@ -181,7 +181,6 @@
         </div>
       </div>
 
-      <!-- Segunda linha: Forma de Recebimento e Categoria -->
       <div class="grid">
         <div class="col-12 md:col-6">
           <div class="field">
@@ -212,7 +211,6 @@
         </div>
       </div>
 
-      <!-- Terceira linha: Descrição (largura completa) -->
       <div class="field">
         <label for="descricao" class="block text-sm font-medium mb-3 text-white">
           <i class="pi pi-file-edit mr-2"></i>Descrição

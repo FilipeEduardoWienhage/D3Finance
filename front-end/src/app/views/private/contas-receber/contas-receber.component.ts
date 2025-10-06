@@ -3,7 +3,6 @@ import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { HeaderSystemComponent } from '../header-system/header-system.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
-
 import { TableModule, Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,9 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
-
 import { ConfirmationService, MessageService } from 'primeng/api';
-
 import { ContaReceberRequestModel } from '../../../models/contas-receber';
 import { ContaReceberResponseModel, ContasReceberService } from '../../../service/contas-receber.service';
 import { ContasService, ContaResponseModel } from '../../../service/contas.service';
@@ -123,15 +120,12 @@ export class ContasReceberComponent implements OnInit {
 
   carregarDados(event?: any): void {
     this.loading = true;
-    // Carregar todos os dados primeiro
     this.contasService.listarContasReceber({ page: 1, size: 1000 }).subscribe({
       next: (response: any) => {
         let dadosFiltrados = response.items || [];
         
-        // Aplicar filtros localmente
         dadosFiltrados = this.aplicarFiltrosLocalmente(dadosFiltrados);
         
-        // Aplicar paginação
         const page = event?.first ? Math.floor(event.first / event.rows) + 1 : 1;
         const size = event?.rows || 10;
         const startIndex = (page - 1) * size;
@@ -150,7 +144,6 @@ export class ContasReceberComponent implements OnInit {
   }
 
   carregarResumo(): void {
-    // Carregar todos os dados para calcular o resumo correto
     this.contasService.listarContasReceber({ page: 1, size: 1000 }).subscribe({
       next: (response: any) => {
         const dadosFiltrados = this.aplicarFiltrosLocalmente(response.items || []);
@@ -173,10 +166,9 @@ export class ContasReceberComponent implements OnInit {
       if (item.status === 'Recebido') {
         pagas++;
       } else {
-        // Para contas não recebidas, verificar se estão vencidas
         const dataVenc = item.dataPrevista ? new Date(item.dataPrevista) : null;
         if (dataVenc) {
-          dataVenc.setHours(0, 0, 0, 0); // Zerar horas para comparação
+          dataVenc.setHours(0, 0, 0, 0); 
           if (dataVenc < hoje) {
             vencidas++;
           } else {
@@ -192,7 +184,6 @@ export class ContasReceberComponent implements OnInit {
 
   aplicarFiltrosLocalmente(dados: ContaReceberResponseModel[]): ContaReceberResponseModel[] {
     return dados.filter(item => {
-      // Filtro por status
       if (this.filtros.status) {
         const statusAtual = this.getStatusDisplay(item);
         if (statusAtual !== this.filtros.status) {
@@ -200,12 +191,10 @@ export class ContasReceberComponent implements OnInit {
         }
       }
       
-      // Filtro por categoria
       if (this.filtros.categoria && item.categoriaReceita !== this.filtros.categoria) {
         return false;
       }
       
-      // Filtro por data prevista
       if (this.filtros.dataPrevista) {
         const dataFiltro = new Date(this.filtros.dataPrevista);
         const dataItem = item.dataPrevista ? new Date(item.dataPrevista) : null;
@@ -221,7 +210,6 @@ export class ContasReceberComponent implements OnInit {
         }
       }
       
-      // Filtro por busca (descrição)
       if (this.filtros.search && !item.descricao.toLowerCase().includes(this.filtros.search.toLowerCase())) {
         return false;
       }
@@ -288,7 +276,6 @@ export class ContasReceberComponent implements OnInit {
   console.log('Dados para enviar:', payload);
 
   if (this.isEditing) {
-    // Passamos o 'payload' com a data formatada para o serviço.
     this.contasService.editarContaReceber(this.contaEditando.id || 0, payload).subscribe({
       next: (response) => {
         console.log('Conta atualizada com sucesso:', response);
@@ -303,7 +290,6 @@ export class ContasReceberComponent implements OnInit {
       }
     });
   } else {
-    // Passamos o 'payload' com a data formatada para o serviço.
     this.contasService.cadastrarContaReceber(payload).subscribe({
       next: (response) => {
         console.log('Conta cadastrada com sucesso:', response);
