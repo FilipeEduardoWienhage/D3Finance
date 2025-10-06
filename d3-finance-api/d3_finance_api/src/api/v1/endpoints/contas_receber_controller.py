@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
 from src.app import router
 from src.database.database import SessionLocal
-from src.database.models import ContasReceber, Contas, Usuario
+from src.database.models import ContasReceber, Contas, Usuario, Receitas
 from src.api.tags import Tag
 from src.schemas.contas_receber_schemas import (
     ContaReceberCreate, ContaReceberUpdate, ContaReceberResponse, 
@@ -324,9 +324,21 @@ def marcar_conta_como_paga(
         conta_bancaria.saldo += conta.valor
         conta_bancaria.data_alteracao = datetime.now()
 
+    # Registrar automaticamente como Receita
+    receita = Receitas(
+        categoria=conta.categoria_receita,
+        valor_recebido=conta.valor,
+        data_recebimento=date.today(),
+        descricao=conta.descricao,
+        forma_recebimento=conta.forma_recebimento,
+        conta_id=conta.conta_id,
+        usuario_id=usuario_logado.id
+    )
+    db.add(receita)
+
     try:
         db.commit()
-        db.refresh(conta)
+        db.refresh(conta)   
 
         return ContaReceberResponse(
             id=conta.id,
