@@ -41,25 +41,24 @@
 }
 
 /* Rows específicas com tema escuro */
-.row-vencida {
+.row-atrasada {
   background-color: #973939 !important;
   border-left: 4px solid #cc5e5e !important;
 }
 
-.row-vencida:hover {
+.row-atrasada:hover {
   background-color: #e63434ae !important;
 }
 
 .row-paga {
   background-color: #208549 !important;
-  border-left: 4px solid #44cd9f !important;
+  border-left: 4px solid #36e0a8 !important;
 }
 
 .row-paga:hover {
-  background-color: #1bcf5d9a !important;
+  background-color: #38bd699a !important;
 }
 
-/* Botões de ação com tema escuro */
 .p-button {
   border-radius: 6px;
   font-weight: 500;
@@ -76,7 +75,6 @@
   font-size: 0.875rem;
 }
 
-/* Tags com tema escuro */
 .p-tag {
   border-radius: 16px;
   font-weight: 500;
@@ -88,7 +86,6 @@
   border-radius: 16px;
 }
 
-/* Modal customizado com tema escuro */
 .custom-dialog .p-dialog {
   background-color: #2c2c2c !important;
   border: 1px solid #404040 !important;
@@ -97,7 +94,6 @@
   backdrop-filter: blur(10px) !important;
 }
 
-/* Modal de cadastro específico */
 .modal-cadastro .p-dialog {
   width: 1000px !important;
   max-width: 95vw !important;

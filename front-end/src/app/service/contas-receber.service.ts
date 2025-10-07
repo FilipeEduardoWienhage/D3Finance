@@ -51,7 +51,6 @@ export class ContasReceberService {
   listarContasReceber(params?: any): Observable<any> {
     return this.http.get<any>(this.apiUrl, { params }).pipe(
       map(response => {
-        // Se a resposta já tem a estrutura de paginação
         if (response.items || response.data) {
           const items = response.items || response.data || [];
           return {
@@ -70,7 +69,6 @@ export class ContasReceberService {
             total: response.total || response.totalItems || items.length
           };
         }
-        // Se a resposta é um array simples
         return {
           items: response.map((item: any) => ({
             id: item.id,
@@ -123,8 +121,7 @@ export class ContasReceberService {
 
 
   confirmarRecebimento(id: number): Observable<void> {
-    // Backend expõe PUT em /v1/contas-receber/{id}/pagar
-    return this.http.put<void>(`${this.apiUrl}/${id}/pagar`, {});
+    return this.http.put<void>(`${this.apiUrl}/${id}/receber`, {});
   }
 
 

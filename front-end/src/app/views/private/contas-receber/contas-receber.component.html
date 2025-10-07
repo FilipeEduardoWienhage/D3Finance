@@ -93,7 +93,7 @@
               </ng-template>
 
               <ng-template pTemplate="body" let-item>
-                <tr [ngClass]="{'row-vencida': isVencida(item), 'row-paga': item.status === 'Recebido'}">
+                <tr [ngClass]="{'row-atrasada': isAtrasada(item), 'row-paga': item.status === 'Recebido'}">
                   <td>{{ item.categoriaReceita }}</td>
                   <td>{{ item.descricao || 'Sem descrição' }}</td>
                   <td>{{ getNomeConta(item.conta_id) }}</td>
@@ -260,8 +260,8 @@
       <div class="col-12 md:col-6">
         <div class="text-center p-4 bg-[#10b981] bg-opacity-20 rounded-lg border border-[#10b981] border-opacity-30 mb-3">
           <i class="pi pi-check-circle text-[#34d399] text-4xl mb-2 block"></i>
-          <h3 class="text-[#6ee7b7] m-0 text-2xl font-bold">{{ resumo.pagas || 0 }}</h3>
-          <p class="text-[#d1fae5] m-0 mt-1">Pagas</p>
+          <h3 class="text-[#6ee7b7] m-0 text-2xl font-bold">{{ resumo.recebidas || 0 }}</h3>
+          <p class="text-[#d1fae5] m-0 mt-1">Recebidas</p>
         </div>
       </div>
       
@@ -269,7 +269,7 @@
         <div class="text-center p-4 bg-[#ef4444] bg-opacity-20 rounded-lg border border-[#ef4444] border-opacity-30 mb-3">
           <i class="pi pi-times-circle text-[#f87171] text-4xl mb-2 block"></i>
           <h3 class="text-[#fca5a5] m-0 text-2xl font-bold">{{ resumo.vencidas || 0 }}</h3>
-          <p class="text-[#fecaca] m-0 mt-1">Vencidas</p>
+          <p class="text-[#fecaca] m-0 mt-1">Atrasadas</p>
         </div>
       </div>
       
