@@ -25,7 +25,7 @@ LISTA_CONTAS_RECEBER_PAGINADO = "/v1/contas-receber/paginado"
 CRIAR_CONTA_RECEBER = "/v1/contas-receber"
 ATUALIZAR_CONTA_RECEBER = "/v1/contas-receber/{conta_id}"
 DELETAR_CONTA_RECEBER = "/v1/contas-receber/{conta_id}"
-MARCAR_COMO_PAGA = "/v1/contas-receber/{conta_id}/pagar"
+MARCAR_COMO_PAGA = "/v1/contas-receber/{conta_id}/receber"
 
 def get_db():
     db = SessionLocal()
@@ -286,9 +286,7 @@ def marcar_conta_como_paga(
     usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db)
 ):
-    """
-    Marca uma conta a receber como paga
-    """
+   
     conta = db.query(ContasReceber).filter(
         and_(
             ContasReceber.id == conta_id,
@@ -308,11 +306,9 @@ def marcar_conta_como_paga(
             detail="Conta já está marcada como paga"
         )
 
-    # Atualizar status para Pago
     conta.status = "Pago"
     conta.data_alteracao = datetime.now()
 
-    # Atualizar saldo da conta
     conta_bancaria = db.query(Contas).filter(
         and_(
             Contas.id == conta.conta_id,
@@ -324,7 +320,6 @@ def marcar_conta_como_paga(
         conta_bancaria.saldo += conta.valor
         conta_bancaria.data_alteracao = datetime.now()
 
-    # Registrar automaticamente como Receita
     receita = Receitas(
         categoria=conta.categoria_receita,
         valor_recebido=conta.valor,

@@ -55,7 +55,7 @@ export class ContasReceberComponent implements OnInit {
 
   itens: ContaReceberResponseModel[] = [];
   contas: ContaResponseModel[] = [];
-  resumo = { pendentes: 0, pagas: 0, vencidas: 0, valorTotal: 0 };
+  resumo = { pendentes: 0, recebidas: 0, vencidas: 0, valorTotal: 0 };
 
   totalRecords = 0;
   loading = true;
@@ -69,10 +69,10 @@ export class ContasReceberComponent implements OnInit {
   };
 
   statusOptions = [
+    { label: 'Atrasado', value: 'Atrasado', severity: 'danger', icon: 'pi-times-circle' },
+    { label: 'Cancelado', value: 'Cancelado', severity: 'secondary', icon: 'pi-ban' },
     { label: 'Pendente', value: 'Pendente', severity: 'warning', icon: 'pi-clock' },
-    { label: 'Pago', value: 'Recebido', severity: 'success', icon: 'pi-check-circle' },
-    { label: 'Vencido', value: 'Vencido', severity: 'danger', icon: 'pi-times-circle' },
-    { label: 'Cancelado', value: 'Cancelado', severity: 'secondary', icon: 'pi-ban' }
+    { label: 'Recebido', value: 'Recebido', severity: 'success', icon: 'pi-check-circle' }
   ];
 
   dialogVisible = false;
@@ -156,16 +156,17 @@ export class ContasReceberComponent implements OnInit {
   }
 
   calculaResumo(items: ContaReceberResponseModel[]) {
-    let pendentes = 0, pagas = 0, vencidas = 0, valorTotal = 0;
+    let pendentes = 0, recebidas = 0, vencidas = 0;
+    let valorTotalPendentesEVencidas = 0;
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0); // Zerar horas para comparação apenas de data
     
     for (const item of items) {
-      valorTotal += item.valor ?? 0;
-      
       if (item.status === 'Recebido') {
-        pagas++;
+      
+        recebidas++;
       } else {
+        valorTotalPendentesEVencidas += item.valor ?? 0;
         const dataVenc = item.dataPrevista ? new Date(item.dataPrevista) : null;
         if (dataVenc) {
           dataVenc.setHours(0, 0, 0, 0); 
@@ -179,7 +180,7 @@ export class ContasReceberComponent implements OnInit {
         }
       }
     }
-    return { pendentes, pagas, vencidas, valorTotal };
+    return { pendentes, recebidas, vencidas, valorTotal: valorTotalPendentesEVencidas };
   }
 
   aplicarFiltrosLocalmente(dados: ContaReceberResponseModel[]): ContaReceberResponseModel[] {
@@ -311,6 +312,8 @@ export class ContasReceberComponent implements OnInit {
       message: 'Confirma excluir esta conta?',
       header: 'Exclusão',
       icon: 'pi pi-info-circle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
       accept: () => {
         this.contasService.deletarContaReceber(id).subscribe({
           next: () => {
@@ -332,10 +335,10 @@ export class ContasReceberComponent implements OnInit {
 
     const valorFormatado = this.currencyPipe.transform(item.valor, 'BRL', 'symbol', '1.2-2');
     this.confirmationService.confirm({
-      message: `Confirma o pagamento da conta "${item.descricao || 'Sem descrição'}" no valor de ${valorFormatado}?`,
-      header: 'Confirmar Pagamento',
+      message: `Confirma o recebimento da conta "${item.descricao || 'Sem descrição'}" no valor de ${valorFormatado}?`,
+      header: 'Confirmar Recebimento',
       icon: 'pi pi-money-bill',
-      acceptLabel: 'Sim, Pagar',
+      acceptLabel: 'Receber',
       rejectLabel: 'Cancelar',
       accept: () => {
         this.contasService.confirmarRecebimento(item.id).subscribe({
@@ -369,7 +372,7 @@ export class ContasReceberComponent implements OnInit {
     return statusConfig?.icon || '';
   }
 
-  isVencida(item: ContaReceberResponseModel): boolean {
+  isAtrasada(item: ContaReceberResponseModel): boolean {
     if (item.status === 'Recebido') return false;
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -383,7 +386,7 @@ export class ContasReceberComponent implements OnInit {
 
   getStatusDisplay(item: ContaReceberResponseModel): string {
     if (item.status === 'Recebido') return 'Recebido';
-    if (this.isVencida(item)) return 'Vencido';
+    if (this.isAtrasada(item)) return 'Atrasado';
     return 'Pendente';
   }
 
