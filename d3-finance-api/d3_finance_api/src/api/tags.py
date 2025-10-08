@@ -11,4 +11,5 @@ class Tag(Enum):
     Transacoes = "Transações"
     Telegram = "Telegram"
     Relatorios = "Relatórios"
+    Pagamentos = "Pagamentos"
     
