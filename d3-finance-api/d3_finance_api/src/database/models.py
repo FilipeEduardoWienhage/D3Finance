@@ -28,6 +28,7 @@ class Usuario(Base):
     despesas = relationship("Despesas", back_populates="usuario", cascade="all, delete-orphan")
     contas_receber = relationship("ContasReceber", back_populates="usuario", cascade="all, delete-orphan")
     telegram_config = relationship("TelegramConfig", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
+    usuario_assinatura = relationship("UsuarioAssinatura", back_populates="usuario", uselist=False)
 
 
 class Receitas(Base):
@@ -157,3 +158,21 @@ class ContasReceber(Base):
 
     def __repr__(self):
         return f"<ContasReceber(id={self.id}, descricao={self.descricao}, valor={self.valor}, status={self.status})>"
+    
+class UsuarioAssinatura(Base):
+    __tablename__ = "usuarios_assinaturas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    stripe_customer_id = Column(String(100))
+    stripe_subscription_id = Column(String(100))
+    plano = Column(String(20)) # Mensal, Semestral, Anual
+    status = Column(String(20), default="Ativo")
+    preco = Column(Float, nullable=False)
+    periodo_teste = Column(Boolean, default=False)
+    data_inicio = Column(DateTime, default=func.now(), nullable=False)
+    data_termino = Column(DateTime)
+    data_teste_fim = Column(DateTime)
+
+    usuario = relationship("Usuario")
+    
