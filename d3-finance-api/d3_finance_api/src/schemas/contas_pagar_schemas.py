@@ -5,37 +5,37 @@ from pydantic.dataclasses import dataclass
 
 
 @dataclass
-class ContaReceberBase:
+class ContaPagarBase:
     valor: float
-    data_prevista: date
-    categoria_receita: str
-    forma_recebimento: str
+    data_vencimento: date
+    categoria_despesa: str
+    forma_pagamento: str
     conta_id: int
     descricao: Optional[str] = None
 
 
 @dataclass
-class ContaReceberCreate(ContaReceberBase):
+class ContaPagarCreate(ContaPagarBase):
     pass
 
 
 @dataclass
-class ContaReceberUpdate:
+class ContaPagarUpdate:
     descricao: Optional[str] = None
     valor: Optional[float] = None
-    data_prevista: Optional[date] = None
-    categoria_receita: Optional[str] = None
-    forma_recebimento: Optional[str] = None
+    data_vencimento: Optional[date] = None
+    categoria_despesa: Optional[str] = None
+    forma_pagamento: Optional[str] = None
     conta_id: Optional[int] = None
 
 
 @dataclass
-class ContaReceberResponse:
+class ContaPagarResponse:
     id: int
     valor: float
-    data_prevista: date
-    categoria_receita: str
-    forma_recebimento: str
+    data_vencimento: date
+    categoria_despesa: str
+    forma_pagamento: str
     status: str
     conta_id: int
     descricao: Optional[str] = None
@@ -44,8 +44,8 @@ class ContaReceberResponse:
 
 
 @dataclass
-class ContaReceberPaginatedResponse:
-    items: list[ContaReceberResponse]
+class ContaPagarPaginatedResponse:
+    items: list[ContaPagarResponse]
     total: int
     page: int
     size: int

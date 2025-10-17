@@ -1,5 +1,4 @@
 from datetime import date, datetime
-import math
 from typing import List, Annotated, Optional
 from fastapi import HTTPException, Depends, status, Query
 from sqlalchemy.orm import Session
@@ -19,7 +18,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Endpoints básicos
 LISTA_CONTAS_RECEBER = "/v1/contas-receber"
 LISTA_CONTAS_RECEBER_PAGINADO = "/v1/contas-receber/paginado"
 CRIAR_CONTA_RECEBER = "/v1/contas-receber"
@@ -27,12 +25,14 @@ ATUALIZAR_CONTA_RECEBER = "/v1/contas-receber/{conta_id}"
 DELETAR_CONTA_RECEBER = "/v1/contas-receber/{conta_id}"
 MARCAR_COMO_PAGA = "/v1/contas-receber/{conta_id}/receber"
 
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 @router.get(
     path=LISTA_CONTAS_RECEBER,

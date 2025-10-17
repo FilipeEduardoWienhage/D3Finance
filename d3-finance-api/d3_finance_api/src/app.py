@@ -2,7 +2,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import APIRouter, FastAPI
 
 # Cria o roteador da API para o endpoint "/users" com a tag "users"
-router = APIRouter()
+router = APIRouter()    
+
 
 
 app = FastAPI(

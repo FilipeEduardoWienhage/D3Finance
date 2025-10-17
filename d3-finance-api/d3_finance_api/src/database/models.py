@@ -158,7 +158,31 @@ class ContasReceber(Base):
 
     def __repr__(self):
         return f"<ContasReceber(id={self.id}, descricao={self.descricao}, valor={self.valor}, status={self.status})>"
-    
+
+
+class ContasPagar(Base):
+    __tablename__ = "contas_pagar"
+
+    id = Column(Integer, primary_key=True, index=True)
+    descricao = Column(String(250))
+    valor = Column(Float, nullable=False)
+    data_vencimento = Column(Date, nullable=False)
+    categoria_despesa = Column(String(50), nullable=False)
+    forma_recebimento = Column(String(50), nullable=False)
+    status = Column(String(20), default="Pendente", nullable=False)  # Pendente, Pago, Cancelado
+    conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    data_criacao = Column(DateTime, default=func.now(), nullable=False)
+    data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
+
+    usuario = relationship("Usuario", back_populates="contas_pagar")
+    conta = relationship("Contas", back_populates="contas_pagar", foreign_keys=[conta_id])
+
+    def __repr__(self):
+        return f"<ContasPagar(id={self.id}, descricao={self.descricao}, valor={self.valor}, status={self.status})>"
+
+
+
 class UsuarioAssinatura(Base):
     __tablename__ = "usuarios_assinaturas"
 
