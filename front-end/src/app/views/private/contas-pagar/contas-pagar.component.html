@@ -1,15 +1,298 @@
-<app-header-system></app-header-system>
-<div class="flex flex-row flex-grow px-4 gap-4">
+<div class="min-h-screen flex flex-col bg-[#1e1e1e]">
+  <app-header-system></app-header-system>
+
+  <div class="flex flex-row flex-grow px-4 gap-4">
     <div class="flex-shrink-0">
-        <app-nav-bar-system></app-nav-bar-system>
+      <app-nav-bar-system></app-nav-bar-system>
+      <p-toast></p-toast>
     </div>
 
-    <p>Aqui o usuário vai poder cadastrar todas as despesas que tem previsão de pagar, com valor, data... e terá um botão
-        efetuar pagamento ai o sistema irá fazer o cadastro dessa despesa o usuario terá que informar a conta que saira
-        o valor para pagar nesse momento</p>
+    <div class="flex flex-col flex-grow space-y-6">
+      <!-- Filtros e Tabela -->
+      <div class="flex flex-col space-y-4">
+        <p-card header="Contas a Pagar" class="bg-[#2c2c2c] text-white rounded-xl">
+          <div class="flex items-center gap-6 p-6 bg-[#2c2c2c] rounded-lg mb-4">
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-300 mb-2 font-medium">Status</label>
+              <p-dropdown [options]="statusOptions" [(ngModel)]="filtros.status" optionLabel="label"
+                optionValue="value" [showClear]="true" (onChange)="aplicarFiltros()"
+                [style]="{ 'width': '220px', 'min-height': '48px' }" placeholder="Todos os status"
+                styleClass="filter-dropdown">
+                <ng-template let-selectedOption pTemplate="selectedItem">
+                  <div class="flex align-items-center gap-2" *ngIf="selectedOption">
+                    <i class="pi {{ getStatusIcon(selectedOption.value) }}"></i>
+                    <span>{{ selectedOption.label }}</span>
+                  </div>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <i class="pi {{ getStatusIcon(option.value) }}"></i>
+                    <span>{{ option.label }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-300 mb-2 font-medium">Categoria</label>
+              <p-dropdown [(ngModel)]="filtros.categoria" [options]="categoriaDaDespesa" optionLabel="name"
+                optionValue="name" placeholder="Todas as categorias" [showClear]="true"
+                (onChange)="aplicarFiltros()" [style]="{ 'width': '300px', 'min-height': '48px' }"
+                styleClass="filter-dropdown">
+              </p-dropdown>
+            </div>
+            
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-300 mb-2 font-medium">Data de Vencimento</label>
+              <p-calendar [(ngModel)]="filtros.dataVencimento" placeholder="Data de vencimento"
+                dateFormat="dd/mm/yy" [showIcon]="true" (onSelect)="aplicarFiltros()"
+                [style]="{ 'width': '220px', 'min-height': '48px' }" styleClass="filter-calendar">
+              </p-calendar>
+            </div>
+            
+            <div class="flex flex-col justify-end">
+              <label class="text-sm mb-1 invisible">.</label>
+              <div class="flex gap-2">
+                <button pButton type="button" label="Resumo" icon="pi pi-chart-bar"
+                  (click)="abrirModalResumo()" class="p-button-info"></button>
+                <button pButton type="button" label="Nova Conta" icon="pi pi-plus"
+                  (click)="abrirDialog()" class="p-button-success"></button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Busca -->
+          <div class="mb-4">
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-300 mb-2 font-medium">Buscar</label>
+              <span class="p-input-icon-left w-full">
+                <i class="pi pi-search text-gray-400"></i>
+                <input type="text" pInputText [(ngModel)]="filtros.search" placeholder="Buscar por descrição..."
+                  class="w-full search-input" (input)="aplicarFiltros()" styleClass="search-input">
+              </span>
+            </div>
+          </div>
 
+          <!-- Tabela de dados -->
+          <div class="bg-[#2a2a2a] p-6 w-full">
+            <p-table #dt [value]="itens" [lazy]="true" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
+              [loading]="loading" [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'single'" [sortField]="'dataVencimento'"
+              [sortOrder]="1" (onLazyLoad)="carregarDados($event)" class="p-datatable-sm p-datatable-gridlines"
+              responsiveLayout="scroll">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Categoria</th>
+                  <th>Descrição</th>
+                  <th>Conta</th>
+                  <th>Valor</th>
+                  <th>Data de Vencimento</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-item>
+                <tr [ngClass]="{'row-atrasada': isAtrasada(item), 'row-paga': item.status === 'Pago'}">
+                  <td>{{ item.categoriaDespesa }}</td>
+                  <td>{{ item.descricao || 'Sem descrição' }}</td>
+                  <td>{{ getNomeConta(item.conta_id) }}</td>
+                  <td>{{ item.valor | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td>{{ item.dataVencimento | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <p-tag [value]="getStatusDisplay(item)" [severity]="getStatusSeverity(getStatusDisplay(item))"
+                      [icon]="'pi ' + getStatusIcon(getStatusDisplay(item))" [rounded]="true">
+                    </p-tag>
+                  </td>
+                  <td class="flex gap-2">
+                    <button pButton type="button" icon="pi pi-money-bill"
+                      class="p-button-sm p-button-rounded p-button-success"
+                      pTooltip="Pagar conta"
+                      (click)="pagarConta(item)"
+                      [disabled]="item.status === 'Pago'"></button>
+                    <button pButton type="button" icon="pi pi-pencil"
+                      class="p-button-sm p-button-rounded p-button-info"
+                      pTooltip="Editar conta"
+                      (click)="editarInline(item)"></button>
+                    <button pButton type="button" icon="pi pi-trash"
+                      class="p-button-sm p-button-rounded p-button-danger"
+                      pTooltip="Excluir conta"
+                      (click)="excluirConta(item.id)"></button>
+                  </td>
+                </tr>
+              </ng-template>
+              
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="7" class="text-center p-4">
+                    <div class="flex flex-column align-items-center gap-3">
+                      <i class="pi pi-inbox text-4xl text-gray-400"></i>
+                      <span class="text-gray-400">Nenhuma conta a pagar encontrada</span>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+
+
+  <p-dialog [header]="isEditing ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'" [(visible)]="dialogVisible"
+    [modal]="true" [style]="{ width: '1000px', maxWidth: '95vw', height: 'auto' }" [closable]="true" [draggable]="false" [resizable]="false"
+    styleClass="custom-dialog modal-cadastro">
+
+    <form #contaForm="ngForm" class="flex flex-column gap-5">
+      <div class="grid">
+        <div class="col-12 md:col-4">
+          <div class="field">
+            <label for="conta" class="block text-sm font-medium mb-3 text-white">
+              <i class="pi pi-credit-card mr-2"></i>Conta *
+            </label>
+            <p-dropdown [(ngModel)]="contaEditando.conta_id" [options]="contas" optionLabel="nome_conta"
+              optionValue="id" [styleClass]="'w-full'" placeholder="Selecione uma conta" name="conta" required>
+            </p-dropdown>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-4">
+          <div class="field">
+            <label for="valor" class="block text-sm font-medium mb-3 text-white">
+              <i class="pi pi-dollar mr-2"></i>Valor *  
+            </label>
+            <p-inputNumber id="valor" [(ngModel)]="contaEditando.valor" mode="currency" currency="BRL"
+              locale="pt-BR" styleClass="w-full" [required]="true" name="valor" [min]="0.01">
+            </p-inputNumber>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-4">
+          <div class="field">
+            <label for="dataVencimento" class="block text-sm font-medium mb-3 text-white">
+              <i class="pi pi-calendar mr-2"></i>Data de Vencimento *
+            </label>
+            <p-calendar id="dataVencimento" [(ngModel)]="contaEditando.dataVencimento" [minDate]="minDate"
+              placeholder="Selecione a data" styleClass="w-full" dateFormat="dd/mm/yy" [showIcon]="true"
+              [required]="true" name="dataVencimento">
+            </p-calendar>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label for="formaPagamento" class="block text-sm font-medium mb-3 text-white">
+              <i class="pi pi-wallet mr-2"></i>Forma de Pagamento *
+            </label>
+            <p-dropdown id="formaPagamento" [(ngModel)]="contaEditando.formaRecebimento"
+              [options]="formaDePagamento" optionLabel="name" optionValue="name"
+              placeholder="Selecione a forma de pagamento" styleClass="w-full" [required]="true"
+              name="formaPagamento">
+            </p-dropdown>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label for="categoria" class="block text-sm font-medium mb-3 text-white">
+              <i class="pi pi-tags mr-2"></i>Categoria da Despesa *
+            </label>
+            <p-dropdown id="categoria" [(ngModel)]="contaEditando.categoriaDespesa"
+              [options]="categoriaDaDespesa" optionLabel="name" optionValue="name"
+              placeholder="Selecione uma categoria" styleClass="w-full" [required]="true"
+              name="categoria">
+            </p-dropdown>
+          </div>
+          <p-button (click)="salvarConta()" label="Cadastrar" class="w-full  md:w-64"
+          styleClass="w-full" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="descricao" class="block text-sm font-medium mb-3 text-white">
+          <i class="pi pi-file-edit mr-2"></i>Descrição
+        </label>
+        <textarea pInputTextarea id="descricao" [(ngModel)]="contaEditando.descricao"
+          placeholder="Descrição da conta a pagar (opcional)" class="w-full" name="descricao" 
+          maxlength="250" rows="5" styleClass="w-full">
+        </textarea>
+        <small class="text-gray-400 mt-2 block">{{ (contaEditando.descricao || '').length }}/250 caracteres</small>
+      </div>
+
+      <!-- Footer do modal -->
+      <ng-template pTemplate="footer">
+        <div class="flex justify-content-between align-items-center">
+          <div class="text-sm text-gray-400">
+            <i class="pi pi-info-circle mr-1"></i>
+            Campos marcados com * são obrigatórios
+          </div>
+          <div class="flex gap-2">
+            <p-button label="Cancelar" severity="secondary" [outlined]="true" icon="pi pi-times"
+              (onClick)="fecharDialog()">
+            </p-button>
+            <p-button [label]="isEditing ? 'Atualizar' : 'Salvar'" icon="pi pi-save"
+              [disabled]="!contaForm.form.valid" (onClick)="salvarConta()" 
+              [class]="isEditing ? 'p-button-warning' : 'p-button-success'">
+            </p-button>
+          </div>
+        </div>
+      </ng-template>
+    </form>
+  </p-dialog>
+
+  <!-- Modal de Resumo -->
+  <p-dialog header="Resumo das Contas a Pagar" [(visible)]="modalResumoVisible"
+    [modal]="true" [style]="{ width: '600px' }" [closable]="true" [draggable]="false" [resizable]="false"
+    styleClass="custom-dialog">
+
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <div class="text-center p-4 bg-[#3b82f6] bg-opacity-20 rounded-lg border border-[#3b82f6] border-opacity-30 mb-3">
+          <i class="pi pi-clock text-[#60a5fa] text-4xl mb-2 block"></i>
+          <h3 class="text-[#93c5fd] m-0 text-2xl font-bold">{{ resumo.pendentes || 0 }}</h3>
+          <p class="text-[#dbeafe] m-0 mt-1">Pendentes</p>
+        </div>
+      </div>
+      
+      <div class="col-12 md:col-6">
+        <div class="text-center p-4 bg-[#10b981] bg-opacity-20 rounded-lg border border-[#10b981] border-opacity-30 mb-3">
+          <i class="pi pi-check-circle text-[#34d399] text-4xl mb-2 block"></i>
+          <h3 class="text-[#6ee7b7] m-0 text-2xl font-bold">{{ resumo.pagas || 0 }}</h3>
+          <p class="text-[#d1fae5] m-0 mt-1">Pagas</p>
+        </div>
+      </div>
+      
+      <div class="col-12 md:col-6">
+        <div class="text-center p-4 bg-[#ef4444] bg-opacity-20 rounded-lg border border-[#ef4444] border-opacity-30 mb-3">
+          <i class="pi pi-times-circle text-[#f87171] text-4xl mb-2 block"></i>
+          <h3 class="text-[#fca5a5] m-0 text-2xl font-bold">{{ resumo.vencidas || 0 }}</h3>
+          <p class="text-[#fecaca] m-0 mt-1">Atrasadas</p>
+        </div>
+      </div>
+      
+      <div class="col-12 md:col-6">
+        <div class="text-center p-4 bg-[#8b5cf6] bg-opacity-20 rounded-lg border border-[#8b5cf6] border-opacity-30 mb-3">
+          <i class="pi pi-dollar text-[#a78bfa] text-4xl mb-2 block"></i>
+          <h3 class="text-[#c4b5fd] m-0 text-2xl font-bold">{{ resumo.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</h3>
+          <p class="text-[#e9d5ff] m-0 mt-1">Total a Pagar</p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-end">
+        <p-button label="Fechar" severity="secondary" [outlined]="true"
+          (onClick)="fecharModalResumo()">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <p-confirmDialog></p-confirmDialog>
+  <p-toast position="top-right"></p-toast>
+
+  <app-footer class="mt-auto"></app-footer>
 </div>
-
-
-
-<app-footer class="mt-auto"></app-footer>

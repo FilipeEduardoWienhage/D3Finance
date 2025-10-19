@@ -27,6 +27,7 @@ class Usuario(Base):
     receitas = relationship("Receitas", back_populates="usuario", cascade="all, delete-orphan")
     despesas = relationship("Despesas", back_populates="usuario", cascade="all, delete-orphan")
     contas_receber = relationship("ContasReceber", back_populates="usuario", cascade="all, delete-orphan")
+    contas_pagar = relationship("ContasPagar", back_populates="usuario", cascade="all, delete-orphan")
     telegram_config = relationship("TelegramConfig", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
     usuario_assinatura = relationship("UsuarioAssinatura", back_populates="usuario", uselist=False)
 
@@ -88,6 +89,7 @@ class Contas(Base):
     despesas = relationship("Despesas", back_populates="conta", foreign_keys="[Despesas.conta_id]")
     receitas = relationship("Receitas", back_populates="conta", foreign_keys="[Receitas.conta_id]")
     contas_receber = relationship("ContasReceber", back_populates="conta", foreign_keys="[ContasReceber.conta_id]")
+    contas_pagar = relationship("ContasPagar", back_populates="conta", foreign_keys="[ContasPagar.conta_id]")
     transacoes_origem = relationship("Transacoes", foreign_keys="[Transacoes.conta_origem_id]", back_populates="conta_origem")
     transacoes_destino = relationship("Transacoes", foreign_keys="[Transacoes.conta_destino_id]", back_populates="conta_destino")
 
