@@ -87,6 +87,11 @@ export class NavBarSystemComponent implements OnInit {
             command: () => this.router.navigate(['/despesas'])
           },
           {
+            label: 'Orçado x Realizado',
+            icon: 'pi pi-sort-alt',
+            command: () => this.router.navigate(['/orcado-realizado'])
+          },
+          {
             label: 'Movimentação entre contas',
             icon: 'pi pi-arrow-right-arrow-left',
             command: () => this.router.navigate(['/movimentarcontas'])

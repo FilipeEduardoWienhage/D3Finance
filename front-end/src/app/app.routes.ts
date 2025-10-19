@@ -16,6 +16,7 @@ import { PlanosComponent } from './views/public/planos/planos.component';
 import { SmartReportComponent } from './views/private/smart-report/smart-report.component';
 import { ContasPagarComponent } from './views/private/contas-pagar/contas-pagar.component';
 import { ContasReceberComponent } from './views/private/contas-receber/contas-receber.component';
+import { OrcadoRealizadoComponent } from './views/private/orcado-realizado/orcado-realizado.component';
 
 //Rotas com a autenticação ativada
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
     { path: "visaogeral", component: VisaoGeralComponent, canActivate: [authGuard] },
     { path: "receitas", component: ReceitasComponent, canActivate: [authGuard]},
     { path: "despesas", component: DespesasComponent, canActivate: [authGuard]},
+    { path: "orcado-realizado", component: OrcadoRealizadoComponent, canActivate: [authGuard]},
     { path: "receitas/cadastrar", component: CadastroReceitasComponent, canActivate: [authGuard]},
     { path: "despesas/cadastrar", component: CadastroDespesasComponent, canActivate: [authGuard]},
     { path: "importararquivo", component: ImportarArquivosComponent, canActivate: [authGuard]},

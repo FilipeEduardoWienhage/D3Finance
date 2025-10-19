@@ -45,6 +45,21 @@ export interface RelatorioAnual {
   despesas_por_conta: ContaValor[];
 }
 
+export interface OrcadoRealizadoMensal {
+  mes: number;
+  orcado: number;
+  realizado: number;
+  diferenca: number;
+}
+
+export interface OrcadoRealizadoResponse {
+  ano: number;
+  total_orcado: number;
+  total_realizado: number;
+  total_diferenca: number;
+  dados_mensais: OrcadoRealizadoMensal[];
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +84,36 @@ export class RelatorioService {
     const params = new HttpParams().set('ano', ano.toString());
 
     return this.http.get<RelatorioAnual>(`${this.apiUrl}/relatorios/anual`, { params });
+  }
+
+  // Orçado x Realizado - Receitas
+  getOrcadoRealizado(ano: number, mes?: number, categoria?: string): Observable<OrcadoRealizadoResponse> {
+    let params = new HttpParams().set('ano', ano.toString());
+    
+    if (mes) {
+      params = params.set('mes', mes.toString());
+    }
+    
+    if (categoria) {
+      params = params.set('categoria', categoria);
+    }
+
+    return this.http.get<OrcadoRealizadoResponse>(`${this.apiUrl}/orcado-realizado`, { params });
+  }
+
+  // Orçado x Realizado - Despesas
+  getOrcadoRealizadoDespesas(ano: number, mes?: number, categoria?: string): Observable<OrcadoRealizadoResponse> {
+    let params = new HttpParams().set('ano', ano.toString());
+    
+    if (mes) {
+      params = params.set('mes', mes.toString());
+    }
+    
+    if (categoria) {
+      params = params.set('categoria', categoria);
+    }
+
+    return this.http.get<OrcadoRealizadoResponse>(`${this.apiUrl}/orcado-realizado-despesas`, { params });
   }
 
 }

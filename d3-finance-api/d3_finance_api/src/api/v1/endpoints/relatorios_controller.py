@@ -262,4 +262,3 @@ def get_relatorio_anual(
     )
 
 
-
