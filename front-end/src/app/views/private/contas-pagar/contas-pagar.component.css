@@ -1,0 +1,447 @@
+/* contas-pagar.component.css - TEMA ESCURO MODERNO */
+
+/* Tabela com tema escuro - usando mesma estrutura da visão geral */
+.p-datatable {
+  background-color: #2a2a2a !important;
+  border: 1px solid #404040 !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  padding: 1rem;
+  border-color: #525252 !important;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 1rem;
+  border-color: #404040 !important;
+  color: #ffffff !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: #404040 !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #363636 !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(even):hover {
+  background-color: #404040 !important;
+}
+
+/* Rows específicas com tema escuro */
+.row-atrasada {
+  background-color: #973939 !important;
+  border-left: 4px solid #cc5e5e !important;
+}
+
+.row-atrasada:hover {
+  background-color: #e63434ae !important;
+}
+
+.row-paga {
+  background-color: #208549 !important;
+  border-left: 4px solid #36e0a8 !important;
+}
+
+.row-paga:hover {
+  background-color: #38bd699a !important;
+}
+
+.p-button {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.p-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.p-button.p-button-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.p-tag {
+  border-radius: 16px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.p-tag.p-tag-rounded {
+  border-radius: 16px;
+}
+
+.custom-dialog .p-dialog {
+  background-color: #2c2c2c !important;
+  border: 1px solid #404040 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.modal-cadastro .p-dialog {
+  width: 1000px !important;
+  max-width: 95vw !important;
+  min-height: 600px !important;
+}
+
+.modal-cadastro .p-dialog-content {
+  padding: 2.5rem !important;
+  min-height: 500px !important;
+}
+
+.modal-cadastro .field {
+  margin-bottom: 2rem !important;
+}
+
+.modal-cadastro .field label {
+  font-size: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.modal-cadastro .p-inputtext,
+.modal-cadastro .p-dropdown,
+.modal-cadastro .p-calendar,
+.modal-cadastro .p-inputnumber,
+.modal-cadastro .p-inputtextarea {
+  padding: 1rem 1.25rem !important;
+  font-size: 1rem !important;
+  min-height: 48px !important;
+}
+
+.custom-dialog .p-dialog-header {
+  background: linear-gradient(135deg, #2c2c2c 0%, #404040 100%) !important;
+  border-bottom: 1px solid #525252 !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 1.5rem !important;
+  color: #ffffff !important;
+}
+
+.custom-dialog .p-dialog-header .p-dialog-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.custom-dialog .p-dialog-header .p-dialog-header-icon {
+  color: #ffffff !important;
+  transition: all 0.2s ease !important;
+}
+
+.custom-dialog .p-dialog-header .p-dialog-header-icon:hover {
+  color: #ef4444 !important;
+  transform: scale(1.1) !important;
+}
+
+.custom-dialog .p-dialog-content {
+  padding: 2rem !important;
+  background-color: #2c2c2c !important;
+  color: #ffffff !important;
+  border-radius: 0 !important;
+}
+
+.custom-dialog .p-dialog-footer {
+  background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+  border-top: 1px solid #525252 !important;
+  border-radius: 0 0 16px 16px !important;
+  padding: 1.5rem 2rem !important;
+}
+
+.custom-dialog .p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+/* Campos do formulário com tema escuro */
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  font-weight: 600;
+  color: #ffffff !important;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.field label i {
+  color: #60a5fa !important;
+  margin-right: 0.5rem;
+}
+
+/* Estilos para filtros melhorados */
+.filter-dropdown .p-dropdown {
+  background-color: #404040 !important;
+  border: 2px solid #525252 !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+  transition: all 0.3s ease !important;
+}
+
+.filter-dropdown .p-dropdown:hover {
+  border-color: #6b7280 !important;
+}
+
+.filter-dropdown .p-dropdown:focus,
+.filter-dropdown .p-dropdown.p-focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.filter-dropdown .p-dropdown .p-dropdown-label {
+  color: #ffffff !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+}
+
+.filter-dropdown .p-dropdown .p-dropdown-trigger {
+  background-color: #525252 !important;
+  color: #ffffff !important;
+  border-radius: 0 6px 6px 0 !important;
+  width: 48px !important;
+}
+
+.filter-calendar .p-calendar {
+  min-height: 48px !important;
+}
+
+.filter-calendar .p-calendar .p-inputtext {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.filter-calendar .p-calendar .p-inputtext:hover {
+  border-color: #6b7280 !important;
+}
+
+.filter-calendar .p-calendar .p-inputtext:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.filter-calendar .p-calendar .p-datepicker-trigger {
+  background-color: #525252 !important;
+  color: #ffffff !important;
+  border-radius: 0 6px 6px 0 !important;
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.search-input {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+  padding: 0.75rem 1rem 0.75rem 2.5rem !important;
+  font-size: 0.95rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.search-input:hover {
+  border-color: #6b7280 !important;
+}
+
+.search-input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  outline: none !important;
+}
+
+.search-input::placeholder {
+  color: #9ca3af !important;
+  font-style: italic;
+}
+
+.p-inputtext,
+.p-dropdown,
+.p-calendar,
+.p-inputnumber,
+.p-inputtextarea {
+  border-radius: 8px !important;
+  border: 2px solid #525252 !important;
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease !important;
+  font-size: 0.95rem !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.p-inputtext:focus,
+.p-dropdown:focus,
+.p-calendar:focus,
+.p-inputnumber:focus,
+.p-inputtextarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  background-color: #4a4a4a !important;
+}
+
+.p-inputtext::placeholder,
+.p-inputtextarea::placeholder {
+  color: #9ca3af !important;
+  font-style: italic;
+}
+
+/* Dropdown com tema escuro */
+.p-dropdown {
+  background-color: #404040 !important;
+}
+
+.p-dropdown .p-dropdown-label {
+  color: #ffffff !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.p-dropdown .p-dropdown-trigger {
+  color: #ffffff !important;
+  background-color: #525252 !important;
+  border-radius: 0 6px 6px 0 !important;
+}
+
+.p-dropdown:not(.p-disabled):hover {
+  border-color: #6b7280 !important;
+}
+
+/* Calendar com tema escuro */
+.p-calendar .p-inputtext {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+}
+
+.p-calendar .p-datepicker-trigger {
+  background-color: #525252 !important;
+  color: #ffffff !important;
+  border-radius: 0 6px 6px 0 !important;
+}
+
+/* InputNumber com tema escuro */
+.p-inputnumber .p-inputtext {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+}
+
+.p-inputnumber .p-button {
+  background-color: #525252 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+}
+
+/* InputTextarea com tema escuro */
+.p-inputtextarea {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 2px solid #525252 !important;
+  resize: vertical !important;
+  min-height: 80px !important;
+}
+
+.p-inputtextarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  background-color: #4a4a4a !important;
+}
+
+/* Paginador com tema escuro */
+.p-paginator {
+  background-color: #2c2c2c !important;
+  border: 1px solid #404040 !important;
+  border-radius: 0 0 8px 8px;
+  padding: 1rem;
+  color: #ffffff !important;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  border-radius: 6px;
+  margin: 0 0.125rem;
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border: 1px solid #525252 !important;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background-color: #525252 !important;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Estados de loading */
+.p-datatable .p-datatable-loading-overlay {
+  background-color: rgba(44, 44, 44, 0.9) !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .p-datatable .p-datatable-thead > tr > th,
+  .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .flex.gap-2 {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .p-button.p-button-sm {
+    width: 100%;
+  }
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.p-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Scrollbar customizada com tema escuro */
+.p-datatable .p-datatable-scrollable-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-track {
+  background-color: #404040;
+  border-radius: 4px;
+}
+
+.p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
+  background-color: #525252;
+  border-radius: 4px;
+}
+
+.p-datatable .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280;
+}

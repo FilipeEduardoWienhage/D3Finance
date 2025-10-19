@@ -181,9 +181,7 @@ def atualizar_conta_receber(
     usuario_logado: Annotated[TokenData, Depends(get_current_user)],
     db: Session = Depends(get_db)
 ):
-    """
-    Atualiza uma conta a receber
-    """
+    
     conta = db.query(ContasReceber).filter(
         and_(
             ContasReceber.id == conta_id,
