@@ -52,7 +52,8 @@ export class ReceitasComponent implements OnInit {
   filtroConsolidado = {
     dataSelecionada: null as Date | null,
     conta_id: null as number | null,
-    forma_recebimento: null as string | null
+    forma_recebimento: null as string | null,
+    categoria: null as string | null
   };
 
   filtroMensal = {
@@ -241,6 +242,9 @@ export class ReceitasComponent implements OnInit {
     if (this.filtroConsolidado.forma_recebimento) {
       filtros.forma_recebimento = this.filtroConsolidado.forma_recebimento;
     }
+    if (this.filtroConsolidado.categoria) {
+      filtros.categoria = this.filtroConsolidado.categoria;
+    }
 
     this.receitaService.getReceitasConsolidadas(filtros).subscribe({
       next: (dados) => {
@@ -331,6 +335,7 @@ export class ReceitasComponent implements OnInit {
     this.filtroConsolidado.dataSelecionada = null;
     this.filtroConsolidado.conta_id = null;
     this.filtroConsolidado.forma_recebimento = null;
+    this.filtroConsolidado.categoria = null;
     this.carregarDadosDoGrafico();
   }
 }

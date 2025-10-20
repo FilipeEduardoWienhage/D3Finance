@@ -24,6 +24,9 @@ export class ReceitasService {
       if (filtros.mes) {
         params = params.append('mes', filtros.mes);
       }
+      if (filtros.categoria) {
+        params = params.append('categoria', filtros.categoria);
+      }
       if (filtros.conta_id) {
         params = params.append('conta_id', filtros.conta_id);
       }

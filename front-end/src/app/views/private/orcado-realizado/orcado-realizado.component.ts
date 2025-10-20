@@ -93,22 +93,17 @@ export class OrcadoRealizadoComponent implements OnInit {
 
   categoriasDespesasOpcoes = [
     { label: 'Todas as Categorias', value: null },
-    { label: 'Aluguel de Espaços', value: 'Aluguel de Espaços' },
-    { label: 'Comissões Pagas', value: 'Comissões Pagas' },
-    { label: 'Custos com Fornecedores', value: 'Custos com Fornecedores' },
     { label: 'Despesas Administrativas', value: 'Despesas Administrativas' },
-    { label: 'Despesas Bancárias / Financeiras', value: 'Despesas Bancárias / Financeiras' },
-    { label: 'Despesas com Marketing e Publicidade', value: 'Despesas com Marketing e Publicidade' },
-    { label: 'Despesas com Seguros', value: 'Despesas com Seguros' },
-    { label: 'Despesas com Tecnologia / Software', value: 'Despesas com Tecnologia / Software' },
-    { label: 'Honorários Profissionais', value: 'Honorários Profissionais' },
+    { label: 'Despesas Financeiras', value: 'Despesas Financeiras' },
+    { label: 'Despesas Operacionais', value: 'Despesas Operacionais' },
+    { label: 'Despesas com Marketing', value: 'Despesas com Marketing' },
+    { label: 'Despesas com Materiais', value: 'Despesas com Materiais' },
+    { label: 'Despesas com Pessoal', value: 'Despesas com Pessoal' },
+    { label: 'Despesas com Terceirizados', value: 'Despesas com Terceirizados' },
+    { label: 'Despesas com Transporte', value: 'Despesas com Transporte' },
     { label: 'Impostos e Taxas', value: 'Impostos e Taxas' },
     { label: 'Manutenção e Reparos', value: 'Manutenção e Reparos' },
-    { label: 'Material de Escritório', value: 'Material de Escritório' },
-    { label: 'Outras Despesas Operacionais', value: 'Outras Despesas Operacionais' },
-    { label: 'Pagamento de Salários', value: 'Pagamento de Salários' },
-    { label: 'Treinamento e Capacitação', value: 'Treinamento e Capacitação' },
-    { label: 'Viagens e Hospedagem', value: 'Viagens e Hospedagem' }
+    { label: 'Outras Despesas', value: 'Outras Despesas' }
   ];
 
   constructor(
