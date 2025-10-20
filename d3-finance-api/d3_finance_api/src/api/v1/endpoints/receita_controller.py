@@ -100,6 +100,7 @@ def get_receitas_por_categoria(
     db: Session = Depends(get_db),
     ano: Optional[int] = None,
     mes: Optional[int] = None,
+    categoria: Optional[str] = None,
     conta_id: Optional[int] = None,
     forma_recebimento: Optional[str] = None
 ):
@@ -111,6 +112,8 @@ def get_receitas_por_categoria(
         query = query.filter(extract("year", Receitas.data_recebimento) == ano)
     if mes:
         query = query.filter(extract("month", Receitas.data_recebimento) == mes)
+    if categoria:
+        query = query.filter(Receitas.categoria == categoria)
     if conta_id:
         query = query.filter(Receitas.conta_id == conta_id)
     if forma_recebimento:

@@ -101,6 +101,7 @@ def get_despesas_consolidadas(
     ano: Optional[int] = None,
     mes: Optional[int] = None,
     conta_id: Optional[int] = None,
+    categoria: Optional[str] = None,
     forma_pagamento: Optional[str] = None
 ):
     query = db.query(
@@ -112,6 +113,8 @@ def get_despesas_consolidadas(
         query = query.filter(extract("year", Despesas.data_pagamento) == ano)
     if mes:
         query = query.filter(extract("month", Despesas.data_pagamento) == mes)
+    if categoria:
+        query = query.filter(Despesas.categoria == categoria)
     if conta_id:
         query = query.filter(Despesas.conta_id == conta_id)
     if forma_pagamento:

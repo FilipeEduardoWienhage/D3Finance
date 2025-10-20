@@ -329,7 +329,7 @@ export class ContasReceberComponent implements OnInit {
 
   pagarConta(item: ContaReceberResponseModel) {
     if (item.status === 'Recebido') {
-      this.mostrarAviso('Esta conta já foi paga');
+      this.mostrarAviso('Esta conta já foi recebida');
       return;
     }
 
@@ -348,7 +348,7 @@ export class ContasReceberComponent implements OnInit {
             this.mostrarSucesso('Conta paga com sucesso!');
           },
           error: (err: any) => {
-            console.error('Erro ao pagar conta:', err);
+            console.error('Erro ao receber conta:', err);
             this.mostrarErro('Erro ao confirmar pagamento: ' + (err.error?.detail || err.message || 'Erro desconhecido'));
           }
         });

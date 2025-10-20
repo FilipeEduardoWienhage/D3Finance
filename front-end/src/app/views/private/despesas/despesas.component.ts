@@ -53,7 +53,8 @@ export class DespesasComponent implements OnInit {
   filtroConsolidado = {
     dataSelecionada: null as Date | null,
     conta_id: null as number | null,
-    forma_pagamento: null as string | null
+    forma_pagamento: null as string | null,
+    categoria: null as string | null
   };
 
   filtroMensal = {
@@ -255,6 +256,9 @@ export class DespesasComponent implements OnInit {
       filtrosParaApi.ano = this.filtroConsolidado.dataSelecionada.getFullYear();
       filtrosParaApi.mes = this.filtroConsolidado.dataSelecionada.getMonth() + 1;
     }
+    if (this.filtroConsolidado.categoria) {
+      filtrosParaApi.categoria = this.filtroConsolidado.categoria;
+    }
     if (this.filtroConsolidado.conta_id) {
       filtrosParaApi.conta_id = this.filtroConsolidado.conta_id;
     }
@@ -349,6 +353,7 @@ export class DespesasComponent implements OnInit {
 
   limparFiltros() {
     this.filtroConsolidado.dataSelecionada = null;
+    this.filtroConsolidado.categoria = null;
     this.filtroConsolidado.conta_id = null;
     this.filtroConsolidado.forma_pagamento = null;
     this.carregarDadosConsolidado();
