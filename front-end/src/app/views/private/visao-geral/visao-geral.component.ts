@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { NavBarSystemComponent } from '../nav-bar-system/nav-bar-system.component';
 import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -24,6 +24,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { PrimeNG } from 'primeng/config';
 import { DatePicker } from 'primeng/datepicker';
 import { HeaderSystemComponent } from '../header-system/header-system.component';
+import { ChartModule } from 'primeng/chart';
 
 @Component({
   selector: 'app-visao-geral',
@@ -47,6 +48,7 @@ import { HeaderSystemComponent } from '../header-system/header-system.component'
     NavBarSystemComponent,
     FooterComponent,
     InputNumberModule,
+    ChartModule,
   ],
   templateUrl: './visao-geral.component.html',
   styleUrls: ['./visao-geral.component.css'],
@@ -61,7 +63,9 @@ export class VisaoGeralComponent implements OnInit {
     private messageService: MessageService,
     private transacaoService: TransacaoService,
     private contasService: ContasService,
-    private primengConfig: PrimeNG
+    private primengConfig: PrimeNG,
+    private cd: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   tipoContas = [
@@ -143,8 +147,16 @@ export class VisaoGeralComponent implements OnInit {
   first = 0;
   rows = 10;
 
+  // Dados do gráfico
+  data: any;
+  options: any;
+  receitasMensais: any[] = [];
+  despesasMensais: any[] = [];
+  anoAtual: number = new Date().getFullYear();
+
   tabItems: MenuItem[] = [
     { label: 'Contas e Saldo', icon: 'pi pi-wallet' },
+    { label: 'Receitas X Despesas', icon: 'pi pi-chart-line' },
     { label: 'Receitas', icon: 'pi pi-dollar' },
     { label: 'Despesas', icon: 'pi pi-credit-card' },
     { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left' }
@@ -439,6 +451,133 @@ export class VisaoGeralComponent implements OnInit {
         }
       });
     }
+
+    if (item.label === 'Receitas X Despesas') {
+      this.carregarGraficoReceitasXDespesas();
+    }
+  }
+
+  carregarGraficoReceitasXDespesas() {
+    const anoAtual = new Date().getFullYear();
+    
+    // Carregar receitas mensais
+    this.receitasService.getReceitasConsolidadasMensal({ ano: anoAtual }).subscribe({
+      next: (receitas) => {
+        this.receitasMensais = receitas;
+        this.initChart();
+      },
+      error: (err) => console.error('Erro ao carregar receitas mensais:', err)
+    });
+
+    // Carregar despesas mensais
+    this.despesasService.getDespesaConsolidadasMensal({ ano: anoAtual }).subscribe({
+      next: (despesas) => {
+        this.despesasMensais = despesas;
+        this.initChart();
+      },
+      error: (err) => console.error('Erro ao carregar despesas mensais:', err)
+    });
+  }
+
+  initChart() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    
+    const valoresReceitas = new Array(12).fill(0);
+    const valoresDespesas = new Array(12).fill(0);
+
+    // Preencher valores de receitas
+    this.receitasMensais.forEach(item => {
+      if (item.mes >= 1 && item.mes <= 12) {
+        valoresReceitas[item.mes - 1] = item.valor;
+      }
+    });
+
+    // Preencher valores de despesas
+    this.despesasMensais.forEach(item => {
+      if (item.mes >= 1 && item.mes <= 12) {
+        valoresDespesas[item.mes - 1] = item.valor;
+      }
+    });
+
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--p-text-color') || '#ffffff';
+    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color') || '#9ca3af';
+    const surfaceBorder = documentStyle.getPropertyValue('--p-surface-border') || '#374151';
+
+    this.data = {
+      labels: meses,
+      datasets: [
+        {
+          label: 'Receitas',
+          data: valoresReceitas,
+          fill: false,
+          borderColor: '#22c55e',
+          tension: 0.4
+        },
+        {
+          label: 'Despesas',
+          data: valoresDespesas,
+          fill: false,
+          borderColor: '#ef4444',
+          tension: 0.4
+        }
+      ]
+    };
+
+    this.options = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              let label = context.dataset.label || '';
+              if (label) {
+                label += ': ';
+              }
+              const valor = context.raw;
+              return label + valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+            font: {
+              weight: 500
+            }
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false
+          }
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+            callback: (value: number) => {
+              return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false
+          }
+        }
+      }
+    };
+    this.cd.markForCheck();
   }
 
 
