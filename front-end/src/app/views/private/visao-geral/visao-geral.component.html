@@ -64,6 +64,16 @@
                         </div>
                     </div>
 
+                    <div *ngIf="activeTab.label === 'Receitas X Despesas'"
+                        class="flex flex-col items-center justify-center px-4 py-8 w-full">
+                        <div class="w-full max-w-5xl bg-[#2a2a2a] p-6 rounded">
+                            <h2 class="text-xl font-semibold mb-4 text-white">Receitas vs Despesas - Ano {{ anoAtual }}</h2>
+                            <div class="h-[30rem]">
+                                <p-chart type="line" [data]="data" [options]="options" style="height: 100%" />
+                            </div>
+                        </div>
+                    </div>
+
                     <div *ngIf="activeTab.label === 'Receitas'"
                         class="flex flex-col items-center justify-center px-4 py-8 w-full">
                         <h1>Filtros</h1>
