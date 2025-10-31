@@ -77,6 +77,11 @@ export class NavBarSystemComponent implements OnInit {
             command: () => this.router.navigate(['/visaogeral'])
           },
           {
+            label: 'Assistente Virtual',
+            icon: 'pi pi-chart-line',
+            command: () => this.router.navigate(['/assistente'])
+          },
+          {
             label: 'Receitas',
             icon: 'pi pi-chart-line',
             command: () => this.router.navigate(['/receitas'])

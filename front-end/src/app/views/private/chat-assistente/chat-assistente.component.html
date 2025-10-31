@@ -1,0 +1,120 @@
+<div class="chat-container">
+  <!-- Header do Chat -->
+  <div class="chat-header">
+    <div class="header-content">
+      <div class="header-info">
+        <h2>
+          <span class="icon">🤖</span>
+          Assistente Financeiro IA
+        </h2>
+        <p class="subtitle">Faça perguntas sobre suas finanças em linguagem natural</p>
+      </div>
+      <button 
+        class="btn-limpar" 
+        (click)="limparChat()"
+        title="Limpar histórico de conversa">
+        🗑️ Limpar
+      </button>
+    </div>
+  </div>
+
+  <!-- Área de Mensagens -->
+  <div class="chat-messages" #chatContainer>
+    <div 
+      *ngFor="let mensagem of mensagens; let i = index" 
+      class="message-wrapper"
+      [class.user-message]="mensagem.pergunta"
+      [class.assistant-message]="!mensagem.pergunta && mensagem.resposta">
+      
+      <!-- Mensagem do Usuário -->
+      <div *ngIf="mensagem.pergunta" class="message user-msg">
+        <div class="message-content">
+          <div class="message-text">{{ mensagem.pergunta }}</div>
+          <span class="message-time">
+            {{ mensagem.timestamp | date:'HH:mm' }}
+          </span>
+        </div>
+        <div class="avatar user-avatar">👤</div>
+      </div>
+
+      <!-- Mensagem do Assistente -->
+      <div *ngIf="mensagem.resposta" class="message assistant-msg">
+        <div class="avatar assistant-avatar">🤖</div>
+        <div class="message-content">
+          <div class="message-text">{{ mensagem.resposta }}</div>
+          
+          <!-- Queries SQL Executadas -->
+          <div *ngIf="mensagem.queries_executadas && mensagem.queries_executadas.length > 0" class="queries-section">
+            <button 
+              class="btn-toggle-queries"
+              (click)="toggleQueries(i)">
+              {{ mostrarQueries[i] ? '▼' : '▶' }} 
+              {{ mensagem.queries_executadas.length }} 
+              {{ mensagem.queries_executadas.length === 1 ? 'query executada' : 'queries executadas' }}
+            </button>
+            
+            <div *ngIf="mostrarQueries[i]" class="queries-list">
+              <div 
+                *ngFor="let query of mensagem.queries_executadas" 
+                class="query-item">
+                <div class="query-header">
+                  <span class="query-name">🔍 {{ query.nome_ferramenta }}</span>
+                </div>
+                <div class="query-sql">
+                  <pre>{{ formatarSQL(query.query_sql) }}</pre>
+                </div>
+                <div *ngIf="query.parametros" class="query-params">
+                  <strong>Parâmetros:</strong>
+                  <pre>{{ query.parametros | json }}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <span class="message-time">
+            {{ mensagem.timestamp | date:'HH:mm' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicador de Carregamento -->
+    <div *ngIf="carregando" class="message assistant-msg loading">
+      <div class="avatar assistant-avatar">🤖</div>
+      <div class="message-content">
+        <div class="loading-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span class="loading-text">Assistente está pensando...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Área de Input -->
+  <div class="chat-input-container">
+    <div class="input-wrapper">
+      <textarea
+        class="chat-input"
+        [(ngModel)]="mensagemAtual"
+        (keydown)="onKeyDown($event)"
+        placeholder="Digite sua pergunta aqui... (Enter para enviar, Shift+Enter para nova linha)"
+        rows="1"
+        [disabled]="carregando">
+      </textarea>
+      <button 
+        class="btn-send"
+        (click)="enviarPergunta()"
+        [disabled]="!mensagemAtual.trim() || carregando"
+        title="Enviar pergunta">
+        <span *ngIf="!carregando">📤</span>
+        <span *ngIf="carregando">⏳</span>
+      </button>
+    </div>
+    <div class="input-hint">
+      💡 Exemplos: "Quanto eu gastei em outubro?" | "Qual meu saldo total?" | "Mostre minhas contas vencidas"
+    </div>
+  </div>
+</div>
+
