@@ -1,0 +1,7 @@
+GROQ_API_KEY="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"
+
+# Adicione estas linhas para o seu banco MySQL
+DB_HOST="localhost"
+DB_USER="root"
+DB_PASSWORD="1234"
+DB_NAME="financeiro"

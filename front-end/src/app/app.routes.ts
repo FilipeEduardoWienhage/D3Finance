@@ -17,6 +17,7 @@ import { SmartReportComponent } from './views/private/smart-report/smart-report.
 import { ContasPagarComponent } from './views/private/contas-pagar/contas-pagar.component';
 import { ContasReceberComponent } from './views/private/contas-receber/contas-receber.component';
 import { OrcadoRealizadoComponent } from './views/private/orcado-realizado/orcado-realizado.component';
+import { ChatAssistenteComponent } from './views/private/chat-assistente/chat-assistente.component';
 
 //Rotas com a autenticação ativada
 export const routes: Routes = [
@@ -38,6 +39,7 @@ export const routes: Routes = [
     { path: "smartreport", component: SmartReportComponent, canActivate: [authGuard]},
     { path: "contasreceber", component: ContasReceberComponent, canActivate: [authGuard]},
     { path: "contaspagar", component: ContasPagarComponent, canActivate: [authGuard]},
+    { path: "assistente", component: ChatAssistenteComponent, canActivate: [authGuard]},
     { path: "**", redirectTo: "/home" }
 ];
 
