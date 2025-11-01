@@ -78,7 +78,7 @@ export class NavBarSystemComponent implements OnInit {
           },
           {
             label: 'Assistente Virtual',
-            icon: 'pi pi-chart-line',
+            icon: 'pi pi-microchip-ai',
             command: () => this.router.navigate(['/assistente'])
           },
           {
@@ -97,9 +97,14 @@ export class NavBarSystemComponent implements OnInit {
             command: () => this.router.navigate(['/orcado-realizado'])
           },
           {
-            label: 'Movimentação entre contas',
-            icon: 'pi pi-arrow-right-arrow-left',
-            command: () => this.router.navigate(['/movimentarcontas'])
+            label: 'Smart Report',
+            icon: 'pi pi-envelope',
+            command: () => this.router.navigate(['/smartreport'])
+          },
+          {
+            label: 'Cadastrar contas',
+            icon: 'pi pi-plus',
+            command: () => this.router.navigate(['/contas/cadastrar'])
           },
           {
             label: 'Cadastrar receitas',
@@ -112,16 +117,6 @@ export class NavBarSystemComponent implements OnInit {
             command: () => this.router.navigate(['/despesas/cadastrar'])
           },
           {
-            label: 'Cadastrar contas',
-            icon: 'pi pi-plus',
-            command: () => this.router.navigate(['/contas/cadastrar'])
-          },
-          {
-            label: 'Importar arquivo CSV',
-            icon: 'pi pi-cloud-upload',
-            command: () => this.router.navigate(['/importararquivo'])
-          },
-          {
             label: 'Contas à receber',
             icon: 'pi pi-money-bill',
             command: () => this.router.navigate(['/contasreceber'])
@@ -132,9 +127,14 @@ export class NavBarSystemComponent implements OnInit {
             command: () => this.router.navigate(['/contaspagar'])
           },
           {
-            label: 'Smart Report',
-            icon: 'pi pi-envelope',
-            command: () => this.router.navigate(['/smartreport'])
+            label: 'Movimentação entre contas',
+            icon: 'pi pi-arrow-right-arrow-left',
+            command: () => this.router.navigate(['/movimentarcontas'])
+          },
+          {
+            label: 'Importar arquivo CSV',
+            icon: 'pi pi-cloud-upload',
+            command: () => this.router.navigate(['/importararquivo'])
           },
           {
             label: 'Telegram BOT',

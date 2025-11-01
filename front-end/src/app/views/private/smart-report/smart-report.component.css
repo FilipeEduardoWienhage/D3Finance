@@ -1,0 +1,57 @@
+:host ::ng-deep .p-editor .ql-editor {
+  color: #ffffff;
+  background: #2a2a2a;
+}
+
+:host ::ng-deep .p-editor .ql-editor.ql-blank::before {
+  color: #ffffff !important;
+  opacity: 0.6;
+  font-style: normal;
+}
+
+:host ::ng-deep .p-editor .ql-container {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+
+:host ::ng-deep .p-editor .ql-toolbar {
+  background: #363636;
+  border-color: #404040;
+}
+
+:host ::ng-deep .p-editor .ql-toolbar .ql-stroke {
+  stroke: #ffffff;
+}
+
+:host ::ng-deep .p-editor .ql-toolbar .ql-fill {
+  fill: #ffffff;
+}
+
+:host ::ng-deep .p-editor .ql-toolbar button:hover,
+:host ::ng-deep .p-editor .ql-toolbar button.ql-active {
+  background: #404040;
+}
+
+:host ::ng-deep .p-editor .ql-toolbar button:hover .ql-stroke,
+:host ::ng-deep .p-editor .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #667eea;
+}
+
+:host ::ng-deep .p-editor .ql-toolbar button:hover .ql-fill,
+:host ::ng-deep .p-editor .ql-toolbar button.ql-active .ql-fill {
+  fill: #667eea;
+}
+
+:host ::ng-deep .p-editor .ql-editor {
+  border-color: #404040;
+}
+
+:host ::ng-deep .p-editor .ql-editor p,
+:host ::ng-deep .p-editor .ql-editor h1,
+:host ::ng-deep .p-editor .ql-editor h2,
+:host ::ng-deep .p-editor .ql-editor h3,
+:host ::ng-deep .p-editor .ql-editor h4,
+:host ::ng-deep .p-editor .ql-editor li {
+  color: #ffffff;
+}
+
