@@ -16,6 +16,7 @@ import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { RelatorioService, RelatorioMensal, RelatorioAnual } from '../../../service/relatorio.service';
 import { firstValueFrom } from 'rxjs';
+import jsPDF from 'jspdf';
 
 interface RelatorioModelo {
   id: string;
@@ -397,40 +398,117 @@ mesSelecionado: number | null = null;
     }
 
     try {
-      // Converter HTML para texto limpo
+      // Criar PDF
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      const maxWidth = pageWidth - (2 * margin);
+      let y = margin;
+      
+      // Configurar fonte
+      pdf.setFont('helvetica', 'normal');
+      
+      // Adicionar cabeçalho
+      pdf.setFontSize(18);
+      pdf.setFont('helvetica', 'bold');
+      const titulo = this.modeloSelecionado.nome.toUpperCase();
+      pdf.text(titulo, margin, y);
+      y += 10;
+      
+      // Linha de separação
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, y, pageWidth - margin, y);
+      y += 8;
+      
+      // Data de geração
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      const dataGeracao = `Relatório gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`;
+      pdf.text(dataGeracao, margin, y);
+      y += 15;
+      
+      // Converter HTML para texto processado
       const textoLimpo = this.converterHtmlParaTexto(this.text);
+      const linhas = textoLimpo.split('\n');
       
-      // Adicionar cabeçalho e rodapé
-      const conteudoCompleto = `
-${this.modeloSelecionado.nome.toUpperCase()}
-${'='.repeat(this.modeloSelecionado.nome.length + 10)}
-
-${textoLimpo}
-
-${'='.repeat(50)}
-Relatório gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}
-Diamond Three Finance
-`;
-
-      // Criar o blob e fazer download
-      const blob = new Blob([conteudoCompleto], { type: 'text/plain;charset=utf-8' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
       
-      // Nome do arquivo baseado no tipo de relatório e data
+      // Adicionar cada linha do conteúdo
+      for (const linha of linhas) {
+        if (!linha.trim()) {
+          y += 5;
+          continue;
+        }
+        
+        // Processar diferentes tipos de linha
+        if (linha.startsWith('='.repeat(50))) {
+          y += 5;
+          pdf.line(margin, y, pageWidth - margin, y);
+          y += 10;
+          continue;
+        }
+        
+        if (linha.startsWith('-'.repeat(30))) {
+          y += 5;
+          pdf.line(margin, y, pageWidth - margin, y);
+          y += 10;
+          continue;
+        }
+        
+        if (linha.startsWith('-'.repeat(20))) {
+          y += 8;
+          continue;
+        }
+        
+        // Detectar títulos e formatar
+        if (linha.length > 0 && linha.toUpperCase() === linha && linha.length < 100) {
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          const linhasTexto = pdf.splitTextToSize(linha, maxWidth);
+          for (const textLine of linhasTexto) {
+            if (y > pageHeight - 30) {
+              pdf.addPage();
+              y = margin;
+            }
+            pdf.text(textLine, margin, y);
+            y += 7;
+          }
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'normal');
+          y += 3;
+          continue;
+        }
+        
+        // Texto normal
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'normal');
+        const linhasTexto = pdf.splitTextToSize(linha, maxWidth);
+        
+        for (const textLine of linhasTexto) {
+          if (y > pageHeight - 30) {
+            pdf.addPage();
+            y = margin;
+          }
+          pdf.text(textLine, margin, y);
+          y += 6;
+        }
+      }
+      
+      // Adicionar rodapé em todas as páginas
+      const totalPages = pdf.internal.pages.length - 1;
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(9);
+        pdf.setFont('helvetica', 'italic');
+        pdf.text('Diamond Three Finance', pageWidth / 2, pageHeight - 15, { align: 'center' });
+      }
+      
+      // Salvar o arquivo
       const dataAtual = new Date().toISOString().split('T')[0];
-      const nomeArquivo = `${this.modeloSelecionado.nome.replace(/\s+/g, '_')}_${dataAtual}.txt`;
-      
-      link.href = url;
-      link.download = nomeArquivo;
-      link.style.display = 'none';
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // Limpar URL do objeto
-      window.URL.revokeObjectURL(url);
+      const nomeArquivo = `${this.modeloSelecionado.nome.replace(/\s+/g, '_')}_${dataAtual}.pdf`;
+      pdf.save(nomeArquivo);
 
       this.messageService.add({
         severity: 'success',

@@ -55,3 +55,93 @@
   color: #ffffff;
 }
 
+/* Estilos de impressão */
+@media print {
+  /* Ocultar elementos da interface */
+  app-header-system,
+  app-nav-bar-system,
+  app-footer,
+  p-toast,
+  p-button,
+  p-select,
+  label {
+    display: none !important;
+  }
+
+  /* Ocultar seções específicas */
+  .text-center,
+  .mb-6 {
+    display: none !important;
+  }
+
+  /* Ocultar todo o primeiro card (Configurações) */
+  :host ::ng-deep p-card:first-of-type {
+    display: none !important;
+  }
+
+  /* Ocultar cabeçalhos de todos os cards */
+  :host ::ng-deep .p-card .p-card-header,
+  :host ::ng-deep .p-card .p-card-title,
+  :host ::ng-deep .p-card header,
+  :host ::ng-deep .p-card-title {
+    display: none !important;
+  }
+
+  /* Ocultar toolbar do editor */
+  :host ::ng-deep .p-editor .ql-toolbar {
+    display: none !important;
+  }
+
+  /* Estilizar o editor para impressão */
+  :host ::ng-deep .p-editor {
+    display: block !important;
+    background: white !important;
+  }
+
+  :host ::ng-deep .p-card {
+    border: none !important;
+    box-shadow: none !important;
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  :host ::ng-deep .p-card .p-card-body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  :host ::ng-deep .p-editor .ql-container {
+    background: white !important;
+    border: none !important;
+  }
+
+  :host ::ng-deep .p-editor .ql-editor {
+    background: white !important;
+    color: black !important;
+    border: none !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+    min-height: auto !important;
+    height: auto !important;
+    font-size: 12pt !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Garantir cores de texto na impressão */
+  :host ::ng-deep .p-editor .ql-editor * {
+    color: black !important;
+  }
+
+  /* Configuração da página */
+  @page {
+    size: A4;
+    margin: 2cm;
+  }
+
+  /* Resetar margens e padding */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
