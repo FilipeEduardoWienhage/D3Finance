@@ -157,10 +157,9 @@ export class ReceitasComponent implements OnInit {
             summary: 'Aviso',
             detail: 'Não há receitas para esta categoria no ano selecionado.'
           });
-        } else {
-          this.dadosMensal = dados;
-          this.initChartMensal();
         }
+        this.dadosMensal = dados;
+        this.initChartMensal();
       },
       error: (err) => console.error('Erro ao carregar dados mensais:', err)
     });
@@ -254,10 +253,11 @@ export class ReceitasComponent implements OnInit {
             summary: 'Aviso',
             detail: 'Não há receitas para o período selecionado.'
           });
+          this.dadosConsolidado = [];
         } else {
           this.dadosConsolidado = dados;
-          this.initChartCategorias();
         }
+        this.initChartCategorias();
       },
       error: (err) => {
         console.error('Erro ao carregar dados de receitas:', err);

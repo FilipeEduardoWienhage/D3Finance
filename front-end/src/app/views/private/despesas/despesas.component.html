@@ -17,21 +17,21 @@
                             <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroMensal.categoria"
                                 optionLabel="label" optionValue="value"
                                 placeholder="Todas as categorias" (ngModelChange)="filtrarDadosMensais()"
-                                [style]="{ 'width': '250px' }" [showClear]="true"></p-dropdown>
+                                [style]="{ 'width': '250px' }" [showClear]="true" [appendTo]="'body'"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
                             <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroMensal.conta_id"
                                 optionLabel="label" optionValue="value"
                                 placeholder="Todas as contas" (ngModelChange)="filtrarDadosMensais()"
-                                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
+                                [style]="{ 'width': '200px' }" [showClear]="true" [appendTo]="'body'"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
                             <p-dropdown [options]="formasPagamentoOpcoes" [(ngModel)]="filtroMensal.forma_pagamento"
                                 optionLabel="label" optionValue="value"
                                 placeholder="Todas as formas" (ngModelChange)="filtrarDadosMensais()"
-                                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
+                                [style]="{ 'width': '200px' }" [showClear]="true" [appendTo]="'body'"></p-dropdown>
                         </div>
                         <div class="flex flex-col justify-end">
                             <label class="text-sm mb-1 invisible">.</label>
@@ -54,21 +54,21 @@
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Mês/Ano</label>
                             <p-calendar [(ngModel)]="filtroConsolidado.dataSelecionada" view="month" dateFormat="mm/yy"
                                 [readonlyInput]="true" placeholder="Selecione o período"
-                                (onSelect)="filtrarDados()" [showClear]="true"></p-calendar>
+                                (onSelect)="filtrarDados()" [showClear]="true" [appendTo]="'body'"></p-calendar>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Categoria</label>
                             <p-dropdown [options]="categoriasOpcoes" [(ngModel)]="filtroConsolidado.categoria"
                                 optionLabel="label" optionValue="value"
                                 placeholder="Todas as categorias" (ngModelChange)="filtrarDados()"
-                                [style]="{ 'width': '250px' }" [showClear]="true"></p-dropdown>
+                                [style]="{ 'width': '250px' }" [showClear]="true" [appendTo]="'body'"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Filtrar por Conta</label>
                             <p-dropdown [options]="contasOpcoes" [(ngModel)]="filtroConsolidado.conta_id"
                                 optionLabel="label" optionValue="value"
                                 placeholder="Todas as contas" (ngModelChange)="filtrarDados()"
-                                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
+                                [style]="{ 'width': '200px' }" [showClear]="true" [appendTo]="'body'"></p-dropdown>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm text-gray-400 mb-1">Forma de Pagamento</label>
@@ -76,7 +76,7 @@
                                 [(ngModel)]="filtroConsolidado.forma_pagamento"
                                 optionLabel="label" optionValue="value"
                                 placeholder="Todas as formas" (ngModelChange)="filtrarDados()"
-                                [style]="{ 'width': '200px' }" [showClear]="true"></p-dropdown>
+                                [style]="{ 'width': '200px' }" [showClear]="true" [appendTo]="'body'"></p-dropdown>
                         </div>
                         <div class="flex flex-col justify-end">
                             <label class="text-sm mb-1 invisible">.</label>
