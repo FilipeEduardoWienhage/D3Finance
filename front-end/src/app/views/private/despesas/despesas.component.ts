@@ -168,10 +168,9 @@ export class DespesasComponent implements OnInit {
             summary: 'Aviso',
             detail: 'Não há despesas para a categoria selecionada.'
           });
-        } else {
-          this.dadosMensal = dados;
-          this.initChartMensal();
         }
+        this.dadosMensal = dados;
+        this.initChartMensal();
       },
       error: (err) => {
         console.error('Erro ao carregar despesas mensais:', err);
@@ -277,8 +276,8 @@ export class DespesasComponent implements OnInit {
           this.dadosConsolidado = [];
         } else {
           this.dadosConsolidado = dados;
-          this.initChart();
         }
+        this.initChart();
       },
       error: (err) => {
         console.error('Erro ao carregar despesas consolidadas:', err);
