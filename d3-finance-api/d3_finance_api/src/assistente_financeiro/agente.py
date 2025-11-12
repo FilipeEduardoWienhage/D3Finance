@@ -92,8 +92,8 @@ class AssistenteFinanceiro:
         # Histórico de mensagens
         self.messages: List = []
         
-        # Lista para armazenar queries executadas (para retornar no endpoint)
-        self.queries_executadas: List[dict] = []
+        # Lista para armazenar queries executadas (DESABILITADO - não exibe queries para usuários)
+        # self.queries_executadas: List[dict] = []
     
     def _get_system_prompt(self) -> str:
         """
@@ -219,10 +219,10 @@ Sua tarefa é ajudar o usuário a entender e gerenciar suas finanças pessoais.
                 # Executa a ferramenta
                 func = self.tool_map[tool_name]
                 try:
-                    # Captura a query SQL executada (se disponível)
-                    query_info = self._capturar_query_executada(tool_name, args, func)
-                    if query_info:
-                        self.queries_executadas.append(query_info)
+                    # Captura de queries desabilitada para economizar tokens e não exibir para usuários
+                    # query_info = self._capturar_query_executada(tool_name, args, func)
+                    # if query_info:
+                    #     self.queries_executadas.append(query_info)
                     
                     result = func.invoke(args)
                 except Exception as e:
@@ -267,64 +267,67 @@ Sua tarefa é ajudar o usuário a entender e gerenciar suas finanças pessoais.
     def limpar_historico(self):
         """Limpa o histórico de mensagens"""
         self.messages = []
-        self.queries_executadas = []
+        # self.queries_executadas = []  # Desabilitado - queries não são mais capturadas
     
-    def _capturar_query_executada(self, tool_name: str, args: dict, func) -> dict:
-        """
-        Captura informações sobre a query SQL executada
-        
-        Args:
-            tool_name: Nome da ferramenta
-            args: Argumentos passados
-            func: Função da ferramenta
-            
-        Returns:
-            Dict com informações da query ou None
-        """
-        try:
-            query_sql = self._gerar_query_string(tool_name, args)
-            return {
-                "nome_ferramenta": tool_name,
-                "query_sql": query_sql,
-                "parametros": args
-            }
-        except:
-            return None
+    # Métodos de captura de queries desabilitados para economizar tokens
+    # Queries não são mais exibidas para usuários, apenas respostas em linguagem natural
     
-    def _gerar_query_string(self, tool_name: str, args: dict) -> str:
-        """
-        Gera uma representação da query SQL baseada na ferramenta e argumentos
-        Nota: Esta é uma representação aproximada, a query real é executada dentro da ferramenta
-        """
-        # Mapeamento de ferramentas para templates de query
-        query_templates = {
-            "consultar_despesas_por_mes": """
-                SELECT COALESCE(SUM(valor_pago), 0) AS total_gasto, COUNT(*) AS quantidade
-                FROM despesas
-                WHERE usuario_id = %s AND MONTH(data_pagamento) = %s AND YEAR(data_pagamento) = %s
-            """,
-            "consultar_receitas_por_mes": """
-                SELECT COALESCE(SUM(valor_recebido), 0) AS total_receita, COUNT(*) AS quantidade
-                FROM receitas
-                WHERE usuario_id = %s AND MONTH(data_recebimento) = %s AND YEAR(data_recebimento) = %s
-            """,
-            "consultar_balanco_mensal": """
-                SELECT 
-                    (SELECT COALESCE(SUM(valor_recebido), 0) FROM receitas WHERE usuario_id = %s AND MONTH(data_recebimento) = %s AND YEAR(data_recebimento) = %s) AS receitas,
-                    (SELECT COALESCE(SUM(valor_pago), 0) FROM despesas WHERE usuario_id = %s AND MONTH(data_pagamento) = %s AND YEAR(data_pagamento) = %s) AS despesas
-            """,
-        }
-        
-        # Remove espaços em branco excessivos e formata
-        template = query_templates.get(tool_name, f"-- Query para {tool_name}")
-        return " ".join(template.split())
-    
-    def get_queries_executadas(self) -> List[dict]:
-        """
-        Retorna a lista de queries executadas na última pergunta
-        e limpa a lista para a próxima pergunta
-        """
-        queries = self.queries_executadas.copy()
-        self.queries_executadas = []  # Limpa para próxima pergunta
-        return queries
+    # def _capturar_query_executada(self, tool_name: str, args: dict, func) -> dict:
+    #     """
+    #     Captura informações sobre a query SQL executada
+    #     
+    #     Args:
+    #         tool_name: Nome da ferramenta
+    #         args: Argumentos passados
+    #         func: Função da ferramenta
+    #         
+    #     Returns:
+    #         Dict com informações da query ou None
+    #     """
+    #     try:
+    #         query_sql = self._gerar_query_string(tool_name, args)
+    #         return {
+    #             "nome_ferramenta": tool_name,
+    #             "query_sql": query_sql,
+    #             "parametros": args
+    #         }
+    #     except:
+    #         return None
+    # 
+    # def _gerar_query_string(self, tool_name: str, args: dict) -> str:
+    #     """
+    #     Gera uma representação da query SQL baseada na ferramenta e argumentos
+    #     Nota: Esta é uma representação aproximada, a query real é executada dentro da ferramenta
+    #     """
+    #     # Mapeamento de ferramentas para templates de query
+    #     query_templates = {
+    #         "consultar_despesas_por_mes": """
+    #             SELECT COALESCE(SUM(valor_pago), 0) AS total_gasto, COUNT(*) AS quantidade
+    #             FROM despesas
+    #             WHERE usuario_id = %s AND MONTH(data_pagamento) = %s AND YEAR(data_pagamento) = %s
+    #         """,
+    #         "consultar_receitas_por_mes": """
+    #             SELECT COALESCE(SUM(valor_recebido), 0) AS total_receita, COUNT(*) AS quantidade
+    #             FROM receitas
+    #             WHERE usuario_id = %s AND MONTH(data_recebimento) = %s AND YEAR(data_recebimento) = %s
+    #         """,
+    #         "consultar_balanco_mensal": """
+    #             SELECT 
+    #                 (SELECT COALESCE(SUM(valor_recebido), 0) FROM receitas WHERE usuario_id = %s AND MONTH(data_recebimento) = %s AND YEAR(data_recebimento) = %s) AS receitas,
+    #                 (SELECT COALESCE(SUM(valor_pago), 0) FROM despesas WHERE usuario_id = %s AND MONTH(data_pagamento) = %s AND YEAR(data_pagamento) = %s) AS despesas
+    #         """,
+    #     }
+    #     
+    #     # Remove espaços em branco excessivos e formata
+    #     template = query_templates.get(tool_name, f"-- Query para {tool_name}")
+    #     return " ".join(template.split())
+    # 
+    # def get_queries_executadas(self) -> List[dict]:
+    #     """
+    #     Retorna a lista de queries executadas na última pergunta
+    #     e limpa a lista para a próxima pergunta
+    #     """
+    #     queries = self.queries_executadas.copy()
+    #     self.queries_executadas = []  # Limpa para próxima pergunta
+    #     return queries
 

@@ -35,7 +35,7 @@ def get_assistente(usuario_id: int) -> AssistenteFinanceiro:
     response_model=MensagemAssistenteResponse,
     tags=[Tag.AssistenteIA.name],
     summary="Fazer pergunta ao assistente financeiro",
-    description="Envia uma pergunta ao assistente financeiro e recebe a resposta em linguagem natural junto com as queries SQL executadas"
+    description="Envia uma pergunta ao assistente financeiro e recebe a resposta em linguagem natural. Queries SQL não são mais retornadas para usuários."
 )
 async def chat_assistente(
     request: MensagemAssistenteRequest,
@@ -49,7 +49,7 @@ async def chat_assistente(
         usuario_logado: Dados do usuário logado
         
     Returns:
-        Resposta do assistente com queries executadas
+        Resposta do assistente em linguagem natural (queries SQL não são retornadas)
     """
     try:
         usuario_id = usuario_logado.id
@@ -61,11 +61,12 @@ async def chat_assistente(
         if not request.manter_contexto:
             assistente.limpar_historico()
         
-        # Faz a pergunta e captura queries executadas
+        # Faz a pergunta ao assistente
         resposta = assistente.perguntar(request.pergunta, verbose=False)
         
-        # Captura as queries executadas do histórico
-        queries_executadas = assistente.get_queries_executadas()
+        # Queries SQL não são mais capturadas/exibidas - economiza tokens e mantém resposta limpa
+        # Captura de queries desabilitada no agente.py para otimização
+        queries_executadas = []  # Sempre lista vazia - queries não são mais processadas
         
         return MensagemAssistenteResponse(
             pergunta=request.pergunta,
