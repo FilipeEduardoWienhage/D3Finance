@@ -8,7 +8,6 @@
     </div>
 
     <div class="flex flex-col flex-grow space-y-6">
-      <!-- Filtros e Tabela -->
       <div class="flex flex-col space-y-4">
         <p-card header="Contas a Pagar" class="bg-[#2c2c2c] text-white rounded-xl">
           <div class="flex items-center gap-6 p-6 bg-[#2c2c2c] rounded-lg mb-4">
@@ -61,7 +60,6 @@
             </div>
           </div>
           
-          <!-- Busca -->
           <div class="mb-4">
             <div class="flex flex-col">
               <label class="text-sm text-gray-300 mb-2 font-medium">Buscar</label>
@@ -73,7 +71,6 @@
             </div>
           </div>
 
-          <!-- Tabela de dados -->
           <div class="bg-[#2a2a2a] p-6 w-full">
             <p-table #dt [value]="itens" [lazy]="true" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
               [loading]="loading" [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'single'" [sortField]="'dataVencimento'"
@@ -142,7 +139,7 @@
 
   <p-dialog [header]="isEditing ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'" [(visible)]="dialogVisible"
     [modal]="true" [style]="{ width: '1000px', maxWidth: '95vw', height: 'auto' }" [closable]="true" [draggable]="false" [resizable]="false"
-    styleClass="custom-dialog modal-cadastro">
+    [baseZIndex]="10000" styleClass="custom-dialog modal-cadastro">
 
     <form #contaForm="ngForm" class="flex flex-column gap-5">
       <div class="grid">
@@ -152,7 +149,7 @@
               <i class="pi pi-credit-card mr-2"></i>Conta *
             </label>
             <p-dropdown [(ngModel)]="contaEditando.conta_id" [options]="contas" optionLabel="nome_conta"
-              optionValue="id" [styleClass]="'w-full'" placeholder="Selecione uma conta" name="conta" required>
+              optionValue="id" [styleClass]="'w-full'" placeholder="Selecione uma conta" name="conta" required [appendTo]="'body'">
             </p-dropdown>
           </div>
         </div>
@@ -163,7 +160,7 @@
               <i class="pi pi-dollar mr-2"></i>Valor *  
             </label>
             <p-inputNumber id="valor" [(ngModel)]="contaEditando.valor" mode="currency" currency="BRL"
-              locale="pt-BR" styleClass="w-full" [required]="true" name="valor" [min]="0.01">
+              locale="pt-BR" styleClass="w-full" inputStyleClass="w-full bg-[#2a2a2a] border border-gray-600 text-white" [required]="true" name="valor" [min]="0.01">
             </p-inputNumber>
           </div>
         </div>
@@ -174,7 +171,7 @@
               <i class="pi pi-calendar mr-2"></i>Data de Vencimento *
             </label>
             <p-calendar id="dataVencimento" [(ngModel)]="contaEditando.dataVencimento" [minDate]="minDate"
-              placeholder="Selecione a data" styleClass="w-full" dateFormat="dd/mm/yy" [showIcon]="true"
+              placeholder="Selecione a data" styleClass="w-full" dateFormat="dd/mm/yy" [showIcon]="true" [appendTo]="'body'"
               [required]="true" name="dataVencimento">
             </p-calendar>
           </div>
@@ -190,7 +187,7 @@
             <p-dropdown id="formaPagamento" [(ngModel)]="contaEditando.formaRecebimento"
               [options]="formaDePagamento" optionLabel="name" optionValue="name"
               placeholder="Selecione a forma de pagamento" styleClass="w-full" [required]="true"
-              name="formaPagamento">
+              name="formaPagamento" [appendTo]="'body'">
             </p-dropdown>
           </div>
         </div>
@@ -203,7 +200,7 @@
             <p-dropdown id="categoria" [(ngModel)]="contaEditando.categoriaDespesa"
               [options]="categoriaDaDespesa" optionLabel="name" optionValue="name"
               placeholder="Selecione uma categoria" styleClass="w-full" [required]="true"
-              name="categoria">
+              name="categoria" [appendTo]="'body'">
             </p-dropdown>
           </div>
           <p-button (click)="salvarConta()" label="Cadastrar" class="w-full  md:w-64"
@@ -217,12 +214,11 @@
         </label>
         <textarea pInputTextarea id="descricao" [(ngModel)]="contaEditando.descricao"
           placeholder="Descrição da conta a pagar (opcional)" class="w-full" name="descricao" 
-          maxlength="250" rows="5" styleClass="w-full">
+          maxlength="250" rows="3" autoResize styleClass="w-full">
         </textarea>
         <small class="text-gray-400 mt-2 block">{{ (contaEditando.descricao || '').length }}/250 caracteres</small>
       </div>
 
-      <!-- Footer do modal -->
       <ng-template pTemplate="footer">
         <div class="flex justify-content-between align-items-center">
           <div class="text-sm text-gray-400">
@@ -243,7 +239,6 @@
     </form>
   </p-dialog>
 
-  <!-- Modal de Resumo -->
   <p-dialog header="Resumo das Contas a Pagar" [(visible)]="modalResumoVisible"
     [modal]="true" [style]="{ width: '600px' }" [closable]="true" [draggable]="false" [resizable]="false"
     styleClass="custom-dialog">

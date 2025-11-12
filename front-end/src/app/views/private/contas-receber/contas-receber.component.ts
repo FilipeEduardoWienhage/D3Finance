@@ -21,6 +21,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ContaReceberRequestModel } from '../../../models/contas-receber';
 import { ContaReceberResponseModel, ContasReceberService } from '../../../service/contas-receber.service';
 import { ContasService, ContaResponseModel } from '../../../service/contas.service';
+import { PrimeNG } from 'primeng/config';
+
 
 @Component({
   selector: 'app-contas-receber',
@@ -101,14 +103,27 @@ export class ContasReceberComponent implements OnInit {
     private contasDisponiveisService: ContasService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private datePipe: DatePipe,
-    private currencyPipe: CurrencyPipe
+    private currencyPipe: CurrencyPipe,
+    private primengConfig: PrimeNG
   ) {}
 
   ngOnInit(): void {
     this.carregarDados();
     this.carregarContasDisponiveis();
     this.carregarResumo();
+
+    this.primengConfig.setTranslation({
+      dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+      dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+      dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+      monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      today: 'Hoje',
+      clear: 'Limpar',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'Sm',
+      firstDayOfWeek: 0,
+    });
   }
 
   carregarContasDisponiveis() {

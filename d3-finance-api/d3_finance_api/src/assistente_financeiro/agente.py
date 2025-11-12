@@ -101,7 +101,7 @@ class AssistenteFinanceiro:
         """
         ano_atual = datetime.now().year
         mes_atual = datetime.now().month
-
+        
         return f"""Você é um assistente financeiro para empresas de pequeno porte/pessoal inteligente e prestativo chamado Chico.
 Sua tarefa é ajudar o usuário a entender e gerenciar suas finanças pessoais.
 
