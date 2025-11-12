@@ -11,7 +11,7 @@ from src.database.models import Receitas, Despesas, Contas
 from src.app import router
 from src.schemas.relatorios_schemas import (RelatorioMensalResponse, RelatorioAnualResponse)
 
-#Endpoints
+
 RELATORIO_MENSAL = "/v1/relatorios/mensal"
 RELATORIO_ANUAL = "/v1/relatorios/anual"
 
@@ -34,14 +34,12 @@ def get_relatorio_mensal(
     if not 1 <= mes <= 12:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Mês inválido. Deve estar entre 1 e 12.")
 
-    # Calular o periódo
     data_inicio = date(ano, mes, 1)
     if mes == 12:
         data_fim = date(ano + 1, 1, 1) - date.resolution
     else:
         data_fim = date(ano, mes + 1, 1) - date.resolution
 
-    # Buscar receitas do periodo
     receitas = db.query(
         func.sum(Receitas.valor_recebido).label("total"),
         func.count(Receitas.id).label("quantidade"),   
@@ -53,7 +51,6 @@ def get_relatorio_mensal(
         )
     ).first()
 
-    # Buscar despesas do período
     despesas = db.query(
         func.sum(Despesas.valor_pago).label('total'),
         func.count(Despesas.id).label('quantidade')
@@ -65,7 +62,6 @@ def get_relatorio_mensal(
         )
     ).first()
 
-    # Receitas por categoria
     receitas_categoria = db.query(
         Receitas.categoria,
         func.sum(Receitas.valor_recebido).label('valor')
@@ -77,7 +73,6 @@ def get_relatorio_mensal(
         )
     ).group_by(Receitas.categoria).all()
 
-    # Despesas por categoria
     despesas_categoria = db.query(
         Despesas.categoria,
         func.sum(Despesas.valor_pago).label('valor')
@@ -89,7 +84,6 @@ def get_relatorio_mensal(
         )
     ).group_by(Despesas.categoria).all()
 
-    # Receitas por conta
     receitas_conta = db.query(
         Contas.nome_conta,
         func.sum(Receitas.valor_recebido).label('valor')
@@ -102,7 +96,6 @@ def get_relatorio_mensal(
         )
     ).group_by(Contas.nome_conta).all()
 
-    # Despesas por conta
     despesas_conta = db.query(
         Contas.nome_conta,
         func.sum(Despesas.valor_pago).label('valor')
@@ -119,7 +112,6 @@ def get_relatorio_mensal(
     total_despesas = despesas.total or 0.0
     saldo_periodo = total_receitas - total_despesas
 
-    # Preparar dados por conta
     receitas_por_conta_data = [
         {"conta": r.nome_conta, "valor": float(r.valor)}
         for r in receitas_conta
@@ -128,8 +120,7 @@ def get_relatorio_mensal(
         {"conta": d.nome_conta, "valor": float(d.valor)}
         for d in despesas_conta
     ]
-    
-    
+     
     return RelatorioMensalResponse(
         periodo_inicio=data_inicio,
         periodo_fim=data_fim,
@@ -160,7 +151,6 @@ def get_relatorio_anual(
     data_inicio = date(ano, 1, 1)
     data_fim = date(ano, 12, 31)
 
-    # totais anuais
     total_receitas = db.query(func.sum(Receitas.valor_recebido)).filter(
         and_(
             Receitas.usuario_id == usuario_logado.id,
@@ -177,7 +167,6 @@ def get_relatorio_anual(
         )
     ).scalar() or 0.0
 
-    # Receitas por mês
     receitas_mensais = db.query(
         extract('month', Receitas.data_recebimento).label('mes'),
         func.sum(Receitas.valor_recebido).label('valor')
@@ -189,7 +178,6 @@ def get_relatorio_anual(
         )
     ).group_by(extract('month', Receitas.data_recebimento)).all()
 
-    # Despesas por mês
     despesas_mensais = db.query(
         extract('month', Despesas.data_pagamento).label('mes'),
         func.sum(Despesas.valor_pago).label('valor')
@@ -201,7 +189,6 @@ def get_relatorio_anual(
         )
     ).group_by(extract('month', Despesas.data_pagamento)).all()
 
-    # Organizar dados por mês
     dados_mensais = []
     for mes in range(1, 13):
         receita_mes = next((r.valor for r in receitas_mensais if r.mes == mes), 0.0)
@@ -213,7 +200,6 @@ def get_relatorio_anual(
             "saldo_periodo": float(receita_mes - despesa_mes)
         })
 
-    # Receitas por conta (anual) - consulta simples com INNER JOIN
     receitas_conta_anual = db.query(
         Contas.nome_conta,
         func.sum(Receitas.valor_recebido).label('valor')
@@ -229,7 +215,6 @@ def get_relatorio_anual(
     for r in receitas_conta_anual:
         print(f"  - {r.nome_conta}: R$ {r.valor}")
 
-    # Despesas por conta (anual) - consulta simples com INNER JOIN
     despesas_conta_anual = db.query(
         Contas.nome_conta,
         func.sum(Despesas.valor_pago).label('valor')
@@ -260,5 +245,3 @@ def get_relatorio_anual(
             for d in despesas_conta_anual
         ]
     )
-
-

@@ -66,14 +66,12 @@ def get_transacao_by_id(transacoes_id: int, usuario_logado: Annotated[TokenData,
     path=CADASTRO_TRANSACOES, response_model=TransacoesResponse, tags=[Tag.Transacoes.name]
 )
 def create_transacao(transacao: TransacoesCreate, usuario_logado: Annotated[TokenData, Depends(get_current_user)], db: Session = Depends(get_db)):
-    # VALIDAÇÃO: Verificar se conta origem e destino são diferentes
     if transacao.conta_origem_id == transacao.conta_destino_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="A conta origem e a conta destino não podem ser a mesma."
         )
     
-    # VALIDAÇÃO: Verificar se o valor é maior que zero
     if transacao.valor <= 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -100,7 +98,6 @@ def create_transacao(transacao: TransacoesCreate, usuario_logado: Annotated[Toke
     send_notification_background("transacao", db, transacao=db_transacao)
     db.refresh(db_transacao)
 
-    # Envia notificação do Telegram
     try:
         telegram_service.notify_movimentacao_contas(
             usuario_id=usuario_logado.id,
@@ -110,7 +107,6 @@ def create_transacao(transacao: TransacoesCreate, usuario_logado: Annotated[Toke
             descricao=transacao.descricao or "Movimentação entre contas"
         )
     except Exception as e:
-        # Log do erro mas não falha a operação
         import logging
         logger = logging.getLogger(__name__)
         logger.error(f"Erro ao enviar notificação do Telegram para transação: {e}")
@@ -133,7 +129,6 @@ def update_transacao(transacoes_id: int, transacao_update: TransacoesUpdate, usu
     if not transacao:
         raise HTTPException(status_code=404, detail="Transação não encontrada")
     
-    # VALIDAÇÃO: Verificar se conta origem e destino são diferentes (se estiver sendo atualizado)
     if hasattr(transacao_update, 'conta_origem_id') and hasattr(transacao_update, 'conta_destino_id'):
         if transacao_update.conta_origem_id == transacao_update.conta_destino_id:
             raise HTTPException(
@@ -141,7 +136,6 @@ def update_transacao(transacoes_id: int, transacao_update: TransacoesUpdate, usu
                 detail="A conta origem e a conta destino não podem ser a mesma."
             )
     
-    # VALIDAÇÃO: Verificar se o valor é maior que zero (se estiver sendo atualizado)
     if hasattr(transacao_update, 'valor') and transacao_update.valor is not None:
         if transacao_update.valor <= 0:
             raise HTTPException(
@@ -184,7 +178,6 @@ def update_transacao(transacoes_id: int, transacao_update: TransacoesUpdate, usu
         descricao=transacao.descricao,
         data_transacao=transacao.data_transacao,
     )
-
 
 @router.delete(
     path=APAGAR_TRANSACOES, tags=[Tag.Transacoes.name]

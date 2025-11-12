@@ -23,7 +23,6 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Endpoints
 CONFIG_TELEGRAM = "/v1/telegram/config"
 TEST_TELEGRAM = "/v1/telegram/test"
 GET_CONFIG_TELEGRAM = "/v1/telegram/config"
@@ -37,7 +36,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
 
 @router.post(
     path=CONFIG_TELEGRAM, 
@@ -53,7 +51,6 @@ def create_telegram_config(
     Configura a integração com Telegram para o usuário
     """
     try:
-        # Verifica se já existe configuração para o usuário
         existing_config = db.query(TelegramConfig).filter(
             TelegramConfig.usuario_id == usuario_logado.id
         ).first()
@@ -64,7 +61,6 @@ def create_telegram_config(
                 detail="Usuário já possui configuração do Telegram. Use PUT para atualizar."
             )
         
-        # Cria nova configuração
         db_config = TelegramConfig(
             usuario_id=usuario_logado.id,
             chat_id=config.chat_id,
@@ -154,7 +150,6 @@ def update_telegram_config(
         )
     
     try:
-        # Atualiza os campos fornecidos
         if config_update.chat_id is not None:
             config.chat_id = config_update.chat_id
         if config_update.ativo is not None:
@@ -240,7 +235,6 @@ def test_telegram_notification(
         )
     
     try:
-        # Formata mensagem de teste
         message = f"""
 🧪 <b>TESTE DE NOTIFICAÇÃO</b>
 
@@ -250,7 +244,6 @@ def test_telegram_notification(
 ✅ Se você recebeu esta mensagem, a integração está funcionando corretamente!
 """
         
-        # Envia mensagem de teste
         success = telegram_service.send_message(
             config.chat_id, 
             message.strip()
@@ -286,13 +279,11 @@ def configurar_telegram(
     Configura o Telegram para um usuário
     """
     try:
-        # Verifica se já existe configuração
         existing_config = db.query(TelegramConfig).filter(
             TelegramConfig.usuario_id == current_user.id
         ).first()
         
         if existing_config:
-            # Atualiza configuração existente
             existing_config.chat_id = config.chat_id
             existing_config.ativo = config.ativo
             db.commit()
@@ -308,7 +299,6 @@ def configurar_telegram(
                 data_atualizacao=existing_config.data_atualizacao
             )
         else:
-            # Cria nova configuração
             new_config = TelegramConfig(
                 usuario_id=current_user.id,
                 chat_id=config.chat_id,
@@ -379,7 +369,6 @@ def enviar_mensagem_teste(
     Envia uma mensagem de teste para o Chat ID configurado
     """
     try:
-        # Busca configuração do usuário
         config = db.query(TelegramConfig).filter(
             TelegramConfig.usuario_id == current_user.id
         ).first()
@@ -390,7 +379,6 @@ def enviar_mensagem_teste(
                 detail="Configuração do Telegram não encontrada"
             )
         
-        # Envia mensagem de teste
         message = f"""
 🤖 <b>MENSAGEM DE TESTE</b>
 
@@ -456,3 +444,4 @@ def remover_configuracao_telegram(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erro interno do servidor"
         )
+    

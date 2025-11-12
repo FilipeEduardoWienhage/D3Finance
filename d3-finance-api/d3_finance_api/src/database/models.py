@@ -10,13 +10,13 @@ class Usuario(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
-    cpf = Column(String(11), unique=True, index=True, nullable=False)  # Ajustado para 11 dígitos
+    cpf = Column(String(11), unique=True, index=True, nullable=False)  
     data_nascimento = Column(Date, nullable=False)
     sexo = Column(String(20), nullable=False)
     profissao = Column(String(45), nullable=False)
-    cnpj = Column(String(14), unique=True, nullable=False)  # Ajustado para 14 dígitos
+    cnpj = Column(String(14), unique=True, nullable=False)  
     razao_social = Column(String(55), nullable=False)
-    cep = Column(String(8), nullable=False)  # Ajustado para 8 dígitos
+    cep = Column(String(8), nullable=False)  
     estado = Column(String(2), nullable=False)
     cidade = Column(String(30), nullable=False)
     bairro = Column(String(30), nullable=False)
@@ -30,7 +30,6 @@ class Usuario(Base):
     contas_pagar = relationship("ContasPagar", back_populates="usuario", cascade="all, delete-orphan")
     telegram_config = relationship("TelegramConfig", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
     usuario_assinatura = relationship("UsuarioAssinatura", back_populates="usuario", uselist=False)
-
 
 class Receitas(Base):
     __tablename__ = "receitas"
@@ -49,7 +48,6 @@ class Receitas(Base):
     
     usuario = relationship("Usuario", back_populates="receitas")
     conta = relationship("Contas", back_populates="receitas", foreign_keys=[conta_id])
-
 
 class Despesas(Base):
     __tablename__ = "despesas"
@@ -80,7 +78,6 @@ class Contas(Base):
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
     data_alteracao = Column(DateTime, onupdate=func.now(), nullable=True)
 
-    # Constraint composta: nome_conta deve ser único por usuário
     __table_args__ = (
         UniqueConstraint('nome_conta', 'usuario_id', name='uq_nome_conta_usuario'),
     )
@@ -149,7 +146,7 @@ class ContasReceber(Base):
     data_prevista = Column(Date, nullable=False)
     categoria_receita = Column(String(50), nullable=False)
     forma_recebimento = Column(String(50), nullable=False)
-    status = Column(String(20), default="Pendente", nullable=False)  # Pendente, Recebido, Cancelado
+    status = Column(String(20), default="Pendente", nullable=False)  
     conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
@@ -171,7 +168,7 @@ class ContasPagar(Base):
     data_vencimento = Column(Date, nullable=False)
     categoria_despesa = Column(String(50), nullable=False)
     forma_recebimento = Column(String(50), nullable=False)
-    status = Column(String(20), default="Pendente", nullable=False)  # Pendente, Pago, Cancelado
+    status = Column(String(20), default="Pendente", nullable=False)  
     conta_id = Column(Integer, ForeignKey("contas.id"), nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     data_criacao = Column(DateTime, default=func.now(), nullable=False)
@@ -183,8 +180,6 @@ class ContasPagar(Base):
     def __repr__(self):
         return f"<ContasPagar(id={self.id}, descricao={self.descricao}, valor={self.valor}, status={self.status})>"
 
-
-
 class UsuarioAssinatura(Base):
     __tablename__ = "usuarios_assinaturas"
 
@@ -192,7 +187,7 @@ class UsuarioAssinatura(Base):
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     stripe_customer_id = Column(String(100))
     stripe_subscription_id = Column(String(100))
-    plano = Column(String(20)) # Mensal, Semestral, Anual
+    plano = Column(String(20)) 
     status = Column(String(20), default="Ativo")
     preco = Column(Float, nullable=False)
     periodo_teste = Column(Boolean, default=False)

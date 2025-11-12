@@ -170,14 +170,12 @@ def create_despesa(despesa: DespesaCreate, usuario_logado: Annotated[TokenData, 
 
     db.add(db_despesa)
 
-    # Atualiza saldo da conta subtraindo o valor pago (despesa diminui saldo)
     conta.saldo -= despesa.valor_pago
 
     db.commit()
     send_notification_background("despesa", db, despesa=db_despesa)
     db.refresh(db_despesa)
 
-    # Envia notificação do Telegram
     try:
         telegram_service.notify_despesa_cadastrada(
             usuario_id=usuario_logado.id,
@@ -188,7 +186,6 @@ def create_despesa(despesa: DespesaCreate, usuario_logado: Annotated[TokenData, 
             conta_nome=conta.nome_conta
         )
     except Exception as e:
-        # Log do erro mas não falha a operação
         import logging
         logger = logging.getLogger(__name__)
         logger.error(f"Erro ao enviar notificação do Telegram para despesa: {e}")
@@ -214,31 +211,25 @@ def update_despesa(despesas_id: int, despesa_update: DespesaUpdate, usuario_loga
     if not despesa:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Despesa não encontrada")
 
-    # Busca a conta atual da despesa
     conta_atual = db.query(Contas).filter(Contas.id == despesa.conta_id, Contas.usuario_id == usuario_logado.id).first()
     if not conta_atual:
         raise HTTPException(status_code=404, detail="Conta não encontrada ou não pertence ao usuário")
 
-    # Remove o valor da despesa da conta atual (soma de volta o valor pago)
     conta_atual.saldo += despesa.valor_pago
 
-    # Se a conta foi alterada, busca a nova conta
     nova_conta = None
     if despesa_update.conta_id and despesa_update.conta_id != despesa.conta_id:
         nova_conta = db.query(Contas).filter(Contas.id == despesa_update.conta_id, Contas.usuario_id == usuario_logado.id).first()
         if not nova_conta:
             raise HTTPException(status_code=404, detail="Nova conta não encontrada ou não pertence ao usuário")
 
-    # Atualiza os campos da despesa
     for field, value in despesa_update.__dict__.items():
         if value is not None:
             setattr(despesa, field, value)
 
-    # Se a conta foi alterada, subtrai o valor da nova conta
     if nova_conta:
         nova_conta.saldo -= despesa.valor_pago
     else:
-        # Se não mudou de conta, apenas ajusta o valor na conta atual
         conta_atual.saldo -= despesa.valor_pago
 
     db.commit()
@@ -268,7 +259,6 @@ def delete_despesa(despesas_id: int, usuario_logado: Annotated[TokenData, Depend
     if not conta:
         raise HTTPException(status_code=404, detail="Conta não encontrada ou não pertence ao usuário")
 
-    # Ao deletar despesa, soma o valor pago de volta no saldo da conta
     conta.saldo += despesa.valor_pago
 
     db.delete(despesa)

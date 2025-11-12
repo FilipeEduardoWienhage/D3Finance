@@ -12,7 +12,6 @@ from src.schemas.autenticacao_schemas import TokenData
 from src.utils.notification_utils import send_notification_background
 from src.services.telegram_service import telegram_service
 
-# Endpoints
 LISTA_CONTAS = "/v1/contas"
 CADASTRO_CONTAS = "/v1/contas"
 ATUALIZAR_CONTAS = "/v1/contas/{conta_id}"
@@ -81,7 +80,7 @@ def create_contas(conta: ContaCreate, usuario_logado: Annotated[TokenData, Depen
         send_notification_background("conta", db, conta=db_conta)
         db.refresh(db_conta)
 
-        # Envia notificação do Telegram
+        
         try:
             telegram_service.notify_conta_criada(
                 usuario_id=usuario_logado.id,
@@ -90,7 +89,7 @@ def create_contas(conta: ContaCreate, usuario_logado: Annotated[TokenData, Depen
                 saldo_inicial=conta.saldo if conta.saldo is not None else 0.0
             )
         except Exception as e:
-            # Log do erro mas não falha a operação
+            
             import logging
             logger = logging.getLogger(__name__)
             logger.error(f"Erro ao enviar notificação do Telegram para conta: {e}")

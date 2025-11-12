@@ -19,7 +19,6 @@ from src.utils.auth_utils import gerar_hash_senha
 from src.utils.notification_utils import send_notification_background
 
 
-# Endpoints
 ENVIAR_CODIGO = "/v1/recuperar-senha/enviar-codigo"
 VALIDAR_CODIGO = "/v1/recuperar-senha/validar-codigo"
 ALTERAR_SENHA = "/v1/recuperar-senha/alterar-senha"
@@ -64,7 +63,6 @@ def enviar_codigo_recuperacao(
     Envia código OTP para recuperação de senha
     """
     try:
-        # Verificar se o email existe no sistema
         usuario = db.query(Usuario).filter(Usuario.email == request.email).first()
         if not usuario:
             raise HTTPException(
@@ -72,14 +70,11 @@ def enviar_codigo_recuperacao(
                 detail="Email não encontrado no sistema."
             )
         
-        # Limpar códigos antigos
         limpar_codigos_antigos(db, request.email)
         
-        # Gerar novo código
         codigo = gerar_codigo_otp()
         expiracao = datetime.utcnow() + timedelta(minutes=10)
         
-        # Salvar código no banco
         codigo_recuperacao = CodigoRecuperacao(
             email=request.email,
             codigo=codigo,
@@ -90,7 +85,6 @@ def enviar_codigo_recuperacao(
         db.commit()
         db.refresh(codigo_recuperacao)
         
-        # Enviar email
         email_service = EmailService()
         sucesso = email_service.enviar_codigo_otp(
             request.email, 
@@ -99,7 +93,6 @@ def enviar_codigo_recuperacao(
         )
         
         if not sucesso:
-            # Se falhar ao enviar email, remover o código
             db.delete(codigo_recuperacao)
             db.commit()
             raise HTTPException(
@@ -135,7 +128,6 @@ def validar_codigo_recuperacao(
     try:
         agora = datetime.utcnow()
         
-        # Buscar código válido
         codigo_recuperacao = db.query(CodigoRecuperacao).filter(
             and_(
                 CodigoRecuperacao.email == request.email,
@@ -151,14 +143,13 @@ def validar_codigo_recuperacao(
                 detail="Código inválido ou expirado."
             )
         
-        # Marcar código como usado
         codigo_recuperacao.usado = True
         db.commit()
         
         return ValidarCodigoResponse(
             message="Código validado com sucesso.",
             success=True,
-            token=codigo_recuperacao.codigo  # Usar código como token temporário
+            token=codigo_recuperacao.codigo  
         )
         
     except HTTPException:
@@ -182,7 +173,6 @@ def alterar_senha_recuperacao(
     Altera senha usando código OTP
     """
     try:
-        # Verificar se o código foi usado recentemente
         codigo_recuperacao = db.query(CodigoRecuperacao).filter(
             and_(
                 CodigoRecuperacao.email == request.email,
@@ -197,14 +187,12 @@ def alterar_senha_recuperacao(
                 detail="Código inválido ou não validado."
             )
         
-        # Verificar se não expirou (dar 5 minutos extras após validação)
         if codigo_recuperacao.expiracao + timedelta(minutes=5) < datetime.utcnow():
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Código expirado. Solicite um novo código."
             )
         
-        # Buscar usuário
         usuario = db.query(Usuario).filter(Usuario.email == request.email).first()
         if not usuario:
             raise HTTPException(
@@ -212,19 +200,16 @@ def alterar_senha_recuperacao(
                 detail="Usuário não encontrado."
             )
         
-        # Validar nova senha
         if len(request.nova_senha) < 8:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="A senha deve ter pelo menos 8 caracteres."
             )
         
-        # Alterar senha
         senha_hash = gerar_hash_senha(request.nova_senha)
         usuario.senha = senha_hash
         db.commit()
         
-        # Enviar email de confirmação
         email_service = EmailService()
         email_service.enviar_confirmacao_senha_alterada(
             request.email, 

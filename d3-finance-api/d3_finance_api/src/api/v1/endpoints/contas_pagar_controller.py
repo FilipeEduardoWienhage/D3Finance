@@ -40,8 +40,6 @@ def get_contas_pagar(
     db: Session = Depends(get_db)
 ):
     
-    #Lista as contas a pagar do usuario
-
     contas = db.query(ContasPagar).filter(
         ContasPagar.usuario_id == usuario_logado.id
     ).order_by(ContasPagar.data_vencimento.asc()).all()
@@ -71,8 +69,6 @@ def get_contas_pagar_paginado(
     page: int = Query(1, ge=1, description="Número da página"),
     size: int = Query(10, ge=1, le=100, description="Itens por página")
 ):
-    
-    # Listar contas a pagar com paginacao
 
     query = db.query(ContasPagar).filter(
         ContasPagar.usuario_id == usuario_logado.id
@@ -129,11 +125,11 @@ def create_conta_pagar(
             valor=conta_pagar.valor,
             data_vencimento=conta_pagar.data_vencimento,
             categoria_despesa=conta_pagar.categoria_despesa,
-            # schema usa forma_pagamento, modelo usa forma_recebimento
+            
             forma_recebimento=conta_pagar.forma_pagamento,
             conta_id=conta_pagar.conta_id,
             descricao=conta_pagar.descricao,
-            status="Pendente",  # Sempre inicia como Pendente
+            status="Pendente",  
             usuario_id=usuario_logado.id
         )
 
@@ -147,7 +143,7 @@ def create_conta_pagar(
             valor=nova_conta.valor,
             data_vencimento=nova_conta.data_vencimento,
             categoria_despesa=nova_conta.categoria_despesa,
-            # schema espera forma_pagamento
+            
             forma_pagamento=nova_conta.forma_recebimento,
             status=nova_conta.status,
             conta_id=nova_conta.conta_id,
@@ -188,7 +184,6 @@ def atualizar_conta_pagar(
             detail="Conta a pagar não encontrada"
         )
 
-    # Verificar se a nova conta existe e pertence ao usuário
     if conta_pagar_update.conta_id:
         nova_conta = db.query(Contas).filter(
             and_(
@@ -203,7 +198,6 @@ def atualizar_conta_pagar(
                 detail="Conta não encontrada"
             )
 
-    # Atualizar apenas os campos fornecidos
     update_data = conta_pagar_update.__dict__
     update_data = {k: v for k, v in update_data.items() if v is not None}
 
@@ -239,8 +233,6 @@ def atualizar_conta_pagar(
             detail="Erro ao atualizar conta a pagar"
         )
     
-    
-
 @router.put(
     path=MARCAR_COMO_PAGA,
     response_model=ContaPagarResponse,

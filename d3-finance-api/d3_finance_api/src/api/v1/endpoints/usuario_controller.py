@@ -10,14 +10,13 @@ from src.utils.auth_utils import gerar_hash_senha
 from sqlalchemy.exc import IntegrityError
 from src.utils.notification_utils import send_notification_background
 
-# Endpoints
+
 LISTA_USUARIOS = "/v1/usuarios"
 CADASTRO_USUARIO = "/v1/usuarios"
 ATUALIZAR_USUARIO = "/v1/usuarios/{usuario_id}"
 APAGAR_USUARIO = "/v1/usuarios/{usuario_id}"
 OBTER_POR_ID_USUARIO = "/v1/usuarios/{usuario_id}"
 
-# Dependência para injeção de sessão do banco
 def get_db():
     db = SessionLocal()
     try:
@@ -25,7 +24,6 @@ def get_db():
     finally:
         db.close()
 
-# GET - Listar todos os usuários
 @router.get(
     path=LISTA_USUARIOS, response_model=List[UsuarioResponse], tags=[Tag.Usuarios.name]
 )
@@ -45,10 +43,9 @@ def get_users(db: Session = Depends(get_db)):
         estado=user.estado,
         cidade=user.cidade,
         bairro=user.bairro,
-        usuario=user.usuario  # Incluindo o campo 'usuario'
+        usuario=user.usuario 
     ) for user in users]
 
-# GET - Obter usuário por ID
 @router.get(
     path=OBTER_POR_ID_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
@@ -72,10 +69,9 @@ def get_user(usuario_id: int, db: Session = Depends(get_db)):
         estado=user.estado,
         cidade=user.cidade,
         bairro=user.bairro,
-        usuario=user.usuario  # Incluindo o campo 'usuario'
+        usuario=user.usuario  
     )
 
-# POST - Criar usuário
 @router.post(
     path=CADASTRO_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
@@ -141,7 +137,6 @@ def create_user(usuario: UsuarioCreate, db: Session = Depends(get_db)):
         print(f"Erro inesperado no cadastro: {str(e)}")
         raise HTTPException(status_code=500, detail="Erro interno do servidor.")
 
-# PUT - Atualizar usuário
 @router.put(
     path=ATUALIZAR_USUARIO, response_model=UsuarioResponse, tags=[Tag.Usuarios.name]
 )
@@ -152,7 +147,6 @@ def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = De
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
-    # Atualiza somente os campos fornecidos
     for field, value in usuario_update.__dict__.items():
         if value is not None:
             setattr(user, field, value)
@@ -174,10 +168,9 @@ def update_user(usuario_id: int, usuario_update: UsuarioUpdate, db: Session = De
         estado=user.estado,
         cidade=user.cidade,
         bairro=user.bairro,
-        usuario=user.usuario  # Incluindo o campo 'usuario' na resposta
+        usuario=user.usuario  
     )
 
-# DELETE - Apagar usuário
 @router.delete(
     path=APAGAR_USUARIO, tags=[Tag.Usuarios.name]
 )

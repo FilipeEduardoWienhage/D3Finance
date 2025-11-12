@@ -11,9 +11,7 @@ from src.database.models import ContasReceber, Receitas
 from src.app import router
 from src.schemas.orcado_realizado_schemas import OrcadoRealizadoResponse
 
-# Endpoint
 ORCADO_REALIZADO = "/v1/orcado-realizado"
-
 
 def get_db():
     db = SessionLocal()
@@ -38,21 +36,18 @@ def get_orcado_realizado(
     - Realizado: Contas a receber pagas + Receitas cadastradas manualmente
     - Permite filtrar por mês específico e/ou categoria
     """
-    # Definir período baseado se tem filtro de mês ou não
     if mes:
         data_inicio = date(ano, mes, 1)
         if mes == 12:
             data_fim = date(ano + 1, 1, 1) - date.resolution
         else:
             data_fim = date(ano, mes + 1, 1) - date.resolution
-        # Se filtrou por mês, mostrar só esse mês nos dados
         meses_para_processar = [mes]
     else:
         data_inicio = date(ano, 1, 1)
         data_fim = date(ano, 12, 31)
         meses_para_processar = range(1, 13)
 
-    # Buscar valores orçados (todas as contas a receber) por mês
     query_orcados = db.query(
         extract('month', ContasReceber.data_prevista).label('mes'),
         func.sum(ContasReceber.valor).label('valor')
@@ -64,13 +59,11 @@ def get_orcado_realizado(
         )
     )
     
-    # Aplicar filtro de categoria se fornecido
     if categoria:
         query_orcados = query_orcados.filter(ContasReceber.categoria_receita == categoria)
     
     orcados_mensais = query_orcados.group_by(extract('month', ContasReceber.data_prevista)).all()
 
-    # Buscar valores realizados de contas a receber pagas por mês
     query_contas_pagas = db.query(
         extract('month', ContasReceber.data_prevista).label('mes'),
         func.sum(ContasReceber.valor).label('valor')
@@ -83,13 +76,11 @@ def get_orcado_realizado(
         )
     )
     
-    # Aplicar filtro de categoria se fornecido
     if categoria:
         query_contas_pagas = query_contas_pagas.filter(ContasReceber.categoria_receita == categoria)
     
     contas_receber_pagas = query_contas_pagas.group_by(extract('month', ContasReceber.data_prevista)).all()
 
-    # Buscar receitas cadastradas manualmente por mês
     query_receitas = db.query(
         extract('month', Receitas.data_recebimento).label('mes'),
         func.sum(Receitas.valor_recebido).label('valor')
@@ -101,13 +92,11 @@ def get_orcado_realizado(
         )
     )
     
-    # Aplicar filtro de categoria se fornecido
     if categoria:
         query_receitas = query_receitas.filter(Receitas.categoria == categoria)
     
     receitas_manuais = query_receitas.group_by(extract('month', Receitas.data_recebimento)).all()
 
-    # Organizar dados por mês
     dados_mensais = []
     total_orcado = 0.0
     total_realizado = 0.0
@@ -115,7 +104,6 @@ def get_orcado_realizado(
     for mes_num in meses_para_processar:
         orcado_mes = next((float(o.valor) for o in orcados_mensais if o.mes == mes_num), 0.0)
         
-        # Realizado = contas a receber pagas + receitas cadastradas manualmente
         contas_pagas_mes = next((float(r.valor) for r in contas_receber_pagas if r.mes == mes_num), 0.0)
         receitas_manuais_mes = next((float(r.valor) for r in receitas_manuais if r.mes == mes_num), 0.0)
         realizado_mes = contas_pagas_mes + receitas_manuais_mes
@@ -139,4 +127,3 @@ def get_orcado_realizado(
         total_diferenca=total_realizado - total_orcado,
         dados_mensais=dados_mensais
     )
-

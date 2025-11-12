@@ -119,7 +119,7 @@ def criar_conta_receber(
     """
     Cria uma nova conta a receber
     """
-    # Verificar se a conta existe e pertence ao usuário
+
     conta = db.query(Contas).filter(
         and_(
             Contas.id == conta_receber.conta_id,
@@ -141,7 +141,7 @@ def criar_conta_receber(
             forma_recebimento=conta_receber.forma_recebimento,
             conta_id=conta_receber.conta_id,
             descricao=conta_receber.descricao,
-            status="Pendente",  # Sempre inicia como Pendente
+            status="Pendente",
             usuario_id=usuario_logado.id
         )
 
@@ -195,7 +195,6 @@ def atualizar_conta_receber(
             detail="Conta a receber não encontrada"
         )
 
-    # Verificar se a nova conta existe e pertence ao usuário
     if conta_receber_update.conta_id:
         nova_conta = db.query(Contas).filter(
             and_(
@@ -210,7 +209,6 @@ def atualizar_conta_receber(
                 detail="Conta não encontrada"
             )
 
-    # Atualizar apenas os campos fornecidos
     update_data = conta_receber_update.__dict__
     update_data = {k: v for k, v in update_data.items() if v is not None}
 
@@ -242,7 +240,6 @@ def atualizar_conta_receber(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Erro ao atualizar conta a receber"
         )
-
 
 @router.delete(
     path=DELETAR_CONTA_RECEBER,

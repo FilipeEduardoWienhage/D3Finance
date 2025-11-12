@@ -11,12 +11,9 @@ from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
 from src.assistente_financeiro import AssistenteFinanceiro
 
-# Endpoint para o chat do assistente
 ASSISTENTE_CHAT = "/v1/assistente/chat"
 ASSISTENTE_LIMPAR_HISTORICO = "/v1/assistente/limpar-historico"
 
-# Armazena instâncias do assistente por usuário (cache em memória)
-# Em produção, considere usar Redis ou banco de dados
 _assistentes_cache = {}
 
 

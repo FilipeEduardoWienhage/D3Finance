@@ -169,14 +169,12 @@ def create_receita(receita: ReceitaCreate, usuario_logado: Annotated[TokenData, 
 
     db.add(db_receita)
 
-    # Atualiza saldo da conta
     conta.saldo += receita.valor_recebido
 
     db.commit()
     send_notification_background("receita", db, receita=db_receita)
     db.refresh(db_receita)
 
-    # Envia notificação do Telegram
     try:
         telegram_service.notify_receita_cadastrada(
             usuario_id=usuario_logado.id,
@@ -187,7 +185,6 @@ def create_receita(receita: ReceitaCreate, usuario_logado: Annotated[TokenData, 
             conta_nome=conta.nome_conta
         )
     except Exception as e:
-        # Log do erro mas não falha a operação
         import logging
         logger = logging.getLogger(__name__)
         logger.error(f"Erro ao enviar notificação do Telegram para receita: {e}")
@@ -214,32 +211,26 @@ def update_receita(receita_id: int, receita_update: ReceitaUpdate, usuario_logad
     if not receita:
         raise HTTPException(status_code=404, detail="Receita não encontrada ou não pertence ao usuário")
 
-    # Busca a conta atual da receita
     conta_atual = db.query(Contas).filter(Contas.id == receita.conta_id, Contas.usuario_id == usuario_logado.id).first()
     if not conta_atual:
         raise HTTPException(status_code=404, detail="Conta associada à receita não encontrada")
 
-    # Remove o valor da receita da conta atual
     conta_atual.saldo -= receita.valor_recebido
 
-    # Se a conta foi alterada, busca a nova conta
     nova_conta = None
     if receita_update.conta_id and receita_update.conta_id != receita.conta_id:
         nova_conta = db.query(Contas).filter(Contas.id == receita_update.conta_id, Contas.usuario_id == usuario_logado.id).first()
         if not nova_conta:
             raise HTTPException(status_code=404, detail="Nova conta não encontrada ou não pertence ao usuário")
 
-    # Atualiza os campos da receita
     valor_antigo = receita.valor_recebido
     for field, value in receita_update.__dict__.items():
         if value is not None:
             setattr(receita, field, value)
 
-    # Se a conta foi alterada, adiciona o valor na nova conta
     if nova_conta:
         nova_conta.saldo += receita.valor_recebido
     else:
-        # Se não mudou de conta, apenas ajusta o valor na conta atual
         conta_atual.saldo += receita.valor_recebido
 
     db.commit()
@@ -271,7 +262,6 @@ def delete_receita(receita_id: int, usuario_logado: Annotated[TokenData, Depends
     if not conta:
         raise HTTPException(status_code=404, detail="Conta associada à receita não encontrada")
 
-    # Subtrai o valor da receita do saldo da conta
     conta.saldo -= receita.valor_recebido
 
     db.delete(receita)

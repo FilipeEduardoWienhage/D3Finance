@@ -11,7 +11,6 @@ from src.database.models import Receitas, Despesas, Contas
 from src.services.autenticacao_service import get_current_user
 from src.schemas.autenticacao_schemas import TokenData
 
-# Configurar logger
 logger = logging.getLogger(__name__)
 
 def get_db():
@@ -32,28 +31,24 @@ def importar_transacoes_csv(
     """
     logger.info(f"Iniciando importação para usuário {usuario_logado.id}")
     
-    # Validar arquivo
     if not arquivo.filename or not arquivo.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="O arquivo deve ser um CSV")
 
-    # Ler conteúdo do arquivo
     try:
         conteudo = arquivo.file.read().decode("utf-8")
         logger.info(f"Arquivo lido com sucesso: {len(conteudo)} caracteres")
     except UnicodeDecodeError:
         try:
-            arquivo.file.seek(0)  # Voltar ao início do arquivo
+            arquivo.file.seek(0)  
             conteudo = arquivo.file.read().decode("latin1")
             logger.info(f"Arquivo lido com encoding latin1: {len(conteudo)} caracteres")
         except UnicodeDecodeError:
             raise HTTPException(status_code=400, detail="Erro ao decodificar o arquivo CSV. Use UTF-8 ou Latin1.")
 
-    # Processar CSV
     try:
         leitor = csv.DictReader(StringIO(conteudo))
         colunas_esperadas = ["tipo", "conta_nome", "categoria", "valor", "data"]
         
-        # Verificar se todas as colunas obrigatórias estão presentes
         if leitor.fieldnames is None:
             raise HTTPException(status_code=400, detail="Não foi possível ler as colunas do CSV")
         
@@ -68,37 +63,30 @@ def importar_transacoes_csv(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Erro ao ler CSV: {str(e)}")
 
-    # Contadores e listas
     receitas_processadas = 0
     despesas_processadas = 0
     erros = []
     transacoes_validas = []
 
-    # Processar cada linha
     for linha_num, linha in enumerate(leitor, 1):
         logger.info(f"Processando linha {linha_num}: {linha}")
         
         try:
-            # Validar campos obrigatórios
             tipo = linha.get("tipo", "").strip().lower()
             conta_nome = linha.get("conta_nome", "").strip()
             categoria = linha.get("categoria", "").strip()
             valor_str = linha.get("valor", "").strip()
             data_str = linha.get("data", "").strip()
             
-            # Validar tipo
             if tipo not in ["receita", "despesa"]:
                 raise ValueError(f"Tipo inválido: '{tipo}'. Deve ser 'receita' ou 'despesa'")
             
-            # Validar conta_nome
             if not conta_nome:
                 raise ValueError("Campo 'conta_nome' é obrigatório")
             
-            # Validar categoria
             if not categoria:
                 raise ValueError("Campo 'categoria' é obrigatório")
             
-            # Validar valor
             if not valor_str:
                 raise ValueError("Campo 'valor' é obrigatório")
             
@@ -109,7 +97,6 @@ def importar_transacoes_csv(
             except ValueError:
                 raise ValueError(f"Valor inválido: '{valor_str}'")
             
-            # Validar data
             if not data_str:
                 raise ValueError("Campo 'data' é obrigatório")
             
@@ -118,7 +105,6 @@ def importar_transacoes_csv(
             except ValueError:
                 raise ValueError(f"Data inválida: '{data_str}'. Use formato YYYY-MM-DD")
             
-            # Buscar conta
             conta = db.query(Contas).filter(
                 Contas.nome_conta == conta_nome,
                 Contas.usuario_id == usuario_logado.id
@@ -127,11 +113,9 @@ def importar_transacoes_csv(
             if not conta:
                 raise ValueError(f"Conta '{conta_nome}' não encontrada para o usuário logado")
             
-            # Campos opcionais
             forma = linha.get("forma", "").strip() or None
             descricao = linha.get("descricao", "").strip() or None
             
-            # Criar objeto de transação
             if tipo == "receita":
                 transacao = Receitas(
                     categoria=categoria,
@@ -145,7 +129,7 @@ def importar_transacoes_csv(
                 receitas_processadas += 1
                 logger.info(f"Receita criada: {categoria} - R$ {valor}")
                 
-            else:  # despesa
+            else: 
                 transacao = Despesas(
                     categoria=categoria,
                     valor_pago=valor,
@@ -158,7 +142,6 @@ def importar_transacoes_csv(
                 despesas_processadas += 1
                 logger.info(f"Despesa criada: {categoria} - R$ {valor}")
             
-            # Adicionar à lista de transações válidas
             transacoes_validas.append((transacao, conta, tipo, valor))
             
         except Exception as e:
@@ -166,16 +149,13 @@ def importar_transacoes_csv(
             logger.error(erro_msg)
             erros.append(erro_msg)
 
-    # Salvar no banco se houver transações válidas
     if transacoes_validas:
         try:
             logger.info(f"Salvando {len(transacoes_validas)} transações no banco...")
             
             for transacao, conta, tipo, valor in transacoes_validas:
-                # Adicionar transação
                 db.add(transacao)
                 
-                # Atualizar saldo da conta
                 saldo_atual = conta.saldo or 0.0
                 if tipo == "receita":
                     conta.saldo = saldo_atual + valor
@@ -184,7 +164,6 @@ def importar_transacoes_csv(
                     conta.saldo = saldo_atual - valor
                     logger.info(f"Saldo da conta {conta.nome_conta}: {saldo_atual} -> {conta.saldo}")
             
-            # Commit das transações
             db.commit()
             logger.info("Commit realizado com sucesso!")
             
@@ -196,7 +175,6 @@ def importar_transacoes_csv(
         logger.warning("Nenhuma transação válida encontrada")
         db.rollback()
 
-    # Retornar resultado
     resultado = {
         "mensagem": f"{receitas_processadas} receitas e {despesas_processadas} despesas importadas com sucesso.",
         "erros": erros,
