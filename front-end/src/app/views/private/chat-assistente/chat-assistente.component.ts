@@ -37,7 +37,7 @@ export class ChatAssistenteComponent implements OnInit, AfterViewChecked {
 
   ngOnInit(): void {
     // Mensagem de boas-vindas
-    this.adicionarMensagemSistema('Olá! Me chamo Chico sou seu assistente financeiro. Como posso ajudar?');
+    this.adicionarMensagemSistema('Olá! Me chamo Chiquinho sou seu assistente financeiro. Como posso ajudar?');
   }
 
   ngAfterViewChecked(): void {
